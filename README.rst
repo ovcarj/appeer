@@ -9,7 +9,7 @@ A JSON file containing article URLs can be easily generated using `Publish or Pe
 
 Article HTMLs are downloaded from the URLs stored in the JSON using:
 
-..code:: shell
+.. code:: shell
 
         python request.py <json_filename>
 
