@@ -59,7 +59,4 @@ def main(json_filename=sys.argv[1]):
 
 if __name__ == '__main__':
 
-    print(sys.argv[1])
-    print('Yeaa')
-
-    main(json_filename=sys.argv[1])
+    main()
