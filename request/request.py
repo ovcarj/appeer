@@ -18,7 +18,8 @@ def initialize_headers():
 
     return headers
 
-def scrape_htmls(publications, requests_headers, destination_directory, verbose=True):
+def scrape_htmls(publications, requests_headers, destination_directory, verbose=True,
+        sleep_time=0.5):
     
     os.makedirs(destination_directory, exist_ok=True)
 
@@ -35,16 +36,16 @@ def scrape_htmls(publications, requests_headers, destination_directory, verbose=
 
         write_to_file(f'{destination_directory}/{i}_html.dat', response)
 
+        time.sleep(sleep_time)
+
     if verbose:
         print(f'Job done!')
-
 
 def write_to_file(path_to_file, response):
 
 	with open(path_to_file, 'w+') as f:
             f.write(response.text)
 
-	time.sleep(0.5)
 
 if __name__ == '__main__':
 
@@ -54,6 +55,7 @@ if __name__ == '__main__':
     headers = initialize_headers()
 
     prefix = json_filename.split('.')[0]
+
     destination_directory = f'{prefix}_scraped_htmls'
 
     scrape_htmls(publications, headers, destination_directory)
