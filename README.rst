@@ -1,16 +1,28 @@
 appeer
 ===========================
 
-(Experimental) code for scraping scientific journals to get statistics on the length of peer review. Currently, only `RSC <https://www.rsc.org/>`_ analysis is being implemented.
+(Experimental) code for getting statistics of the length of peer review. Currently, only `RSC <https://www.rsc.org/>`_ analysis is being implemented.
 
-**Usage**
+Installation
+----------------------------------
 
-A JSON file containing article URLs can be easily generated using `Publish or Perish <https://harzing.com/resources/publish-or-perish>`_. For an example JSON, check ``examples/PoP.json``.
+The following installation procedure was tested:
+
+.. code:: shell
+
+        conda create -n appeer python=3.10
+        conda activate appeer
+        python -m pip install -e .
+
+Usage
+----------------------------------
+
+A JSON file containing article URLs can be easily generated using `Publish or Perish <https://harzing.com/resources/publish-or-perish>`_. For an example JSON, check ``src/appeer/tests/sample_data/PoP.json``.
 
 Article HTMLs are downloaded from the URLs stored in the JSON using:
 
 .. code:: shell
 
-        python request.py <json_filename>
+        appeer_request <json_filename>
 
-The HTMLs downloaded using ``examples/POP.json`` can be seen in ``examples/example_htmls``.
+The HTMLs downloaded using the sample ``POP.json`` can be seen in ``src/appeer/tests/sample_data/htmls``.

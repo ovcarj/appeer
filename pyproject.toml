@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "appeer"
+version = "0.0.1"
+authors = [
+    {name = "Juraj Ovčar", email = "juraj.ovcar@gmail.com"},
+]
+description = "appeer: statistics of the length of peer review"
+readme = "README.rst"
+requires-python = ">=3.10"
+keywords = ["appeer", "peer", "review", "length"]
+license = {text = "GPL-3.0-only"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License version 3",
+]
+dependencies = [
+    "requests",
+    'importlib-metadata; python_version>="3.10"',
+]
+
+[project.scripts]
+appeer_request = "appeer.request:main"
+

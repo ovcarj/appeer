@@ -32,7 +32,7 @@ def scrape_htmls(publications, requests_headers, destination_directory, verbose=
             print(f'{i + 1}/{len(publications)}')
             print(f'Scraping {url}...')
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=requests_headers)
 
         write_to_file(f'{destination_directory}/{i}_html.dat', response)
 
@@ -46,16 +46,20 @@ def write_to_file(path_to_file, response):
 	with open(path_to_file, 'w+') as f:
             f.write(response.text)
 
+def main(json_filename=sys.argv[1]):
 
-if __name__ == '__main__':
-
-    json_filename = sys.argv[1]
     publications = load_json(json_filename)
 
     headers = initialize_headers()
 
     prefix = json_filename.split('.')[0]
-
     destination_directory = f'{prefix}_scraped_htmls'
 
     scrape_htmls(publications, headers, destination_directory)
+
+if __name__ == '__main__':
+
+    print(sys.argv[1])
+    print('Yeaa')
+
+    main(json_filename=sys.argv[1])
