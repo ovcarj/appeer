@@ -23,6 +23,6 @@ Article HTMLs are downloaded from the URLs stored in the JSON using:
 
 .. code:: shell
 
-        appeer_request <json_filename>
+        appeer_request -i <json_filename> -o <output_zip_archive_filename> -c
 
-The HTMLs downloaded using the sample ``POP.json`` can be seen in ``src/appeer/tests/sample_data/htmls``.
+The HTMLs downloaded using the sample ``POP.json`` are given in ``src/appeer/tests/sample_data/htmls``.
