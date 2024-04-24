@@ -4,13 +4,17 @@ import json
 import logging
 
 from shutil import make_archive, rmtree
+from datetime import datetime
 
-def _init_logger(name='appeer'):
+def _init_logger(start_time, name='appeer'):
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO) 
-    handler = logging.StreamHandler(sys.stdout)
-    logger.addHandler(handler)
+    stream_handler = logging.StreamHandler(sys.stdout)
+    logger.addHandler(stream_handler)
+    file_handler = logging.FileHandler(f'{name}_{start_time}.log')
+    file_handler.setLevel(logging.INFO)
+    logger.addHandler(file_handler)
 
     return logger
 
@@ -52,6 +56,18 @@ def get_current_datetime():
     timestr = time.strftime("%Y%m%d-%H%M%S")
 
     return timestr
+
+def convert_time_string(time_string):
+
+    datetime_object = datetime.strptime(time_string, '%Y%m%d-%H%M%S')
+
+    return datetime_object
+
+def get_runtime(start_time, end_time):
+
+    delta = end_time - start_time
+
+    return str(delta)
 
 def archive_directory(output_filename, directory_name):
 

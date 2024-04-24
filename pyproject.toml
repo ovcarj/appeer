@@ -23,5 +23,4 @@ dependencies = [
 ]
 
 [project.scripts]
-appeer_request = "appeer.request:main"
-
+appeer-scrape = "appeer.scrape:main"
