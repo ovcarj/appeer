@@ -24,3 +24,6 @@ dependencies = [
 
 [project.scripts]
 appeer-scrape = "appeer.scrape:main"
+
+[project.optional-dependencies]
+test = ['pytest', 'pytest-cov']

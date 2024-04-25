@@ -2,6 +2,7 @@ import sys
 import time
 import json
 
+import pathlib
 from shutil import make_archive, rmtree
 from datetime import datetime
 
@@ -25,22 +26,6 @@ def load_json(json_filename):
         data = json.load(f)
 
     return data
-
-def write_text_to_file(path_to_file, text_data):
-    """
-    Write text to a file.
-
-    Parameters
-    ----------
-    path_to_file : str
-        Output file path
-    text_data : str
-        Text data to be written into a file
-
-    """
-
-    with open(path_to_file, 'w+') as f:
-        f.write(text_data)
 
 def get_current_datetime():
     """
@@ -91,13 +76,29 @@ def get_runtime(start_time, end_time):
     Returns
     -------
     delta : str
-        Runtime in ``%Y%m%d-%H%M%S`` format
+        Runtime in ``%H:%M:%S`` format
 
     """
 
     delta = end_time - start_time
 
     return str(delta)
+
+def write_text_to_file(path_to_file, text_data):
+    """
+    Write text to a file.
+
+    Parameters
+    ----------
+    path_to_file : str
+        Output file path
+    text_data : str
+        Text data to be written into a file
+
+    """
+
+    with open(path_to_file, 'w+') as f:
+        f.write(text_data)
 
 def archive_directory(output_filename, directory_name):
     """
@@ -110,6 +111,9 @@ def archive_directory(output_filename, directory_name):
     directory_name : str
         Path to the directory to be archived
     """
+
+    if type(output_filename) == pathlib.PosixPath:
+        output_filename = str(output_filename)
 
     if output_filename.endswith('.zip'):
         output_filename = output_filename.split('.')[0]

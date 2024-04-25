@@ -14,6 +14,18 @@ The following installation procedure was tested:
         conda activate appeer
         python -m pip install -e .
 
+To be able to run tests, use the following command instead: 
+
+.. code:: shell
+
+        python -m pip install -e .[test]
+
+To run tests, simply type:
+
+.. code:: shell
+
+        pytest
+
 Usage
 ----------------------------------
 
