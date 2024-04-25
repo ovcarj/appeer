@@ -128,8 +128,10 @@ def test_archive_directory(tmp_path):
     filepath = tmp_dir / 'sample.txt'
     appeer.utils.write_text_to_file(path_to_file=filepath, text_data='.zip test')
 
-    appeer.utils.archive_directory(output_filename=str(tmp_dir / 'test.zip'), directory_name=tmp_dir)
-    assert pathlib.Path(tmp_dir / 'test.zip').is_file()
+    zip_filename = str(tmp_dir / 'test.zip')
+
+    appeer.utils.archive_directory(output_filename=zip_filename, directory_name=tmp_dir)
+    assert pathlib.Path(zip_filename).is_file()
 
     # TODO: unpack archive and check content
 

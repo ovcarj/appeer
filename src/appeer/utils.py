@@ -112,9 +112,6 @@ def archive_directory(output_filename, directory_name):
         Path to the directory to be archived
     """
 
-    if type(output_filename) == pathlib.PosixPath:
-        output_filename = str(output_filename)
-
     if output_filename.endswith('.zip'):
         output_filename = output_filename.split('.')[0]
 
