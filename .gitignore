@@ -161,8 +161,7 @@ cython_debug/
 #
 
 # .swp files
-
 *.swp
 
 # appeer related stuff
-appeer_scrape*
+appeer-scrape*

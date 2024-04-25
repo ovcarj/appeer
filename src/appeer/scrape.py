@@ -4,6 +4,7 @@ import time
 import requests
 
 import appeer.utils
+import appeer.log
 
 def parse_input_arguments():
     """
@@ -112,9 +113,9 @@ def main():
 
         global _logger 
         global log_dashes
-        _logger = appeer.utils._init_logger(start_time=start_datetime, logname='appeer-scrape')
-        log_dashes = appeer.utils.get_log_dashes()
-        logo = appeer.utils.get_logo()
+        _logger = appeer.log.init_logger(start_time=start_datetime, logname='appeer-scrape')
+        log_dashes = appeer.log.get_log_dashes()
+        logo = appeer.log.get_logo()
 
         _logger.info(logo)
         _logger.info(log_dashes)
