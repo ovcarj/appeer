@@ -1,16 +1,21 @@
 import sys
+import os
 import logging
 
-def init_logger(start_time, logname='appeer'):
+import appeer.utils
+
+def init_logger(start_time=None, logdir=None, logname='appeer'):
     """
     Initialize the logger object.
 
     Parameters
     ----------
+    logdir : str
+        Directory in which to store the log file. If not given, default to current directory
     start_time : str
-        Current datetime in ``%Y%m%d-%H%M%S`` format (used in naming the log file)
+        Current datetime in ``%Y%m%d-%H%M%S`` format (used in naming the log file). If not given, default to current time
     logname : str
-        Name of the logger object (used in naming in the log file)
+        Name of the logger object (also used in naming in the log file)
 
     Returns
     ----------
@@ -19,11 +24,22 @@ def init_logger(start_time, logname='appeer'):
 
     """
 
+    if start_time is None:
+        start_time = appeer.utils.get_current_datetime()
+
+    if logdir is None:
+        logdir = os.getcwd()
+
+    os.makedirs(logdir, exist_ok=True)
+
+    if not logdir.endswith('/'):
+        logdir += '/'
+
     logger = logging.getLogger(logname)
     logger.setLevel(logging.INFO) 
     stream_handler = logging.StreamHandler(sys.stdout)
     logger.addHandler(stream_handler)
-    file_handler = logging.FileHandler(f'{logname}_{start_time}.log')
+    file_handler = logging.FileHandler(f'{logdir}{logname}_{start_time}.log')
     file_handler.setLevel(logging.INFO)
     logger.addHandler(file_handler)
 

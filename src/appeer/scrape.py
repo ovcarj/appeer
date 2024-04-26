@@ -1,4 +1,5 @@
 import os
+import sys
 import argparse
 import time
 import requests
@@ -6,9 +7,19 @@ import requests
 import appeer.utils
 import appeer.log
 
-def parse_input_arguments():
+def parse_input_arguments(arguments):
     """
-    Parse input arguments.
+    Parse input arguments of ``appeer-scrape``. For possible arguments, see ``appeer-scrape -h``.
+
+    Parameters
+    ----------
+    input_arguments : list
+        Input arguments. Normally inputted through the CLI using ``appeer-scrape <input_arguments>``
+
+    Returns
+    -------
+    argparse.ArgumentParser
+        Arguments parsed into the ArgumentParser object
     """
 
     parser = argparse.ArgumentParser()
@@ -19,12 +30,16 @@ def parse_input_arguments():
             help='Name of the output ZIP archive', required=True)
     parser.add_argument('-t', '--sleep_time', type=float,
             help='Time (in seconds) between sending requests', required=False, default=1.0)
+    parser.add_argument('-l', '--logdir', type=str,
+            help='Directory in which to store the logfile. Defaults to CWD', required=False, default=None)
+    parser.add_argument('-d', '--download_dir', type=str,
+            help='Directory into which to download the files. Defaults to appeer-scrape_{current__datetime}.', required=False, default=None)
     parser.add_argument('-c', '--cleanup', action='store_true',
             help='If this flag is provided, the output ZIP archive will be kept, while the directory with the downloaded data will be deleted', required=False)
     parser.add_argument('-q', '--quiet', action='store_true',
             help='If this flag is provided, no logging will be done (not recommended)', required=False)
 
-    args = parser.parse_args()
+    args = parser.parse_args(arguments)
 
     return args
 
@@ -44,7 +59,7 @@ def initialize_headers():
 
     return headers
 
-def scrape(publications_list, download_directory, quiet=False, sleep_time=0.5):
+def scrape(publications_list, download_directory, _logger, quiet=False, sleep_time=0.5):
     """
     Download HTMLs from a list of URLs found in the loaded ``publications_list`` JSON file.
 
@@ -57,12 +72,16 @@ def scrape(publications_list, download_directory, quiet=False, sleep_time=0.5):
         List obtained by loading the PoP.json file
     download_directory : str
         Directory into which the HTMLs are downloaded
+    logger : logging.Logger
+        logging.Logger object used to write into the logfile
     quiet : bool
         If true, no logging is done (not recommended)
     sleep_time : float
         How much time (in seconds) to sleep before sending a new request
 
     """
+
+    log_dashes = appeer.log.get_log_dashes()
 
     no_of_publications = len(publications_list)
     requests_headers = initialize_headers()
@@ -94,32 +113,50 @@ def scrape(publications_list, download_directory, quiet=False, sleep_time=0.5):
         _logger.info('All files downloaded!')
         _logger.info(log_dashes)
 
-def main():
+def main(input_arguments=None):
     """ 
     Load the input ``PoP.json`` file into a list of dictionaries and download HTMLs found in the ``article_url`` dictionary keys.
+
+    CLI usage example: ``appeer-scrape -i Pop.json -o out.zip -c``
+
+    Parameters
+    ----------
+    input_arguments : list
+        Input arguments, as defined in ``parse_input_arguments`` (normally inputted through the CLI using ``appeer-scrape <input_arguments>``)
+
     """
 
     start_datetime = appeer.utils.get_current_datetime()
 
-    args = parse_input_arguments()
+    if input_arguments is None:
+        input_arguments=sys.argv[1:]
+
+    args = parse_input_arguments(arguments=input_arguments)
 
     json_filename = args.input
     zip_filename = args.output
     sleep_time = args.sleep_time
+    logdir = args.logdir
+    download_directory = args.download_dir
     quiet = args.quiet
     cleanup = args.cleanup
 
+    if logdir is None:
+        logdir = os.getcwd()
+
+    logpath = os.path.abspath(logdir + f'/appeer-scrape_{start_datetime}.log')
+
     if not quiet:
 
-        global _logger 
-        global log_dashes
-        _logger = appeer.log.init_logger(start_time=start_datetime, logname='appeer-scrape')
+        _logger = appeer.log.init_logger(start_time=start_datetime, logdir=logdir, logname='appeer-scrape')
         log_dashes = appeer.log.get_log_dashes()
         logo = appeer.log.get_logo()
 
         _logger.info(logo)
         _logger.info(log_dashes)
         _logger.info(f'appeer-scrape started on {start_datetime}')
+        _logger.info(log_dashes)
+        _logger.info(f'Logfile: {logpath}')
         _logger.info(log_dashes)
  
     if not quiet:
@@ -131,11 +168,16 @@ def main():
         _logger.info(f'Successfully read data from {json_filename}!')
         _logger.info(log_dashes)
 
-    download_directory = f'appeer-scrape_{start_datetime}'
+    if download_directory is None:
+        download_directory = f'appeer-scrape_{start_datetime}'
+
+    if not quiet:
+        _logger.info(f'Data will be downloaded to {os.path.abspath(download_directory)}')
+        _logger.info(log_dashes)
 
     scrape(publications_list=publications_list, 
             download_directory=download_directory, 
-            quiet=quiet, sleep_time=sleep_time)
+            _logger=_logger, quiet=quiet, sleep_time=sleep_time)
 
     appeer.utils.archive_directory(output_filename=zip_filename, directory_name=download_directory)
 
@@ -173,4 +215,4 @@ def main():
 
 if __name__ == '__main__':
 
-    main()
+    main(sys.argv[1:])

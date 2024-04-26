@@ -1,29 +1,8 @@
 import appeer.utils
 import pathlib
-import pytest
 
 import time
 import datetime
-
-@pytest.fixture
-def sample_data_path():
-    """
-    Get full path to ``$APPEER_ROOT_DIR/src/appeer/tests/sample_data``.
-    """
-
-    path_to_sample_data = pathlib.Path('./src/appeer/tests/sample_data')
-
-    return path_to_sample_data
-
-@pytest.fixture
-def sample_json_path(sample_data_path):
-    """
-    Get full path to ``PoP.json`` located in ``sample_data``.
-    """
-
-    path_to_sample_json = pathlib.Path(f'{sample_data_path}/PoP.json')
-
-    return path_to_sample_json
 
 def test_load_json(sample_json_path):
     """

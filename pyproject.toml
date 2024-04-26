@@ -26,7 +26,8 @@ dependencies = [
 appeer-scrape = "appeer.scrape:main"
 
 [project.optional-dependencies]
-test = ['pytest', 'pytest-cov']
+test = ['pytest>=6.0', 'pytest-cov']
 
 [tool.pytest.ini_options]
-addopts = "--cov"
+minversion = "6.0"
+addopts = "--cov -rs"
