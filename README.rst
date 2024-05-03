@@ -14,7 +14,13 @@ The following installation procedure was tested:
         conda activate appeer
         python -m pip install -e .
 
-To be able to run tests, use the following command instead: 
+After installation, run
+
+.. code:: shell
+
+        appeer init
+
+To be able to run tests, use the following command: 
 
 .. code:: shell
 
@@ -29,12 +35,37 @@ To run tests, simply type:
 Usage
 ----------------------------------
 
-A JSON file containing article URLs can be easily generated using `Publish or Perish <https://harzing.com/resources/publish-or-perish>`_. For an example JSON, check ``src/appeer/tests/sample_data/PoP.json``.
-
-Article HTMLs are downloaded from the URLs stored in the JSON using:
+Article HTMLs can be downloaded from URLs stored in a file using:
 
 .. code:: shell
 
-        appeer-scrape -i <json_filename> -o <output_zip_archive_filename> -c
+        appeer scrape [OPTIONS] FILENAME
 
-The HTMLs downloaded using the sample ``POP.json`` are given in ``src/appeer/tests/sample_data/htmls``.
+To see all ``appeer scrape`` options, use
+
+.. code:: shell
+
+        appeer scrape --help
+
+The input file can be either a JSON file or a text file each URL written in a new line. The URLs can be written either as a full URL or a DOI. E.g., the following entries are equally valid:
+
+.. code:: shell
+
+          https://pubs.rsc.org/en/content/articlelanding/2023/ob/d3ob00424d
+          10.1039/D3OB00424D
+
+Invalid URL entries will be automatically skipped. For an example text file containing URLs, check ``src/appeer/tests/sample_data/example_publications.txt``. To download the HTMLs from this text file, simply use
+
+.. code:: shell
+
+        appeer scrape example_publications.txt
+
+A JSON file containing article URLs can be easily generated using `Publish or Perish <https://harzing.com/resources/publish-or-perish>`_. For an example JSON, check ``src/appeer/tests/sample_data/example_PoP.json``.
+
+The HTMLs downloaded using the sample ``example_POP.json`` are given in ``src/appeer/tests/sample_data/htmls``.
+
+To clean various default ``appeer`` directories, type
+
+.. code:: shell
+
+        appeer clean --help

@@ -3,19 +3,18 @@ import os
 import logging
 
 import appeer.utils
+from appeer import __version__
 
-def init_logger(start_time=None, logdir=None, logname='appeer'):
+def init_logger(logname='appeer', logdir=None):
     """
     Initialize the logger object.
 
     Parameters
     ----------
-    logdir : str
-        Directory in which to store the log file. If not given, default to current directory
-    start_time : str
-        Current datetime in ``%Y%m%d-%H%M%S`` format (used in naming the log file). If not given, default to current time
     logname : str
         Name of the logger object (also used in naming in the log file)
+    logdir : str
+        Directory in which to store the log file. If not given, default to current directory
 
     Returns
     ----------
@@ -23,9 +22,6 @@ def init_logger(start_time=None, logdir=None, logname='appeer'):
         logging.Logger object
 
     """
-
-    if start_time is None:
-        start_time = appeer.utils.get_current_datetime()
 
     if logdir is None:
         logdir = os.getcwd()
@@ -35,15 +31,128 @@ def init_logger(start_time=None, logdir=None, logname='appeer'):
     if not logdir.endswith('/'):
         logdir += '/'
 
+    if not logname.endswith('.log'):
+        logname += '.log'
+
     logger = logging.getLogger(logname)
+
     logger.setLevel(logging.INFO) 
+
     stream_handler = logging.StreamHandler(sys.stdout)
     logger.addHandler(stream_handler)
-    file_handler = logging.FileHandler(f'{logdir}{logname}_{start_time}.log')
+
+    file_handler = logging.FileHandler(f'{logdir}{logname}')
     file_handler.setLevel(logging.INFO)
     logger.addHandler(file_handler)
 
     return logger
+
+def get_logger_fh_path(logger):
+    """
+    Get path to where a log is stored 
+    (baseFilename of the logger FileHandler with level INFO).
+
+    Parameters
+    ----------
+    logger : logging.Logger
+        logging.Logger object
+
+    Returns
+    ----------
+    base_filename : str
+        Path to where the log is stored.
+
+    """
+
+    if logger.hasHandlers():
+
+        handlers = logger.handlers
+
+        base_filename = ''
+
+        for handler in handlers:
+
+            if type(handler) == logging.FileHandler:
+                if handler.level == 20:
+                    base_filename += handler.baseFilename
+
+        if base_filename == '':
+            return 'No logger file handlers found'
+
+        else:
+            return base_filename
+
+    else:
+        return 'No logger handlers found.'
+
+def appeer_start(start_datetime, logpath=None):
+    """
+    Report on the beginning of ``appeer`` execution.
+
+    Parameters
+    ----------
+    start_datetime : str
+        Starting datetime in ``%Y%m%d-%H%M%S`` format
+    logpath : str | None
+        Path to the logfile
+
+    Returns
+    ----------
+    start_report : str
+        Report on the beginning of ``appeer`` execution
+ 
+    """
+
+    start_report = ''
+
+    log_dashes = get_log_dashes()
+    logo = get_logo()
+
+    start_report += logo + '\n'
+    start_report += log_dashes + '\n'
+    start_report += f'appeer started on {start_datetime}\n'
+    start_report += log_dashes 
+
+    if logpath:
+
+        start_report += '\n'
+        start_report += f'Logfile: {logpath}\n'
+        start_report += log_dashes
+
+    return start_report
+
+def appeer_end(start_datetime):
+    """
+    Report on the end of ``appeer`` execution.
+
+    Parameters
+    ----------
+    start_datetime : str
+        Starting datetime in ``%Y%m%d-%H%M%S`` format
+
+    Returns
+    ----------
+    end_report : str
+        Report on the end of ``appeer`` execution
+ 
+    """
+
+    end_datetime = appeer.utils.get_current_datetime()
+
+    end_report = ''
+
+    log_dashes = get_log_dashes()
+
+    runtime = appeer.utils.get_runtime(
+            appeer.utils.convert_time_string(start_datetime),
+            appeer.utils.convert_time_string(end_datetime)
+            )
+
+    end_report += log_dashes + '\n'
+    end_report += f'appeer finished on {end_datetime}\n'
+    end_report += f'Total runtime: {runtime}'
+
+    return end_report
 
 def get_log_dashes():
     """
@@ -56,7 +165,22 @@ def get_log_dashes():
 
     """
 
-    return '------------------------------------'
+    return '----------------------------------------------'
+
+def get_short_log_dashes():
+    """
+    Create some dashes for logging.
+
+    Returns
+    -------
+    str
+        Dashes for logging
+
+    """
+
+    return '-----------------------------'
+
+
 
 def get_logo():
     """
@@ -69,15 +193,14 @@ def get_logo():
 
     """
 
-    logo = r"""
-#                                         
+    logo = rf"""
 #                                         
 #    __ _  _ __   _ __    ___   ___  _ __ 
 #   / _` || '_ \ | '_ \  / _ \ / _ \| '__|
 #  | (_| || |_) || |_) ||  __/|  __/| |   
 #   \__,_|| .__/ | .__/  \___| \___||_|   
 #         | |    | |                      
-#         |_|    |_|    v=0.0.1                  
+#         |_|    |_|    v={__version__}                  
 #
 #
 """
