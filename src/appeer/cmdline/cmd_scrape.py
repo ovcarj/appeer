@@ -21,13 +21,15 @@ If the entry format is invalid, the invalid URL is not scraped.
 """)
 @click.argument('filename')
 @click.option('-o', '--output', 'output_zip_filename', help="Name of the ZIP archive containing the downloaded data. If not given, a default name based on the timestamp is generated")
-@click.option('-t', '--sleep_time', default=5.0, show_default=True, help="Time (in seconds) between sending requests")
+@click.option('-t', '--sleep_time', default=1.0, show_default=True, help="Time (in seconds) between sending requests")
+@click.option('-m', '--max_tries', default=3, show_default=True, help="Maximum number of tries to get a response from an URL before giving up")
+@click.option('-rt', '--retry_sleep_time', default=10.0, show_default=True, help="Time (in seconds) between retrying a URL")
 @click.option('-l', '--logdir', default=None, help="Directory in which to store the logfile. If not given, default ``appeer`` datadir is used (recommended)")
 @click.option('-d', '--download_dir', default=None, help="Directory into which to download the files. If not given, default ``appeer`` datad")
 @click.option('-c', '--cleanup', is_flag=True, default=False, help="Delete the directory with the downloaded data upon successful completion (output ZIP archive is kept)")
 @click.option('-p','--preview', is_flag=True, default=False, help="Get a preview on scraping strategy for a given input file (no scraping is done)")
 def scrape_cli(filename, output_zip_filename,
-        sleep_time,
+        sleep_time, max_tries, retry_sleep_time,
         logdir, download_dir,
         cleanup,
         preview):
@@ -38,7 +40,8 @@ def scrape_cli(filename, output_zip_filename,
         scrape_planning(publications)
 
     else:
-        scrape_main(publications, output_zip_filename, sleep_time,
+        scrape_main(publications, output_zip_filename, 
+            sleep_time, max_tries, retry_sleep_time,
             logdir, download_dir,
             cleanup)
 

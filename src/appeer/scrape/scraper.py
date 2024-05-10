@@ -1,14 +1,16 @@
 import requests
 
 import appeer.log
+
 from appeer.scrape.scrape_plan import ScrapePlan
+from appeer.scrape.request import Request
 
 class Scraper:
     """
     Download data based on url, publisher and strategy (as given by ScrapePlan)
     """
 
-    def __init__(self, url, publisher, strategy, _logger=None):
+    def __init__(self, url, publisher, strategy, max_tries=3, retry_sleep_time=10, _logger=None):
         """
         Initialize Scraper instance.
     
@@ -20,29 +22,33 @@ class Scraper:
             Internal publisher code
         strategy : str
             Internal download strategy code
+        max_tries : int
+            Maximum number of tries to get a response from an URL before giving up
+        retry_sleep_time : float
+            Time (in seconds) to wait before trying an URL again
         _logger : logging.Logger | None
             If given, logging.Logger object used to write into the logfile
 
-
         """
-
-        self._publisher_change = False
-        self._strategy_change = False
 
         self.url = url
         self.publisher = publisher
         self.strategy = strategy
         self._logger = _logger
 
-        self._initialize_headers()
+        self._request = Request(url=url, max_tries=max_tries, 
+                retry_sleep_time=retry_sleep_time, _logger=_logger)
 
         self._define_strategy_map()
 
         self._report = ''
         self._dashes = appeer.log.get_log_dashes()
         self._short_dashes = appeer.log.get_short_log_dashes()
+        self._very_short_dashes = appeer.log.get_very_short_log_dashes()
 
         self._write_text = False
+        self._publisher_change = False
+        self._strategy_change = False
         self.success = False
 
         self._get_scrape_method()
@@ -84,37 +90,22 @@ class Scraper:
 
         getattr(self, self.scrape_method)()
  
-    def _initialize_headers(self):
-        """ 
-        Create a default header using ``requests.utils.default_headers()``.
-    
-        Returns
-        -------
-        headers : requests.structures.CaseInsensitiveDict
-            Default requests header
-
-        """
-    
-        headers = requests.utils.default_headers()
-        headers.update({'User-Agent': 'My User Agent 1.0'})
-
-        self._headers = headers
-    
     def scrape_html_simple(self):
         """
         Download HTML from an URL and store it as self.response_text.
         """
 
-        response = requests.get(self.url, headers=self._headers)
-        # TODO: check validity of response
-        self._log('Response OK.')
+        self._request.send()
 
-        response_text = response.text
-    
-        self.response_text = response_text
+        if self._request._success:
 
-        self._write_text = True
-        self.success = True
+            self.response_text = self._request.response.text
+
+            self._write_text = True
+            self.success = True
+
+        else:
+            pass
 
     def scrape_skip(self):
         """
@@ -132,23 +123,26 @@ class Scraper:
 
         self._log('Resolving DOI...')
 
-        response = requests.head(self.url, headers=self._headers, allow_redirects=True)
-        # TODO: check validity of response
-        self._log('Response OK.')
+        self._request.send(head=True)
 
-        resolved_url = response.url
-        self._log(f'DOI resolved to {resolved_url}')
+        if self._request._success:
 
-        plan = ScrapePlan(resolved_url)
+            resolved_url = self._request.response.url
+            self._log(f'DOI resolved to {resolved_url}')
 
-        self.publisher, self.strategy = plan.publishers[0], plan.strategies[0]
-        self._publisher_change, self._strategy_change = True, True
-        self._log(f'Publisher changed to {self.publisher}.')
-        self._log(f'Strategy changed to {self.strategy}.')
+            plan = ScrapePlan(resolved_url)
 
-        self._get_scrape_method()
+            self.publisher, self.strategy = plan.publishers[0], plan.strategies[0]
+            self._publisher_change, self._strategy_change = True, True
+            self._log(f'Publisher changed to {self.publisher}.')
+            self._log(f'Strategy changed to {self.strategy}.')
 
-        self.run_scrape()
+            self._get_scrape_method()
+
+            self.run_scrape()
+
+        else:
+            pass
 
     def _log(self, text):
         """

@@ -10,7 +10,8 @@ from appeer.scrape.input_handling import parse_data_source, handle_input_reading
 from appeer.scrape.scrape_plan import ScrapePlan
 from appeer.scrape.scraper import Scraper
 
-def scrape(scrape_plan, download_directory, _logger, sleep_time=0.5):
+def scrape(scrape_plan, download_directory, _logger, 
+        sleep_time=1.0, max_tries=3, retry_sleep_time=10):
     """
     Download publications data from a list of URLs according to the ``ScrapePlan``.
 
@@ -26,6 +27,10 @@ def scrape(scrape_plan, download_directory, _logger, sleep_time=0.5):
         logging.Logger object used to write into the logfile
     sleep_time : float
         How much time (in seconds) to sleep before sending a new request
+    max_tries : int
+        Maximum number of tries to get a response from an URL before giving up
+    retry_sleep_time : float
+        Time (in seconds) to wait before retrying an URL again
 
     """
 
@@ -54,7 +59,8 @@ def scrape(scrape_plan, download_directory, _logger, sleep_time=0.5):
         _logger.info(f'Publisher: {publisher}')
         _logger.info(f'Strategy: {strategy}')
 
-        scraper = Scraper(url, publisher, strategy, _logger=_logger)
+        scraper = Scraper(url, publisher, strategy, _logger=_logger, 
+                max_tries=max_tries, retry_sleep_time=retry_sleep_time)
 
         _logger.info(f'Starting scrape...')
 
@@ -101,7 +107,8 @@ def scrape(scrape_plan, download_directory, _logger, sleep_time=0.5):
 
     _logger.info(log_dashes)
 
-def main(publications, output_zip_filename=None, sleep_time=0.5, 
+def main(publications, output_zip_filename=None, 
+        sleep_time=1.0, max_tries=3, retry_sleep_time=10,
         logdir=None, download_dir=None,
         cleanup=False):
     """ 
@@ -131,6 +138,10 @@ def main(publications, output_zip_filename=None, sleep_time=0.5,
     download_dir: str
         Directory into which to download the files. If not given, default ``appeer`` Datadir is used (recommended)
 ir is used (recommended)
+    max_tries : int
+        Maximum number of tries to get a response from an URL before giving up
+    retry_sleep_time : float
+        Time (in seconds) to wait before trying an URL again
     cleanup: bool
         If this flag is provided, the output ZIP archive will be kept, while the directory with the downloaded data will be deleted
 
@@ -175,7 +186,8 @@ ir is used (recommended)
 
     scrape(scrape_plan=plan, 
             download_directory=download_dir, 
-            _logger=_logger, sleep_time=sleep_time)
+            _logger=_logger, sleep_time=sleep_time,
+            max_tries=max_tries, retry_sleep_time=retry_sleep_time)
 
     appeer.utils.archive_directory(output_filename=output_zip_filename, directory_name=download_dir)
 

@@ -180,6 +180,21 @@ def get_short_log_dashes():
 
     return '-----------------------------'
 
+def get_very_short_log_dashes():
+    """
+    Create some dashes for logging.
+
+    Returns
+    -------
+    str
+        Dashes for logging
+
+    """
+
+    return '-----------'
+
+
+
 def get_logo():
     """
     Create the ``appeer`` logo.
