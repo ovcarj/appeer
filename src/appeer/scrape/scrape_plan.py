@@ -49,7 +49,7 @@ class ScrapePlan:
         """
 
         self._publisher_codes = {
-                'invalid_url': 'Invalid URL',
+                'invalid_url': 'Invalid_URL',
                 'unknown': 'Unknown',
                 'doi.org': 'DOI',
                 'pubs.rsc.org': 'RSC'
@@ -72,7 +72,7 @@ class ScrapePlan:
         """
 
         self._strategy_codes = {
-                'Invalid URL': 'skip',
+                'Invalid_URL': 'skip',
                 'Unknown': 'html',
                 'DOI': 'doi',
                 'RSC': 'html'
@@ -164,8 +164,8 @@ class ScrapePlan:
         strategy_report = ''
         dashes = appeer.log.get_log_dashes()
         short_dashes = appeer.log.get_short_log_dashes()
-    
-        strategy_report += f'SCRAPE PLAN SUMMARY\n\n'
+
+        strategy_report += f'{appeer.log.boxed_message("SCRAPE PLAN SUMMARY")}\n\n'
 
         no_of_urls = len(self.url_list)
     
@@ -189,7 +189,7 @@ class ScrapePlan:
                 strategy_report += f'{strategy}: {count}/{no_of_urls}\n'
     
         strategy_report += short_dashes + '\n'
-        strategy_report += f'DETAILED SCRAPE PLAN (url publisher strategy)\n\n'
+        strategy_report += f'{appeer.log.boxed_message("DETAILED SCRAPE PLAN (url publisher strategy)")}\n\n'
         
         for i, url in enumerate(self.url_list):
             strategy_report += f'{url} {self.publishers[i]} {self.strategies[i]}\n'

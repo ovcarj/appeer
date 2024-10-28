@@ -165,7 +165,7 @@ def get_log_dashes():
 
     """
 
-    return '----------------------------------------------'
+    return '–' * 50
 
 def get_short_log_dashes():
     """
@@ -178,7 +178,7 @@ def get_short_log_dashes():
 
     """
 
-    return '-----------------------------'
+    return '–' * 25
 
 def get_very_short_log_dashes():
     """
@@ -191,7 +191,25 @@ def get_very_short_log_dashes():
 
     """
 
-    return '-----------'
+    return '–' * 10
+
+def boxed_message(message):
+    """
+    Create a box around a message.
+
+    Returns
+    -------
+    boxed_message : str
+        Message with a box around it
+
+    """
+
+    dashes = '—' * (len(message) + 4)
+
+    boxed_message = f'{dashes}\n| {message} |\n{dashes}'
+
+    return boxed_message
+        
 
 def get_logo():
     """
