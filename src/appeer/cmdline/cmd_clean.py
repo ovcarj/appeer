@@ -1,9 +1,10 @@
 import click
 
 from appeer.datadir import Datadir
+from appeer.config import Config
 
-@click.command('all', help='Delete the appeer data directory.')
-def clean_all():
+@click.command('all_data', help='Delete the appeer data directory.')
+def clean_all_data():
     """
     Deletes all ``appeer`` data directories
     """
@@ -65,6 +66,15 @@ def clean_db():
     ad = Datadir()
     ad.clean_db()
 
+@click.command('config', help='Delete the appeer config file.')
+def clean_config():
+    """
+    Deletes the ``appeer`` config file.
+    """
+
+    cfg = Config()
+    cfg.clean_config()
+
 @click.group()
 def clean_cli(name='clean', help='Tools for cleaning the appeer data directory'):
     """
@@ -72,13 +82,15 @@ def clean_cli(name='clean', help='Tools for cleaning the appeer data directory')
     """
     pass
 
-clean_cli.add_command(clean_all)
+clean_cli.add_command(clean_all_data)
 clean_cli.add_command(clean_downloads)
 clean_cli.add_command(clean_scrape_archives)
 clean_cli.add_command(clean_scrape_logs)
 clean_cli.add_command(clean_parse)
 clean_cli.add_command(clean_parse_logs)
 clean_cli.add_command(clean_db)
+
+clean_cli.add_command(clean_config)
 
 def main():
     clean_cli()

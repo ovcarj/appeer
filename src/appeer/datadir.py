@@ -5,6 +5,8 @@ import click
 import appeer.utils
 import appeer.log
 
+from appeer.config import Config
+
 class Datadir:
     """
     Class which handles creation, deletion and checking of the
@@ -16,7 +18,9 @@ class Datadir:
         Store default directories using ``platformdirs``.
         """
 
-        self.base = platformdirs.user_data_dir(appname='appeer')
+        config = Config()
+
+        self.base = config._base_directory
         
         self.downloads = f'{self.base}/downloads'
         
@@ -30,7 +34,7 @@ class Datadir:
 
         self.check_existence()
 
-        self.dashes = appeer.log.get_log_dashes()
+        self._dashes = appeer.log.get_log_dashes()
 
     def check_existence(self):
         """
@@ -52,34 +56,36 @@ class Datadir:
 
             while(input_ok == False):
 
-                overwrite = input(f'WARNING: appeer data base directory exists at {self.base}.\nDo you want to overwrite it? All data will be deleted. [Y/n]\n')
+                overwrite = input(f'WARNING: appeer data base directory exists at {self.base}\nDo you want to overwrite it? All data will be deleted. [Y/n]\n')
 
-                click.echo(self.dashes)
+                click.echo(self._dashes)
 
                 try:
-                    assert (overwrite == 'Y' or overwrite== 'n')
+                    assert (overwrite == 'Y' or overwrite == 'n')
                     input_ok = True
 
                 except AssertionError:
                     click.echo('Please enter "Y" or "n".')
-                    click.echo(self.dashes)
+                    click.echo(self._dashes)
 
             if overwrite == 'Y':
 
                 self.clean_all_directories()
 
                 click.echo(f'{self.base} deleted, as requested. Continuing...')
-                click.echo(self.dashes)
+                click.echo(self._dashes)
 
             elif overwrite == 'n':
 
-                click.echo('Stopping appeer data directory creation.')
-                click.echo(self.dashes)
+                click.echo('Stopping appeer data directory overwriting.')
+                click.echo(self._dashes)
 
                 return
 
         os.makedirs(self.base)
         click.echo(f'appeer base directory created at {self.base}')
+
+        self.check_existence()
 
         os.makedirs(self.downloads)
         click.echo(f'appeer downloads directory created at {self.downloads}')
@@ -97,7 +103,7 @@ class Datadir:
         os.makedirs(self.db)
         click.echo(f'appeer db directory created at {self.db}')
 
-        click.echo(self.dashes)
+        click.echo(self._dashes)
 
     def clean_all_directories(self):
         """

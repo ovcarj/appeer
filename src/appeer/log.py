@@ -193,8 +193,6 @@ def get_very_short_log_dashes():
 
     return '-----------'
 
-
-
 def get_logo():
     """
     Create the ``appeer`` logo.
