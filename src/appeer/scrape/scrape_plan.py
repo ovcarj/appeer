@@ -188,8 +188,7 @@ class ScrapePlan:
             if count > 0:
                 strategy_report += f'{strategy}: {count}/{no_of_urls}\n'
     
-        strategy_report += short_dashes + '\n'
-        strategy_report += f'{appeer.log.boxed_message("DETAILED SCRAPE PLAN (url publisher strategy)")}\n\n'
+        strategy_report += f'\n{appeer.log.boxed_message("DETAILED SCRAPE PLAN (url publisher strategy)")}\n\n'
         
         for i, url in enumerate(self.url_list):
             strategy_report += f'{url} {self.publishers[i]} {self.strategies[i]}\n'

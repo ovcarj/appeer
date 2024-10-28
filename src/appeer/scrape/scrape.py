@@ -44,8 +44,8 @@ def scrape(scrape_plan, download_directory, _logger,
 
     no_of_publications = len(scrape_plan.url_list)
     
-    _logger.info(log_dashes)
-    _logger.info(f'Starting download of {no_of_publications} publications to {download_directory}')
+    _logger.info(f'{appeer.log.boxed_message("SCRAPE JOB")}\n')
+    _logger.info(f'Starting to download {no_of_publications} publications to {download_directory}\n')
     _logger.info(log_dashes)
 
     os.makedirs(download_directory, exist_ok=True)
@@ -55,14 +55,12 @@ def scrape(scrape_plan, download_directory, _logger,
         publisher = scrape_plan.publishers[i]
         strategy = scrape_plan.strategies[i]
 
-        _logger.info(f'{i + 1}/{no_of_publications}: Scraping {url} ...')
+        _logger.info(f'{i + 1}/{no_of_publications}: Scraping {url}')
         _logger.info(f'Publisher: {publisher}')
         _logger.info(f'Strategy: {strategy}')
 
         scraper = Scraper(url, publisher, strategy, _logger=_logger, 
                 max_tries=max_tries, retry_sleep_time=retry_sleep_time)
-
-        _logger.info(f'Starting scrape...')
 
         scraper.run_scrape()
 
@@ -75,7 +73,7 @@ def scrape(scrape_plan, download_directory, _logger,
                 writing_path = f'{download_directory}/{i}_html.dat'
                 appeer.utils.write_text_to_file(writing_path, 
                         scraper.response_text)
-                _logger.info(f'Wrote downloaded text to {writing_path}.')
+                _logger.info(f'Wrote downloaded text to {writing_path}')
 
         else:
 
@@ -83,17 +81,16 @@ def scrape(scrape_plan, download_directory, _logger,
             failed_indices.append(i)
             failed_urls.append(url)
 
-        _logger.info(f'{i + 1}/{no_of_publications}: Scraping done.')
+        _logger.info(f'{i + 1}/{no_of_publications}: Scraping done')
 
-        if i < (no_of_publications - 1):
-            _logger.info(short_log_dashes)
+        _logger.info(log_dashes)
 
         time.sleep(sleep_time)
 
-    _logger.info(log_dashes)
-    _logger.info('Scraping finished!')
+    _logger.info(f'\n{appeer.log.boxed_message("SCRAPE JOB SUMMARY")}\n')
+    _logger.info('Scraping job finished!')
     _logger.info(f'Success: {count_success}/{no_of_publications}')
-    _logger.info(f'Fail: {count_fail}/{no_of_publications}')
+    _logger.info(f'Fail: {count_fail}/{no_of_publications}\n')
 
     if count_fail > 0:
 

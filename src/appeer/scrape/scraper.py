@@ -86,7 +86,7 @@ class Scraper:
         Run a scrape method according to self.scrape_method.
         """
 
-        self._log(f'Running scrape using method {self.scrape_method}() ...')
+        self._log(f'Method: {self.scrape_method}()')
 
         getattr(self, self.scrape_method)()
  

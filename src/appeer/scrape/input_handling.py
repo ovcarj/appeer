@@ -90,6 +90,8 @@ def handle_input_reading(publications, data_source_type, plaintext_ex_message, j
     log_dashes = appeer.log.get_log_dashes()
     short_log_dashes = appeer.log.get_short_log_dashes()
 
+    report += f'{appeer.log.boxed_message("READING INPUT FILE")}\n\n'
+
     report += 'Attempting to read the input data...\n'
 
     match data_source_type:
@@ -118,21 +120,18 @@ def handle_input_reading(publications, data_source_type, plaintext_ex_message, j
             success = True
 
             report += f'Successfully read data from the input Python list!\n'
-            report += log_dashes 
 
         case 'plaintext' :
 
             success = True
 
             report += f'Successfully read data from {publications} !\n'
-            report += log_dashes
 
         case 'JSON' :
 
             success = True
 
             report += f'Successfully read data from {publications} !\n'
-            report += log_dashes
 
     return success, report
 
