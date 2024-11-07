@@ -2,6 +2,9 @@ import click
 
 from appeer.scrape.scrape import main as scrape_main
 from appeer.scrape.scrape_plan import main as scrape_planning
+from appeer.config import Config
+
+cfg = Config()._config
 
 @click.command(help="""Download publications data for later parsing.
 
@@ -21,9 +24,9 @@ If the entry format is invalid, the invalid URL is not scraped.
 """)
 @click.argument('filename')
 @click.option('-o', '--output', 'output_zip_filename', help="Name of the ZIP archive containing the downloaded data. If not given, a default name based on the timestamp is generated")
-@click.option('-t', '--sleep_time', default=1.0, show_default=True, help="Time (in seconds) between sending requests")
-@click.option('-m', '--max_tries', default=3, show_default=True, help="Maximum number of tries to get a response from an URL before giving up")
-@click.option('-rt', '--retry_sleep_time', default=10.0, show_default=True, help="Time (in seconds) between retrying a URL")
+@click.option('-t', '--sleep_time', default=float(cfg['ScrapeDefaults']['sleep_time']), show_default=True, help="Time (in seconds) between sending requests")
+@click.option('-m', '--max_tries', default=int(cfg['ScrapeDefaults']['max_tries']), show_default=True, help="Maximum number of tries to get a response from an URL before giving up")
+@click.option('-rt', '--retry_sleep_time', default=float(cfg['ScrapeDefaults']['retry_sleep_time']), show_default=True, help="Time (in seconds) between retrying a URL")
 @click.option('-l', '--logdir', default=None, help="Directory in which to store the logfile. If not given, the default ``appeer`` data directory is used (recommended)")
 @click.option('-d', '--download_dir', default=None, help="Directory into which to download the files. If not given, the default ``appeer`` data directory is used")
 @click.option('-c', '--cleanup', is_flag=True, default=False, help="Delete the directory with the downloaded data upon successful completion (output ZIP archive is kept)")

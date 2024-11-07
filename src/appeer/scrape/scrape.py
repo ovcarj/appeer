@@ -6,12 +6,13 @@ import appeer.utils
 import appeer.log
 
 from appeer.datadir import Datadir
+from appeer.config import Config
 from appeer.scrape.input_handling import parse_data_source, handle_input_reading
 from appeer.scrape.scrape_plan import ScrapePlan
 from appeer.scrape.scraper import Scraper
 
 def scrape(scrape_plan, download_directory, _logger, 
-        sleep_time=1.0, max_tries=3, retry_sleep_time=10):
+        sleep_time, max_tries, retry_sleep_time):
     """
     Download publications data from a list of URLs according to the ``ScrapePlan``.
 
@@ -105,7 +106,7 @@ def scrape(scrape_plan, download_directory, _logger,
     _logger.info(log_dashes)
 
 def main(publications, output_zip_filename=None, 
-        sleep_time=1.0, max_tries=3, retry_sleep_time=10,
+        sleep_time=None, max_tries=None, retry_sleep_time=None,
         logdir=None, download_dir=None,
         cleanup=False):
     """ 
@@ -129,16 +130,16 @@ def main(publications, output_zip_filename=None,
     output_zip_filename: str
         Name of the ZIP archive containing the downloaded data. If not given, a default name based on the timestamp is generated
     sleep_time: float
-        Time (in seconds) between sending requests
+        Time (in seconds) between sending requests. If not given, the value from the appeer config file is used
     logdir: str
-        Directory in which to store the logfile. If not given, default ``appeer`` Datadir is used (recommended)
+        Directory in which to store the logfile. If not given, the ``appeer`` data directory is used (recommended)
     download_dir: str
-        Directory into which to download the files. If not given, default ``appeer`` Datadir is used (recommended)
+        Directory into which to download the files. If not given, the default ``appeer`` data directory is used (recommended)
 ir is used (recommended)
     max_tries : int
-        Maximum number of tries to get a response from an URL before giving up
+        Maximum number of tries to get a response from an URL before giving up. If not given, the value from the appeer config file is used
     retry_sleep_time : float
-        Time (in seconds) to wait before trying an URL again
+        Time (in seconds) to wait before trying an URL again. If not given, the value from the appeer config file is used
     cleanup: bool
         If this flag is provided, the output ZIP archive will be kept, while the directory with the downloaded data will be deleted
 
@@ -149,6 +150,17 @@ ir is used (recommended)
     scrape_label = f'appeer-scrape_{start_datetime}_{random_number}'
 
     default_dirs = Datadir()
+
+    cfg = Config()
+
+    if sleep_time is None:
+        sleep_time = float(cfg._config['ScrapeDefaults']['sleep_time'])
+
+    if max_tries is None:
+        max_tries = int(cfg._config['ScrapeDefaults']['max_tries'])
+
+    if retry_sleep_time is None:
+        retry_sleep_time = float(cfg._config['ScrapeDefaults']['retry_sleep_time'])
 
     if output_zip_filename is None:
         output_zip_filename = f'{default_dirs.scrape_archives}/{scrape_label}.zip'

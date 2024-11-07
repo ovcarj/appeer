@@ -49,6 +49,12 @@ class Config:
 
         self._config['appeerDataDirectory'] = {'data_directory': default_base}
 
+        self._config['ScrapeDefaults'] = {
+                'sleep_time': 1.0,
+                'max_tries': 3,
+                'retry_sleep_time': 10.0,
+                }
+
     def create_config_file(self):
         """
         Creates the ``appeer`` config file. If ``self._config_path`` already exists, 
@@ -197,6 +203,8 @@ class Config:
                         click.echo(f'Invalid configuration subsection {subsection}')
 
                     else:
+
+                        editing_datadir = False
 
                         if (section == 'appeerDataDirectory' and subsection == 'data_directory'):
 

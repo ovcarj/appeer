@@ -10,7 +10,7 @@ class Scraper:
     Download data based on url, publisher and strategy (as given by ScrapePlan)
     """
 
-    def __init__(self, url, publisher, strategy, max_tries=3, retry_sleep_time=10, _logger=None):
+    def __init__(self, url, publisher, strategy, max_tries, retry_sleep_time, _logger=None):
         """
         Initialize Scraper instance.
     
