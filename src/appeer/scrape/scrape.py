@@ -211,7 +211,7 @@ ir is used (recommended)
 
     if cleanup:
 
-        appeer.utils.delete_directory(download_directory)
+        appeer.utils.delete_directory(download_dir)
 
         _logger.info(f'Deleted directory {download_dir}, as requested.')
         _logger.info(log_dashes)
