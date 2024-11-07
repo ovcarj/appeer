@@ -54,19 +54,7 @@ class Datadir:
         
         if self._base_exists:
 
-            while(input_ok == False):
-
-                overwrite = input(f'WARNING: appeer data base directory exists at {self.base}\nDo you want to overwrite it? All data will be deleted. [Y/n]\n')
-
-                click.echo(self._dashes)
-
-                try:
-                    assert (overwrite == 'Y' or overwrite == 'n')
-                    input_ok = True
-
-                except AssertionError:
-                    click.echo('Please enter "Y" or "n".')
-                    click.echo(self._dashes)
+            overwrite = appeer.log.ask_yes_no(f'WARNING: appeer data base directory exists at {self.base}\nDo you want to overwrite it? All data will be deleted. [Y/n]\n')
 
             if overwrite == 'Y':
 

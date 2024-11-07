@@ -24,7 +24,7 @@ If the entry format is invalid, the invalid URL is not scraped.
 @click.option('-t', '--sleep_time', default=1.0, show_default=True, help="Time (in seconds) between sending requests")
 @click.option('-m', '--max_tries', default=3, show_default=True, help="Maximum number of tries to get a response from an URL before giving up")
 @click.option('-rt', '--retry_sleep_time', default=10.0, show_default=True, help="Time (in seconds) between retrying a URL")
-@click.option('-l', '--logdir', default=None, help="Directory in which to store the logfile. If not given, default ``appeer`` data directory is used (recommended)")
+@click.option('-l', '--logdir', default=None, help="Directory in which to store the logfile. If not given, the default ``appeer`` data directory is used (recommended)")
 @click.option('-d', '--download_dir', default=None, help="Directory into which to download the files. If not given, the default ``appeer`` data directory is used")
 @click.option('-c', '--cleanup', is_flag=True, default=False, help="Delete the directory with the downloaded data upon successful completion (output ZIP archive is kept)")
 @click.option('-p','--preview', is_flag=True, default=False, help="Get a preview of the scraping strategy for a given input file (no scraping is done)")

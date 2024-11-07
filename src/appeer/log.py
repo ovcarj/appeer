@@ -1,6 +1,7 @@
 import sys
 import os
 import logging
+import click
 
 import appeer.utils
 from appeer import __version__
@@ -210,7 +211,6 @@ def boxed_message(message):
 
     return boxed_message
         
-
 def get_logo():
     """
     Create the ``appeer`` logo.
@@ -235,3 +235,39 @@ def get_logo():
 """
 
     return logo
+
+def ask_yes_no(question):
+    """
+    Forces the user to type 'Y' or 'n' and returns the answer.
+
+    Parameters
+    ----------
+    question : str
+        Question to ask the user
+
+    Returns
+    -------
+    answer : str
+        'Y' or 'n'
+
+    """
+
+    dashes = get_log_dashes()
+
+    input_ok = False
+
+    while(input_ok == False):
+
+        answer = input(question)
+
+        click.echo(dashes)
+
+        try:
+            assert (answer == 'Y' or answer == 'n')
+            input_ok = True
+
+        except AssertionError:
+            click.echo('Please enter "Y" or "n".')
+            click.echo(dashes)
+
+    return answer

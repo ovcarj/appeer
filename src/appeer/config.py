@@ -112,23 +112,9 @@ class Config:
         """
         
         self.print_config()
+
+        proceed = appeer.log.ask_yes_no('Do you want to proceed with the current config file? [Y/n]\n')
         
-        input_ok = False
-
-        while(input_ok == False):
-
-            proceed = input(f'Do you want to proceed with the current config file? [Y/n]\n')
-
-            click.echo(self._dashes)
-
-            try:
-                assert (proceed == 'Y' or proceed == 'n')
-                input_ok = True
-
-            except AssertionError:
-                click.echo('Please enter "Y" or "n".')
-                click.echo(self._dashes)
-
         if proceed == 'Y':
 
             click.echo('Proceeding with the current appeer config file.')
@@ -212,12 +198,30 @@ class Config:
 
                     else:
 
+                        if (section == 'appeerDataDirectory' and subsection == 'data_directory'):
+
+                            editing_datadir = True
+
+                            click.echo('WARNING: You are attempting to edit the path to the base appeer data directory. If the directory was not previously initialized, you will have to rerun "appeer init".')
+                            proceed = appeer.log.ask_yes_no('Do you wish to proceed?\n')
+
+                            if proceed == 'n':
+                                click.echo('Stopping, as requested.')
+                                return
+
+                            else:
+                                pass
+
                         self._config[section][subsection] = value
                         
                         with open(self._config_path, 'w') as configfile:
                             self._config.write(configfile)
 
                         click.echo(f'[{section}]: {subsection} updated to {value}')
+
+                        if editing_datadir:
+                            click.echo('You have edited the path to the base appeer data directory. If necessary, rerun "appeer init".')
+
                         self.read_config()
 
     def edit_config_by_subsection(self, subsection, value):
