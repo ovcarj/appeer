@@ -2,7 +2,7 @@ import click
 
 from appeer.config import Config
 
-@click.command('print', help='Print the ``appeer`` config file.')
+@click.command('print', help='Print the appeer config file.')
 def show_config():
     """
     Prints the ``appeer`` config file.
@@ -27,7 +27,7 @@ def show_config():
 @click.argument('value', nargs=-1)
 def edit_config(option, value):
     """
-    Edit the ``appeer`` config file by passing a subection and the new value
+    Edit the appeer config file by passing a subection and the new value
 
     """
 
@@ -37,9 +37,9 @@ def edit_config(option, value):
     cfg.edit_config_by_subsection(subsection=option, value=value_str)
 
 @click.group()
-def config_cli(name='config', help='Print/edit the ``appeer`` config file'):
+def config_cli(name='config', help='Print/edit the appeer config file'):
     """
-    Print/edit the ``appeer`` config file
+    Print/edit the appeer config file
 
     """
     pass
