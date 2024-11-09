@@ -91,8 +91,6 @@ class Datadir:
         os.makedirs(self.db)
         click.echo(f'appeer db directory created at {self.db}')
 
-        click.echo(self._dashes)
-
     def clean_all_directories(self):
         """
         Deletes all ``appeer`` data directories.
