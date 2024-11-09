@@ -29,9 +29,6 @@ def init_logger(logname='appeer', logdir=None):
 
     os.makedirs(logdir, exist_ok=True)
 
-    if not logdir.endswith('/'):
-        logdir += '/'
-
     if not logname.endswith('.log'):
         logname += '.log'
 
@@ -42,7 +39,7 @@ def init_logger(logname='appeer', logdir=None):
     stream_handler = logging.StreamHandler(sys.stdout)
     logger.addHandler(stream_handler)
 
-    file_handler = logging.FileHandler(f'{logdir}{logname}')
+    file_handler = logging.FileHandler(os.path.join(logdir, logname))
     file_handler.setLevel(logging.INFO)
     logger.addHandler(file_handler)
 

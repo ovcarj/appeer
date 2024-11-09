@@ -6,12 +6,13 @@ from appeer.log import get_very_short_log_dashes as short_dashes
 
 class Request:
     """
-    Send requests, handle responses, errors, etc...
+    Sends requests, handle responses, errors, etc...
+
     """
 
     def __init__(self, url, max_tries=3, retry_sleep_time=10, _logger=None):
         """
-        Initialize Request instance.
+        Initializes Request instance.
     
         Parameters
         ----------
@@ -44,7 +45,7 @@ class Request:
 
     def send(self, head=False):
         """
-        Send a request to get the content of ``self.url``.
+        Sends a request to get the content of ``self.url``.
 
         Parameters
         -------
@@ -81,7 +82,8 @@ class Request:
 
     def _check_response(self):
         """
-        Check the status code of the response.
+        Checks the status code of the response.
+
         """
 
         try:
@@ -102,6 +104,7 @@ class Request:
     def _handle_failure(self):
         """
         Handle failure of a single request due to, e.g., invalid URL, connection failure,...
+
         """
 
         response_ex_type, response_ex_message, response_ex_traceback = sys.exc_info()
@@ -134,7 +137,8 @@ class Request:
 
     def _all_requests_failed(self):
         """
-        Print a message in the case of failure.
+        Prints a message in the case of failure.
+
         """
 
         self._log(self._dashes)
@@ -143,7 +147,7 @@ class Request:
 
     def _initialize_headers(self):
         """ 
-        Create a default header using ``requests.utils.default_headers()``.
+        Creates a default header using ``requests.utils.default_headers()``.
     
         Returns
         -------
@@ -159,12 +163,13 @@ class Request:
 
     def _log(self, text):
         """
-        Add text to self._report and, if self._logger exist, write to log.
+        Adds text to self._report and, if self._logger exist, writes to log.
 
         Parameters
         -------
         text : str
             text to write into the log
+
         """
 
         self._report += text + '\n'

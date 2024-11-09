@@ -9,28 +9,31 @@ from appeer.config import Config
 
 class Datadir:
     """
-    Class which handles creation, deletion and checking of the
-    ``appeer`` data directory, which is found at ``platformdirs.user_data_dir(appname='appeer')``.
+    Handles creation, deletion and checking of the
+    ``appeer`` data directory, which is, by default, 
+    found at ``platformdirs.user_data_dir(appname='appeer')``.
+
     """
 
     def __init__(self):
         """
-        Store default directories using ``platformdirs``.
+        Defines paths to directories in the base directory.
+
         """
 
         config = Config()
 
         self.base = config._base_directory
         
-        self.downloads = f'{self.base}/downloads'
+        self.downloads = os.path.join(self.base, 'downloads')
         
-        self.scrape_archives = f'{self.base}/scrape'
-        self.scrape_logs = f'{self.base}/scrape/scrape_logs'
+        self.scrape_archives = os.path.join(self.base, 'scrape')
+        self.scrape_logs = os.path.join(self.base, 'scrape_logs')
 
-        self.parse = f'{self.base}/parse'
-        self.parse_logs = f'{self.base}/parse/parse_logs'
+        self.parse = os.path.join(self.base, 'parse')
+        self.parse_logs = os.path.join(self.base, 'parse_logs')
 
-        self.db = f'{self.base}/db'
+        self.db = os.path.join(self.base, 'db')
 
         self.check_existence()
 
@@ -48,6 +51,7 @@ class Datadir:
         """
         Creates ``appeer`` data directories. If ``self.base`` already exists, 
         the user is prompted if they want to overwrite the directory.
+
         """
 
         input_ok = False
@@ -94,6 +98,7 @@ class Datadir:
     def clean_all_directories(self):
         """
         Deletes all ``appeer`` data directories.
+
         """
 
         self.check_existence()
@@ -109,6 +114,7 @@ class Datadir:
     def clean_downloads(self):
         """
         Deletes the contents of ``self.downloads``
+
         """
 
         appeer.utils.delete_directory_content(self.downloads)
@@ -116,6 +122,7 @@ class Datadir:
     def clean_scrape_archives(self):
         """
         Deletes the files in ``self.scrape_archives``
+
         """
 
         appeer.utils.delete_directory_files(self.scrape_archives)
@@ -123,6 +130,7 @@ class Datadir:
     def clean_scrape_logs(self):
         """
         Deletes the files in ``self.scrape_logs``
+
         """
 
         appeer.utils.delete_directory_files(self.scrape_logs)
@@ -130,6 +138,7 @@ class Datadir:
     def clean_parse(self):
         """
         Deletes the files in ``self.parse``
+
         """
 
         appeer.utils.delete_directory_files(self.parse)
@@ -137,6 +146,7 @@ class Datadir:
     def clean_parse_logs(self):
         """
         Deletes the files in ``self.parse_logs``
+
         """
 
         appeer.utils.delete_directory_files(self.parse_logs)
@@ -144,6 +154,7 @@ class Datadir:
     def clean_db(self):
         """
         Deletes the files in ``self.db``
+
         """
 
         appeer.utils.delete_directory_files(self.db)

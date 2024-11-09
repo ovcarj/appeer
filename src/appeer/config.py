@@ -25,7 +25,7 @@ class Config:
         self._config = configparser.ConfigParser()
 
         self._config_dir = platformdirs.user_config_dir(appname='appeer')
-        self._config_path = f'{self._config_dir}/appeer.cfg'
+        self._config_path = os.path.join(self._config_dir, 'appeer.cfg')
 
         self.check_existence()
 

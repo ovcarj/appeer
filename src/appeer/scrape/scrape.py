@@ -147,7 +147,7 @@ ir is used (recommended)
 
     start_datetime = appeer.utils.get_current_datetime()
     random_number = appeer.utils.random_number()
-    scrape_label = f'appeer-scrape_{start_datetime}_{random_number}'
+    scrape_label = f'scrape_{start_datetime}_{random_number}'
 
     default_dirs = Datadir()
 
@@ -163,13 +163,13 @@ ir is used (recommended)
         retry_sleep_time = float(cfg._config['ScrapeDefaults']['retry_sleep_time'])
 
     if output_zip_filename is None:
-        output_zip_filename = f'{default_dirs.scrape_archives}/{scrape_label}.zip'
+        output_zip_filename = os.path.join(default_dirs.scrape_archives, f'{scrape_label}.zip')
 
     if logdir is None:
         logdir = default_dirs.scrape_logs
 
     if download_dir is None:
-        download_dir = f'{default_dirs.downloads}/{scrape_label}'
+        download_dir = os.path.join(default_dirs.downloads, f'{scrape_label}')
 
     _logger = appeer.log.init_logger(logdir=logdir, logname=f'{scrape_label}')
     logpath = appeer.log.get_logger_fh_path(_logger)
