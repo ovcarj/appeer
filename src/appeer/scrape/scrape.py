@@ -6,13 +6,15 @@ import appeer.utils
 import appeer.log
 
 from appeer.datadir import Datadir
+from appeer.db.scrape_db import ScrapeDB
 from appeer.config import Config
 from appeer.scrape.input_handling import parse_data_source, handle_input_reading
 from appeer.scrape.scrape_plan import ScrapePlan
 from appeer.scrape.scraper import Scraper
 
-def scrape(scrape_plan, download_directory, _logger, 
-        sleep_time, max_tries, retry_sleep_time):
+def scrape(scrape_label, scrape_plan, download_directory, _logger, 
+        sleep_time, max_tries, retry_sleep_time,
+        scrape_db):
     """
     Download publications data from a list of URLs according to the ``ScrapePlan``.
 
@@ -20,7 +22,9 @@ def scrape(scrape_plan, download_directory, _logger,
 
     Parameters
     ----------
-    ScrapePlan : appeer.scrape.ScrapePlan.ScrapePlan
+    scrape_label : str
+        Label of the scrape job
+    ScrapePlan : appeer.scrape.scrape_plan.ScrapePlan
         Instance of the ScrapePlan class containing the URL list and scraping plan
     download_directory : str
         Directory into which the HTMLs are downloaded
@@ -32,6 +36,8 @@ def scrape(scrape_plan, download_directory, _logger,
         Maximum number of tries to get a response from an URL before giving up
     retry_sleep_time : float
         Time (in seconds) to wait before retrying an URL again
+    scrape_db : appeer.db.scrape_db.ScrapeDB
+        Instance of the ScrapeDB class referring to the scrape database
 
     """
 
@@ -44,12 +50,22 @@ def scrape(scrape_plan, download_directory, _logger,
     failed_urls = []
 
     no_of_publications = len(scrape_plan.url_list)
+
+    scrape_db._update_job_entry(
+            scrape_label=scrape_label,
+            column_name='scrape_no_of_publications',
+            new_value=no_of_publications)
     
     _logger.info(f'{appeer.log.boxed_message("SCRAPE JOB")}\n')
     _logger.info(f'Starting to download {no_of_publications} publications to {download_directory}\n')
     _logger.info(log_dashes)
 
     os.makedirs(download_directory, exist_ok=True)
+
+    scrape_db._update_job_entry(
+            scrape_label=scrape_label,
+            column_name='scrape_job_status',
+            new_value='R')
 
     for i, url in enumerate(scrape_plan.url_list):
 
@@ -69,6 +85,11 @@ def scrape(scrape_plan, download_directory, _logger,
 
             count_success += 1
 
+            scrape_db._update_job_entry(
+                scrape_label=scrape_label,
+                column_name='scrape_job_successes',
+                new_value=count_success)
+
             if scraper._write_text:
 
                 writing_path = f'{download_directory}/{i}_html.dat'
@@ -81,6 +102,11 @@ def scrape(scrape_plan, download_directory, _logger,
             count_fail += 1
             failed_indices.append(i)
             failed_urls.append(url)
+
+            scrape_db._update_job_entry(
+                scrape_label=scrape_label,
+                column_name='scrape_job_fails',
+                new_value=count_fail)
 
         _logger.info(f'{i + 1}/{no_of_publications}: Scraping done')
 
@@ -131,7 +157,7 @@ def main(publications, output_zip_filename=None,
     output_zip_filename: str
         Name of the ZIP archive containing the downloaded data. If not given, a default name based on the timestamp is generated
     description : str
-        Optional description of the scrape run
+        Optional description of the scrape job
     sleep_time: float
         Time (in seconds) between sending requests. If not given, the value from the appeer config file is used
     logdir: str
@@ -181,6 +207,16 @@ ir is used (recommended)
     logpath = appeer.log.get_logger_fh_path(_logger)
     log_dashes = appeer.log.get_log_dashes()
     logo = appeer.log.get_logo()
+    
+    scrape_db = ScrapeDB()
+
+    scrape_db._add_scrape_job(
+            scrape_label=scrape_label,
+            scrape_description=description,
+            scrape_log=logpath,
+            scrape_zip=output_zip_filename,
+            scrape_date=start_datetime
+            )
 
     start_report = appeer.log.appeer_start(start_datetime=start_datetime, logpath=logpath)
     _logger.info(start_report)
@@ -201,10 +237,12 @@ ir is used (recommended)
 
     _logger.info(plan._strategy_report)
 
-    scrape(scrape_plan=plan, 
+    scrape(scrape_label=scrape_label,
+            scrape_plan=plan,
             download_directory=download_dir, 
             _logger=_logger, sleep_time=sleep_time,
-            max_tries=max_tries, retry_sleep_time=retry_sleep_time)
+            max_tries=max_tries, retry_sleep_time=retry_sleep_time,
+            scrape_db=scrape_db)
 
     appeer.utils.archive_directory(output_filename=output_zip_filename, directory_name=download_dir)
 
@@ -228,6 +266,12 @@ ir is used (recommended)
 
     end_report = appeer.log.appeer_end(start_datetime=start_datetime)
     _logger.info(end_report)
+
+    scrape_db._update_job_entry(
+            scrape_label=scrape_label,
+            column_name='scrape_job_status',
+            new_value='X'
+            )
 
 if __name__ == '__main__':
 
