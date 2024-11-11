@@ -17,7 +17,7 @@ except KeyError:
     default_max_tries = 3
     default_retry_sleep_time = 10.0
 
-@click.command(help="""Download publications data for later parsing.
+@click.command(help="""Download publications data for later parsing
 
 Example usage: appeer scrape -c PoP.json
 
@@ -35,6 +35,7 @@ If the entry format is invalid, the invalid URL is not scraped.
 """)
 @click.argument('filename')
 @click.option('-o', '--output', 'output_zip_filename', help="Name of the ZIP archive containing the downloaded data. If not given, a default name based on the timestamp is generated")
+@click.option('-ds', '--description', 'description', default=None, help="Optional description of the scrape run")
 @click.option('-t', '--sleep_time', default=default_sleep_time, show_default=True, help="Time (in seconds) between sending requests")
 @click.option('-m', '--max_tries', default=default_max_tries, show_default=True, help="Maximum number of tries to get a response from an URL before giving up")
 @click.option('-rt', '--retry_sleep_time', default=default_retry_sleep_time, show_default=True, help="Time (in seconds) between retrying a URL")
@@ -43,6 +44,7 @@ If the entry format is invalid, the invalid URL is not scraped.
 @click.option('-c', '--cleanup', is_flag=True, default=False, help="Delete the directory with the downloaded data upon successful completion (output ZIP archive is kept)")
 @click.option('-p','--preview', is_flag=True, default=False, help="Get a preview of the scraping strategy for a given input file (no scraping is done)")
 def scrape_cli(filename, output_zip_filename,
+        description,
         sleep_time, max_tries, retry_sleep_time,
         logdir, download_dir,
         cleanup,
@@ -55,6 +57,7 @@ def scrape_cli(filename, output_zip_filename,
 
     else:
         scrape_main(publications, output_zip_filename, 
+            description,
             sleep_time, max_tries, retry_sleep_time,
             logdir, download_dir,
             cleanup)

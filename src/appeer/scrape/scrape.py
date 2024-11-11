@@ -106,6 +106,7 @@ def scrape(scrape_plan, download_directory, _logger,
     _logger.info(log_dashes)
 
 def main(publications, output_zip_filename=None, 
+        description=None,
         sleep_time=None, max_tries=None, retry_sleep_time=None,
         logdir=None, download_dir=None,
         cleanup=False):
@@ -120,8 +121,8 @@ def main(publications, output_zip_filename=None,
     or a plaintext file with each URL in a new line.
 
     If ``output_zip_filename``, ``logdir`` and ``download_dir`` are not given,
-    the data will be stored in the default directories determined by ``platformdirs`` 
-    (this is recommended).
+    the data will be stored in the default directories defined in the 
+    appeer config file (recommended).
 
     Parameters
     ----------
@@ -129,6 +130,8 @@ def main(publications, output_zip_filename=None,
         A list of URLs or a filepath to a JSON or plaintext file containing URLs
     output_zip_filename: str
         Name of the ZIP archive containing the downloaded data. If not given, a default name based on the timestamp is generated
+    description : str
+        Optional description of the scrape run
     sleep_time: float
         Time (in seconds) between sending requests. If not given, the value from the appeer config file is used
     logdir: str
@@ -152,6 +155,9 @@ ir is used (recommended)
     default_dirs = Datadir()
 
     cfg = Config()
+
+    if description is None:
+        description = 'No description'
 
     if sleep_time is None:
         sleep_time = float(cfg._config['ScrapeDefaults']['sleep_time'])
@@ -178,6 +184,8 @@ ir is used (recommended)
 
     start_report = appeer.log.appeer_start(start_datetime=start_datetime, logpath=logpath)
     _logger.info(start_report)
+    _logger.info(description)
+    _logger.info(log_dashes)
 
     data_source, data_source_type, plaintext_ex_message, json_ex_message = parse_data_source(publications)
     reading_passed, reading_report = handle_input_reading(publications, data_source_type, str(plaintext_ex_message), str(json_ex_message))
