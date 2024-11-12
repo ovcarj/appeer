@@ -32,12 +32,14 @@ def parse_data_source(publications):
     plaintext_ex_message, json_ex_message = None, None
 
     if isinstance(publications, list):
+
         data_source = publications
         data_source_type = 'pylist'
 
     elif isinstance(publications, str):
 
         try:
+
             data_source = appeer.utils.txt2list(publications)
             data_source_type = 'plaintext'
 
@@ -46,6 +48,7 @@ def parse_data_source(publications):
             plaintext_ex_type, plaintext_ex_message, plaintext_ex_traceback = sys.exc_info()
             
             try:
+
                 data_source = appeer.utils.json2list(publications)
                 data_source_type = 'JSON'
 
@@ -56,7 +59,16 @@ def parse_data_source(publications):
                 data_source = None
                 data_source_type = 'invalid file'
 
+        except FileNotFoundError:
+
+            plaintext_ex_type, plaintext_ex_message, plaintext_ex_traceback = sys.exc_info()
+            json_ex_type, json_ex_message, json_ex_traceback = sys.exc_info()
+
+            data_source = None
+            data_source_type = 'invalid file'
+
     else:
+
         data_source = None
         data_source_type = 'invalid input type'
 
@@ -84,6 +96,7 @@ def handle_input_reading(publications, data_source_type, plaintext_ex_message, j
         True if parsing the input data went OK, False if it failed
     report : str
         Report on why parsing succeeded/failed
+
     """
 
     report = ''
@@ -134,5 +147,3 @@ def handle_input_reading(publications, data_source_type, plaintext_ex_message, j
             report += f'Successfully read data from {publications} !\n'
 
     return success, report
-
-
