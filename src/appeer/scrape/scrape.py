@@ -229,6 +229,13 @@ ir is used (recommended)
     _logger.info(reading_report)
 
     if not reading_passed:
+
+        scrape_db._update_job_entry(
+                scrape_label=scrape_label,
+                column_name='scrape_job_status',
+                new_value='E'
+                )
+
         end_report = appeer.log.appeer_end(start_datetime=start_datetime)
         _logger.info(end_report)
         sys.exit()

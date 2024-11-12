@@ -94,8 +94,8 @@ class ScrapeDB(DB):
 
             case 'scrape_job_status':
 
-                if new_value not in ['I', 'R', 'X']:
-                    raise ValueError(f'Cannot update the scrape database. Invalid scrape_job_status={new_value} given; must be "I", "R" or "X".')
+                if new_value not in ['I', 'R', 'X', 'E']:
+                    raise ValueError(f'Cannot update the scrape database. Invalid scrape_job_status={new_value} given; must be "I", "R", "X" or "E".')
         
                 else:
         
@@ -230,7 +230,7 @@ class ScrapeDB(DB):
 
         click.echo(dashes)
 
-        click.echo('S = Scrape job status: (I) Initialized; (R) Running; (X) Executed/Finished')
+        click.echo('S = Scrape job status: (I) Initialized; (R) Running; (X) Executed/Finished; (E) Error')
         click.echo('P = Scrape job completely parsed: (T) True; (F) False')
         click.echo('Succ./Tot. = Ratio of successful scrapes over total inputted URLs')
 
