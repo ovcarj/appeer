@@ -20,6 +20,7 @@ class ScrapePlan:
         ----------
         url_list : list
             URL list of strings starting with https://
+
         """
 
         self._define_publisher_codes()
@@ -46,6 +47,7 @@ class ScrapePlan:
 
         If the URL does not start with ``'https://'``, ``skip`` code is generated,
         so the URL is skipped during scraping.
+
         """
 
         self._publisher_codes = {
@@ -82,6 +84,7 @@ class ScrapePlan:
         """
         Parse URL list to understand which publisher it corresponds to.
         The list of publishers is stored to self.publishers.
+
         """
     
         url_list = self.url_list
@@ -114,6 +117,7 @@ class ScrapePlan:
         """
         Get scrape strategies from a list of publisher internal codes.
         The list of strategies is stored to self.strategies.
+
         """
     
         strategies = []
@@ -134,6 +138,7 @@ class ScrapePlan:
         """
         Count how many different types of publishers are found 
         and store the results to self._publishers_count
+
         """
 
         publishers_count = {}
@@ -147,6 +152,7 @@ class ScrapePlan:
         """
         Count how many different types of strategies are found 
         and store the results to self._strategies_count
+
         """
 
         strategies_count = {}
@@ -159,6 +165,7 @@ class ScrapePlan:
     def _get_strategy_report(self):
         """
         Get a preview of strategies on how publications data would be downloaded.
+
         """
     
         strategy_report = ''
@@ -203,6 +210,7 @@ def main(publications):
     In the case a filepath is provided, the file can be either a JSON file
     (e.g. ``PoP.json`` file containing ``['article_url']`` keys)
     or a plaintext file with each URL in a new line.
+
     """
 
     start_datetime = appeer.utils.get_current_datetime()
@@ -226,6 +234,23 @@ def main(publications):
 
     end_report = appeer.log.appeer_end(start_datetime)
     click.echo(end_report)
+
+def _get_allowed_strategies():
+    """
+    Get a unique list of strategies defined in the ScrapePlan class.
+
+    Returns
+    -------
+    allowed_strategies : list
+        List of strategies defined in the ScrapePlan class
+
+    """
+
+    scrape_plan = ScrapePlan([])
+    
+    allowed_strategies = list(set(scrape_plan._strategy_codes.values()))
+
+    return allowed_strategies
 
 if __name__ == '__main__':
     main(sys.argv[1])

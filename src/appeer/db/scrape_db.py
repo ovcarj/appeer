@@ -1,7 +1,11 @@
 import click
+
 from collections import namedtuple
 
+import appeer.log
+
 from appeer.db.db import DB
+#from appeer.scrape.scrape_plan import _get_allowed_strategies
 
 class ScrapeDB(DB):
     """
@@ -16,6 +20,9 @@ class ScrapeDB(DB):
         """
 
         super().__init__(db_type='scrape')
+
+        # TODO: strategies in the ScrapePlan will be revised
+        #self._allowed_strategies = _get_allowed_strategies()
 
     def _define_scrape_job_tuple(self):
         """
@@ -36,6 +43,21 @@ class ScrapeDB(DB):
                 no_of_publications,
                 job_parsed""")
 
+    def _define_scrape_tuple(self):
+        """
+        Defines the ``self._Scrape`` named tuple, whose attributes have the same name as the columns in the ``scrape`` table.
+
+        """
+
+        self._Scrape = namedtuple('Scrape',
+                """label,
+                scrape_index,
+                url,
+                strategy,
+                status,
+                out_file,
+                parsed""")
+
     def _set_scrape_job_factory(self):
         """
         Make rows returned by the cursor be ``self._ScrapeJob`` instances.
@@ -50,6 +72,20 @@ class ScrapeDB(DB):
         self._con.row_factory = scrape_job_factory
         self._cur = self._con.cursor()
 
+    def _set_scrape_factory(self):
+        """
+        Make rows returned by the cursor be ``self._Scrape`` instances.
+
+        """
+
+        self._define_scrape_tuple()
+
+        def scrape_factory(cursor, row):
+            return self._Scrape(*row)
+
+        self._con.row_factory = scrape_factory
+        self._cur = self._con.cursor()
+
     def _initialize_database(self):
         """
         Initializes the SQL tables when the ``scrape`` database is created.
@@ -58,7 +94,7 @@ class ScrapeDB(DB):
 
         self._cur.execute('CREATE TABLE scrape_jobs(label, description, log, download_directory, zip_file, date, job_status, job_successes, job_fails, no_of_publications, job_parsed)')
 
-        self._cur.execute('CREATE TABLE scrape(label, scrape_index, url, success_status, scrape_file, parsed)')
+        self._cur.execute('CREATE TABLE scrape(label, scrape_index, url, strategy, status, out_file, parsed)')
 
         self._con.commit()
 
@@ -111,7 +147,7 @@ class ScrapeDB(DB):
 
     def _update_job_entry(self, label, column_name, new_value):
         """
-        Given a ``label``, updates the corresponding ``column_name`` value with ``new_value``.
+        Given a ``label``, updates the corresponding ``column_name`` value with ``new_value`` in the ``scrape_jobs`` table.
 
         ``column_name`` must be in ['job_status', 'job_successes', 'job_fails', 'no_of publications', 'job_parsed'].
 
@@ -137,7 +173,7 @@ class ScrapeDB(DB):
                 else:
         
                     self._cur.execute("""
-                    UPDATE scrape_jobs SET job_status=? WHERE label=?
+                    UPDATE scrape_jobs SET job_status = ? WHERE label = ?
                     """, (new_value, label))
         
                     self._con.commit()
@@ -153,7 +189,7 @@ class ScrapeDB(DB):
                 else:
         
                     self._cur.execute("""
-                    UPDATE scrape_jobs SET no_of_publications=? WHERE label=?
+                    UPDATE scrape_jobs SET no_of_publications = ? WHERE label = ?
                     """, (new_value, label))
         
                     self._con.commit()
@@ -169,7 +205,7 @@ class ScrapeDB(DB):
                 else:
         
                     self._cur.execute("""
-                    UPDATE scrape_jobs SET job_successes=? WHERE label=?
+                    UPDATE scrape_jobs SET job_successes = ? WHERE label = ?
                     """, (new_value, label))
         
                     self._con.commit()
@@ -185,7 +221,7 @@ class ScrapeDB(DB):
                 else:
         
                     self._cur.execute("""
-                    UPDATE scrape_jobs SET job_fails=? WHERE label=?
+                    UPDATE scrape_jobs SET job_fails = ? WHERE label = ?
                     """, (new_value, label))
         
                     self._con.commit()
@@ -198,7 +234,7 @@ class ScrapeDB(DB):
                 else:
         
                     self._cur.execute("""
-                    UPDATE scrape_jobs SET job_parsed=? WHERE label=?
+                    UPDATE scrape_jobs SET job_parsed = ? WHERE label = ?
                     """, (new_value, label))
         
                     self._con.commit()
@@ -371,3 +407,250 @@ class ScrapeDB(DB):
                 success = False
 
         return success
+
+    def _add_scrape(self,
+            label,
+            scrape_index,
+            url,
+            strategy):
+        """
+        Initializes an entry for a scrape.
+
+        Parameters
+        ----------
+        label : str
+            Label of the scrape job
+        scrape_index : int
+            Index of the URL in the input
+        url : str
+            Inputted URL
+        strategy : str
+            Strategy used for scraping
+
+        """
+
+        data = ({
+            'label': label,
+            'scrape_index': scrape_index,
+            'url': url,
+            'strategy': strategy,
+            'status': 'I',
+            'out_file': 'no_file',
+            'parsed': 'F',
+            })
+
+        self._cur.execute("""
+        INSERT INTO scrape VALUES(:label, :scrape_index, :url, :strategy, :status, :out_file, :parsed)
+        """, data)
+
+        self._con.commit()
+
+    def _update_scrape_entry(self, label, scrape_index, column_name, new_value):
+        """
+        Given a ``label`` and ``scrape_index``, updates the corresponding ``column_name`` value with ``new_value`` in the ``scrape`` table.
+
+        ``column_name`` must be in ['strategy', 'status', 'out_file', 'parsed'].
+
+        Parameters
+        ----------
+        label : str
+            Label of the job that the scrape belongs to
+        scrape_index : int
+            Index of the URL in the input
+        column_name : str
+            Name of the column whose value is being updated
+        new_value : str | int
+            New value of the given column
+
+        """
+
+        match column_name:
+
+            case 'strategy':
+
+                # TODO: strategies in the ScrapePlan will be revised
+                # if False is left as a placeholder
+                if False:
+                    raise ValueError(f'Cannot update the scrape database. Invalid strategy={new_value} given; must be ...')
+        
+                else:
+        
+                    self._cur.execute("""
+                    UPDATE scrape SET strategy = ? WHERE label = ? AND scrape_index = ?
+                    """, (new_value, label, scrape_index))
+        
+                    self._con.commit()
+
+            case 'status':
+
+                if not new_value in ['I', 'R', 'E', 'X']:
+                    raise ValueError(f'Cannot update the scrape database. Invalid status={new_value} given; must be one of ["I", "R", "E", "X"].')
+        
+                else:
+        
+                    self._cur.execute("""
+                    UPDATE scrape SET status = ? WHERE label = ? AND scrape_index = ?
+                    """, (new_value, label, scrape_index))
+        
+                    self._con.commit()
+
+            case 'out_file':
+
+                if not isinstance(new_value, str):
+                    raise ValueError(f'Cannot update the scrape database. Invalid out_file={new_value} given; must be a string.')
+        
+                else:
+        
+                    self._cur.execute("""
+                    UPDATE scrape SET out_file = ? WHERE label = ? AND scrape_index = ?
+                    """, (new_value, label, scrape_index))
+        
+                    self._con.commit()
+
+            case 'parsed':
+
+                if new_value not in ['T', 'F']:
+                    raise ValueError(f'Cannot update the scrape database. Invalid parsed={new_value} given; must be "T" or "F".')
+        
+                else:
+        
+                    self._cur.execute("""
+                    UPDATE scrape SET parsed = ? WHERE label = ? AND scrape_index = ?
+                    """, (new_value, label, scrape_index))
+        
+                    self._con.commit()
+
+            case _:
+
+                raise ValueError(f'Cannot update the scrape database. Invalid column name {column_name} given.')
+
+    def _get_scrapes(self, label):
+        """
+        Returns all scrapes for a given job label.
+
+        Parameters
+        ----------
+        label | str
+            Label of the job for which the scrapes are returned
+
+        Returns
+        -------
+        scrapes | list
+            List of Scrape instances for the given label
+
+        """
+
+        job_exists = self._scrape_job_exists(label)
+
+        if not job_exists:
+            click.echo(f'Scrape job {label} does not exist.')
+
+        else:
+            self._set_scrape_factory()
+
+            self._cur.execute("""
+            SELECT * FROM scrape WHERE label = ?
+            """, (label,))
+
+            scrapes = self._cur.fetchall()
+
+        return scrapes
+
+    def _get_all_unparsed(self):
+        """
+        Returns all scrapes with 'X' status and 'F' parse flag (all unparsed scrapes).
+
+        """
+
+        self._set_scrape_factory()
+
+        self._cur.execute("""
+        SELECT * FROM scrape WHERE status = ? AND parsed = ?
+        """, ('X', 'F'))
+
+        scrapes = self._cur.fetchall()
+
+        return scrapes
+
+    def print_job_details(self, label):
+        """
+        Prints details of the job with the given label.
+
+        Parameters
+        ----------
+        label | str
+            Label of the job for which the details are printed
+
+        """
+
+        job_exists = self._scrape_job_exists(label)
+
+        if not job_exists:
+            click.echo(f'Scrape job {label} does not exist.')
+
+        else:
+
+            dashes = appeer.log.get_log_dashes()
+
+            job = self._get_job(label)
+
+            click.echo(appeer.log.boxed_message(f'SCRAPE JOB: {job.label}'))
+            click.echo(job.description)
+            click.echo(f'Date: {job.date}')
+            click.echo(dashes)
+            click.echo('{:19s} {:s}'.format('Log', job.log))
+            click.echo('{:19s} {:s}'.format('Download directory', job.download_directory))
+            click.echo('{:19s} {:s}'.format('Output ZIP file', job.zip_file))
+            click.echo(dashes)
+            click.echo('{:19s} {:s}'.format('Job status', job.job_status))
+            click.echo('{:19s} {:d}/{:d}'.format('Succ./Tot.', job.job_successes, job.no_of_publications))
+            click.echo('{:19s} {:s}'.format('Completely parsed', job.job_parsed))
+            click.echo(dashes)
+
+            scrapes = self._get_scrapes(label)
+
+            if not scrapes:
+                click.echo('No files downloaded')
+
+            else:
+                click.echo(appeer.log.boxed_message('SCRAPE DETAILS'))
+
+                header = '{:<10s} {:<10s} {:^4s} {:^8s} {:<16s} {:<90s}'.format('Index', 'Strategy', 'S', 'P', 'Output', 'URL')
+                dashes_details = len(header) * '–'
+
+                click.echo(dashes_details)
+                click.echo(header)
+                click.echo(dashes_details)
+
+                for scrape in scrapes:
+                    click.echo('{:<10d} {:<10s} {:^4s} {:^8s} {:<16s} {:<90s}'.format(scrape.scrape_index, scrape.strategy, scrape.status, scrape.parsed, scrape.out_file, scrape.url))
+
+                click.echo(dashes_details)
+
+                click.echo('S = Scrape status: (I) Initialized; (R) Running; (X) Executed/Finished; (E) Error')
+                click.echo('P = Scrape parsed: (T) True; (F) False')
+                click.echo(dashes_details)
+
+    def print_all_unparsed(self):
+        """
+        Prints all unparsed scrapes.
+
+        """
+
+        scrapes = self._get_all_unparsed()
+
+        header = '{:<30s} {:<6s} {:<70s} {:<65s}'.format('Label', 'Index', 'ZIP', 'URL')
+        dashes_details = len(header) * '–'
+ 
+        click.echo(dashes_details)
+        click.echo(header)
+        click.echo(dashes_details)
+
+        for scrape in scrapes:
+
+            job = self._get_job(scrape.label)
+            zip_file = job.zip_file
+
+            click.echo('{:<30s} {:<6d} {:<70s} {:<65s}'.format(scrape.label, scrape.scrape_index, zip_file, scrape.url))
+
+        click.echo(dashes_details)

@@ -89,19 +89,17 @@ def clean_config():
 
 @click.command('sjob', help="""Delete scrape job(s) data
 
-        Example usage: 
-        
+        To delete a single job, specify the job label; e.g.:
+
         appeer clean sjob scrape_20241113-070355_8
 
+        To delete all jobs whose status is not 'X', use the --bad flag:
+
         appeer clean sjob --bad
+
+        To delete all jobs, use the --all flag:
         
-        appeer clean sjob -a
-
-        To delete a single job, specify the job label.
-
-        To delete all jobs whose status is not 'X', use the --bad flag.
-
-        To delete all jobs, use the --all_jobs flag.
+        appeer clean sjob --all
 
         To view a summary of all scrape jobs, type:
 

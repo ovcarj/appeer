@@ -72,12 +72,33 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
         publisher = scrape_plan.publishers[i]
         strategy = scrape_plan.strategies[i]
 
+        scrape_db._add_scrape(
+                label=scrape_label,
+                scrape_index=i,
+                url=url,
+                strategy=strategy
+                )
+
         _logger.info(f'{i + 1}/{no_of_publications}: Scraping {url}')
         _logger.info(f'Publisher: {publisher}')
         _logger.info(f'Strategy: {strategy}')
 
+        scrape_db._update_scrape_entry(
+                label=scrape_label,
+                scrape_index=i,
+                column_name='strategy',
+                new_value=strategy
+                )
+
         scraper = Scraper(url, publisher, strategy, _logger=_logger, 
                 max_tries=max_tries, retry_sleep_time=retry_sleep_time)
+
+        scrape_db._update_scrape_entry(
+                label=scrape_label,
+                scrape_index=i,
+                column_name='status',
+                new_value='R'
+                )
 
         scraper.run_scrape()
 
@@ -90,12 +111,26 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
                 column_name='job_successes',
                 new_value=count_success)
 
+            scrape_db._update_scrape_entry(
+                    label=scrape_label,
+                    scrape_index=i,
+                    column_name='status',
+                    new_value='X'
+                    )
+
             if scraper._write_text:
 
                 writing_path = f'{download_directory}/{i}_html.dat'
                 appeer.utils.write_text_to_file(writing_path, 
                         scraper.response_text)
                 _logger.info(f'Wrote downloaded text to {writing_path}')
+
+                scrape_db._update_scrape_entry(
+                        label=scrape_label,
+                        scrape_index=i,
+                        column_name='out_file',
+                        new_value=f'{i}_html.dat'
+                        )
 
         else:
 
@@ -107,6 +142,13 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
                 label=scrape_label,
                 column_name='job_fails',
                 new_value=count_fail)
+
+            scrape_db._update_scrape_entry(
+                    label=scrape_label,
+                    scrape_index=i,
+                    column_name='status',
+                    new_value='E'
+                    )
 
         _logger.info(f'{i + 1}/{no_of_publications}: Scraping done')
 

@@ -43,9 +43,10 @@ def clean_scrape_job(scrape_label):
             entry_deleted = sdb.delete_job_entry(scrape_label)
 
             if entry_deleted:
+                click.echo(dashes)
                 click.echo(f'Job {scrape_label} removed!')
 
-        click.echo(dashes)
+        click.echo(dashes + '\n')
 
 def clean_scrape_jobs(scrape_labels):
     """
