@@ -1,8 +1,11 @@
+import sys
 import click
+
+import appeer.log
 
 from appeer.datadir import Datadir
 from appeer.config import Config
-from appeer.scrape import clean_scrape_job as csj
+from appeer.scrape import clean_scrape_jobs as csj
 
 @click.command('all_data', help='Delete the appeer directory')
 def clean_all_data():
@@ -84,25 +87,52 @@ def clean_config():
     cfg = Config()
     cfg.clean_config()
 
-@click.command('sjob', help="""Delete data associated with a scrape job
+@click.command('sjob', help="""Delete scrape job(s) data
 
-        Example usage: appeer clean sjob scrape_20241113-070355_8
+        Example usage: 
+        
+        appeer clean sjob scrape_20241113-070355_8
 
-        The argument after sjob is the scrape job label.
+        appeer clean sjob --bad
+        
+        appeer clean sjob -a
 
-        To print a summary of all existing scrape jobs, use
+        To delete a single job, specify the job label.
+
+        To delete all jobs whose status is not 'X', use the --bad flag.
+
+        To delete all jobs, use the --all_jobs flag.
+
+        To view a summary of all scrape jobs, type:
 
         appeer sdb
 
         """)
-@click.argument('label', nargs=1)
-def clean_sjob(label):
+@click.argument('label', nargs=1, required=False)
+@click.option('-b', '--bad', is_flag=True, default=False, help='Delete jobs whose status is not X')
+@click.option('-a', '--all', 'everything', is_flag=True, default=False, help='Delete all scrape jobs')
+def clean_sjob(label, bad, everything):
     """
     Delete data associated with a scrape job with a given ``label``.
 
     """
 
-    csj.clean_scrape_job(label)
+    if bad:
+        csj.clean_bad_jobs()
+
+    elif everything:
+        proceed = appeer.log.ask_yes_no('You are about to delete all scrape jobs data. Do you want to proceed? [Y/n]\n')
+
+        if proceed == 'Y':
+            csj.clean_all_jobs()
+
+        elif proceed == 'n':
+
+            click.echo('Stopping.')
+            sys.exit()
+
+    else:
+        csj.clean_scrape_job(label)
 
 @click.group()
 def clean_cli(name='clean', help='Delete contents of the appeer data directory'):

@@ -217,8 +217,6 @@ class ScrapeDB(DB):
 
         self._set_scrape_job_factory()
 
-        self.scrape_jobs = []
-
         self._cur.execute("""
         SELECT * FROM scrape_jobs
         """)
@@ -309,6 +307,27 @@ class ScrapeDB(DB):
 
         return job_exists
 
+    def _get_bad_jobs(self):
+        """
+        Returns all scrape jobs whose status is not 'X'.
+
+        Returns
+        -------
+        bad_jobs | list
+            List of ScrapeJob instances for which the job status is not 'X'
+
+        """
+
+        self._set_scrape_job_factory()
+
+        self._cur.execute("""
+        SELECT * FROM scrape_jobs WHERE job_status!='X'
+        """)
+
+        bad_jobs = self._cur.fetchall()
+
+        return bad_jobs
+
     def delete_job_entry(self, scrape_label):
         """
         Deletes the row given by ``scrape_label`` from the ``scrape_jobs`` table.
@@ -325,8 +344,7 @@ class ScrapeDB(DB):
 
         """
 
-        click.echo(f'Removing entry {scrape_label} from the scrape database')
-        click.echo(self._dashes)
+        click.echo(f'Removing entry {scrape_label} from the scrape database ...')
 
         job_exists = self._scrape_job_exists(scrape_label)
 
@@ -345,13 +363,11 @@ class ScrapeDB(DB):
             job_exists = self._scrape_job_exists(scrape_label)
 
             if not job_exists:
-                click.echo(f'Entry {scrape_label} removed.')
-                click.echo(self._dashes)
+                click.echo(f'Entry {scrape_label} removed.\n')
                 success = True
 
             else:
-                click.echo(f'Could not delete entry {scrape_label}')
-                click.echo(self._dashes)
+                click.echo(f'Could not delete entry {scrape_label}\n')
                 success = False
 
         return success

@@ -181,15 +181,11 @@ class Datadir:
 
         """
 
-        click.echo(self._dashes)
-        click.echo(f'Deleting data associated with the scrape job: {scrape_label}')
-        click.echo(self._dashes)
+        click.echo(f'Deleting data associated with the scrape job: {scrape_label} ...')
 
         appeer.utils.delete_directory(download_directory)
         appeer.utils.delete_file(zip_file)
         appeer.utils.delete_file(log)
-
-        click.echo(self._dashes)
 
         if (
             not appeer.utils.directory_exists(download_directory) and
@@ -198,10 +194,10 @@ class Datadir:
             ):
 
             success = True
-            click.echo(f'Data associated with {scrape_label} deleted.')
+            click.echo(f'Data associated with {scrape_label} deleted.\n')
 
         else:
             success = False
-            click.echo(f'Failed to delete all data associated with {scrape_label}.')
+            click.echo(f'Failed to delete all data associated with {scrape_label}.\n')
 
         return success
