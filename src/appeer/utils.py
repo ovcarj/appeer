@@ -153,6 +153,7 @@ def is_doi_format(entry):
 
     is_doi_format : bool
         True if ``entry`` is in DOI format, False if it is not
+
     """
 
     starts_w_10 = entry.startswith('10')
@@ -238,7 +239,6 @@ def random_number():
 
     return random_no
 
-
 def write_text_to_file(path_to_file, text_data):
     """
     Write text to a file.
@@ -280,6 +280,7 @@ def delete_directory(directory_name):
     ----------
     directory_name : str
         Path to the directory to be deleted
+
     """
 
     if directory_exists(directory_name):
@@ -295,6 +296,29 @@ def delete_directory(directory_name):
     else:
         click.echo(f'Directory {directory_name} does not exist')
 
+def delete_file(file_name):
+    """
+    Delete file called ``file_name``.
+
+    Parameters
+    ----------
+    file_name : str
+        Path to the file to be deleted
+
+    """
+
+    if file_exists(file_name):
+        os.remove(file_name)
+
+        if not file_exists(file_name):
+            click.echo(f'Deleted {file_name}')
+
+        else:
+            click.echo(f'Could not delete {file_name}')
+
+    else:
+        click.echo(f'File {file_name} does not exist')
+
 def directory_exists(directory_path):
     """
     Check if directory ``directory_path`` exists.
@@ -307,7 +331,7 @@ def directory_exists(directory_path):
     Returns
     ----------
     exists : bool
-        True if directory exists, False if it does not.
+        True if directory exists, False if it does not
 
     """
 
@@ -317,7 +341,7 @@ def directory_exists(directory_path):
 
 def file_exists(file_path):
     """
-    Check if directory ``filepath`` exists.
+    Check if file at ``file_path`` exists.
 
     Parameters
     ----------
@@ -327,7 +351,7 @@ def file_exists(file_path):
     Returns
     ----------
     exists : bool
-        True if file exists, False if it does not.
+        True if file exists, False if it does not
 
     """
 
@@ -347,7 +371,7 @@ def is_directory_empty(directory_path):
     Returns
     ----------
     empty : bool
-        True if directory is empty, False if it is not.
+        True if directory is empty, False if it is not
 
     """
 

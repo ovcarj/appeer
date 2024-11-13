@@ -2,7 +2,7 @@ import click
 
 from appeer.config import Config
 
-@click.command('print', help='Print the appeer config file.')
+@click.command('print', help='Print the appeer config file')
 def show_config():
     """
     Prints the ``appeer`` config file.
@@ -12,7 +12,7 @@ def show_config():
     cfg = Config()
     cfg.print_config()
 
-@click.command('edit', help="""Edit the contents of the config file.
+@click.command('edit', help="""Edit the contents of the config file
 
         Example usage: appeer config edit data_directory /home/user/appeer_data
 

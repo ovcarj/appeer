@@ -158,3 +158,50 @@ class Datadir:
         """
 
         appeer.utils.delete_directory_files(self.db)
+
+    def clean_scrape_job_data(self, scrape_label, download_directory, zip_file, log):
+        """
+        Deletes all data associated with a scrape job.
+
+        Parameters
+        ----------
+        scrape_label : str
+            Label of the scrape job whose data is being deleted
+        download_directory : str
+            Path to the directory where the data was downloaded
+        zip_file : str
+            Path to the output ZIP file
+        log : str
+            Path to the scrape log
+
+        Returns
+        -------
+        success : str
+            True if any data does not exist after attempting deletion, False if it does
+
+        """
+
+        click.echo(self._dashes)
+        click.echo(f'Deleting data associated with the scrape job: {scrape_label}')
+        click.echo(self._dashes)
+
+        appeer.utils.delete_directory(download_directory)
+        appeer.utils.delete_file(zip_file)
+        appeer.utils.delete_file(log)
+
+        click.echo(self._dashes)
+
+        if (
+            not appeer.utils.directory_exists(download_directory) and
+            not appeer.utils.file_exists(zip_file) and
+            not appeer.utils.file_exists(log)
+            ):
+
+            success = True
+            click.echo(f'Data associated with {scrape_label} deleted.')
+
+        else:
+            success = False
+            click.echo(f'Failed to delete all data associated with {scrape_label}.')
+
+        return success

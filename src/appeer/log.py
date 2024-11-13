@@ -4,6 +4,7 @@ import logging
 import click
 
 import appeer.utils
+
 from appeer import __version__
 
 def init_logger(logname='appeer', logdir=None):

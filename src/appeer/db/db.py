@@ -3,8 +3,8 @@ import click
 import abc
 import sqlite3
 
-import appeer.log as appeer_log
-import appeer.utils as appeer_utils
+import appeer.log 
+import appeer.utils
 
 from appeer.datadir import Datadir
 
@@ -50,7 +50,7 @@ class DB(abc.ABC):
             self._con = sqlite3.connect(self._db_path)
             self._cur = self._con.cursor()
 
-        self._dashes = appeer_log.get_log_dashes()
+        self._dashes = appeer.log.get_log_dashes()
 
     def _check_existence(self):
         """
@@ -59,7 +59,7 @@ class DB(abc.ABC):
 
         """
 
-        self._db_exists = appeer_utils.file_exists(self._db_path)
+        self._db_exists = appeer.utils.file_exists(self._db_path)
 
     def create_database(self):
         """
@@ -113,7 +113,7 @@ class DB(abc.ABC):
         
         input_ok = False
 
-        proceed = appeer_log.ask_yes_no(f'Do you want to proceed with the current {self._db_type} database? [Y/n]\n')
+        proceed = appeer.log.ask_yes_no(f'Do you want to proceed with the current {self._db_type} database? [Y/n]\n')
 
         if proceed == 'Y':
 
@@ -122,7 +122,6 @@ class DB(abc.ABC):
         elif proceed == 'n':
 
             click.echo(f'Stopping, as requested.')
-#            click.echo(f'Run "appeer clean db" to delete the current database before proceeding.')
             click.echo(self._dashes)
 
             sys.exit()

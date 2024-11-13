@@ -2,11 +2,13 @@ import click
 
 from appeer.datadir import Datadir
 from appeer.config import Config
+from appeer.scrape import clean_scrape_job as csj
 
 @click.command('all_data', help='Delete the appeer directory')
 def clean_all_data():
     """
     Deletes all ``appeer`` data directories
+
     """
 
     ad = Datadir()
@@ -16,6 +18,7 @@ def clean_all_data():
 def clean_downloads():
     """
     Deletes the contents of the ``appeer/downloads`` directory
+
     """
 
     ad = Datadir()
@@ -25,6 +28,7 @@ def clean_downloads():
 def clean_scrape_archives():
     """
     Deletes the contents of the ``appeer/scrape_archives`` directory
+
     """
 
     ad = Datadir()
@@ -34,6 +38,7 @@ def clean_scrape_archives():
 def clean_scrape_logs():
     """
     Deletes the contents of the ``appeer/scrape_logs`` directory
+
     """
 
     ad = Datadir()
@@ -43,6 +48,7 @@ def clean_scrape_logs():
 def clean_parse():
     """
     Deletes the contents of the ``appeer/parse`` directory
+
     """
 
     ad = Datadir()
@@ -52,6 +58,7 @@ def clean_parse():
 def clean_parse_logs():
     """
     Deletes the contents of the ``appeer/parse_logs`` directory
+
     """
 
     ad = Datadir()
@@ -61,6 +68,7 @@ def clean_parse_logs():
 def clean_db():
     """
     Deletes the contents of the ``appeer/db`` directory
+
     """
 
     ad = Datadir()
@@ -69,11 +77,32 @@ def clean_db():
 @click.command('config', help='Delete the appeer config file')
 def clean_config():
     """
-    Deletes the ``appeer`` config file.
+    Deletes the ``appeer`` config file
+
     """
 
     cfg = Config()
     cfg.clean_config()
+
+@click.command('sjob', help="""Delete data associated with a scrape job
+
+        Example usage: appeer clean sjob scrape_20241113-070355_8
+
+        The argument after sjob is the scrape job label.
+
+        To print a summary of all existing scrape jobs, use
+
+        appeer sdb
+
+        """)
+@click.argument('label', nargs=1)
+def clean_sjob(label):
+    """
+    Delete data associated with a scrape job with a given ``label``.
+
+    """
+
+    csj.clean_scrape_job(label)
 
 @click.group()
 def clean_cli(name='clean', help='Delete contents of the appeer data directory'):
@@ -96,6 +125,8 @@ clean_cli.add_command(clean_parse_logs)
 clean_cli.add_command(clean_db)
 
 clean_cli.add_command(clean_config)
+
+clean_cli.add_command(clean_sjob)
 
 def main():
     clean_cli()

@@ -52,8 +52,8 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
     no_of_publications = len(scrape_plan.url_list)
 
     scrape_db._update_job_entry(
-            scrape_label=scrape_label,
-            column_name='scrape_no_of_publications',
+            label=scrape_label,
+            column_name='no_of_publications',
             new_value=no_of_publications)
     
     _logger.info(f'{appeer.log.boxed_message("SCRAPE JOB")}\n')
@@ -63,8 +63,8 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
     os.makedirs(download_directory, exist_ok=True)
 
     scrape_db._update_job_entry(
-            scrape_label=scrape_label,
-            column_name='scrape_job_status',
+            label=scrape_label,
+            column_name='job_status',
             new_value='R')
 
     for i, url in enumerate(scrape_plan.url_list):
@@ -86,8 +86,8 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
             count_success += 1
 
             scrape_db._update_job_entry(
-                scrape_label=scrape_label,
-                column_name='scrape_job_successes',
+                label=scrape_label,
+                column_name='job_successes',
                 new_value=count_success)
 
             if scraper._write_text:
@@ -104,8 +104,8 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
             failed_urls.append(url)
 
             scrape_db._update_job_entry(
-                scrape_label=scrape_label,
-                column_name='scrape_job_fails',
+                label=scrape_label,
+                column_name='job_fails',
                 new_value=count_fail)
 
         _logger.info(f'{i + 1}/{no_of_publications}: Scraping done')
@@ -211,11 +211,12 @@ ir is used (recommended)
     scrape_db = ScrapeDB()
 
     scrape_db._add_scrape_job(
-            scrape_label=scrape_label,
-            scrape_description=description,
-            scrape_log=logpath,
-            scrape_zip=output_zip_filename,
-            scrape_date=start_datetime
+            label=scrape_label,
+            description=description,
+            log=logpath,
+            download_directory=download_dir,
+            zip_file=output_zip_filename,
+            date=start_datetime
             )
 
     start_report = appeer.log.appeer_start(start_datetime=start_datetime, logpath=logpath)
@@ -231,8 +232,8 @@ ir is used (recommended)
     if not reading_passed:
 
         scrape_db._update_job_entry(
-                scrape_label=scrape_label,
-                column_name='scrape_job_status',
+                label=scrape_label,
+                column_name='job_status',
                 new_value='E'
                 )
 
@@ -275,8 +276,8 @@ ir is used (recommended)
     _logger.info(end_report)
 
     scrape_db._update_job_entry(
-            scrape_label=scrape_label,
-            column_name='scrape_job_status',
+            label=scrape_label,
+            column_name='job_status',
             new_value='X'
             )
 
