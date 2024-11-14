@@ -54,7 +54,8 @@ class ScrapePlan:
                 'invalid_url': 'Invalid_URL',
                 'unknown': 'Unknown',
                 'doi.org': 'DOI',
-                'pubs.rsc.org': 'RSC'
+                'pubs.rsc.org': 'RSC',
+                'www.nature.com': 'NAT'
                 }
 
     def _define_strategy_codes(self):
@@ -77,7 +78,8 @@ class ScrapePlan:
                 'Invalid_URL': 'skip',
                 'Unknown': 'html',
                 'DOI': 'doi',
-                'RSC': 'html'
+                'RSC': 'html',
+                'NAT': 'html'
                 }
 
     def _understand_publishers(self):

@@ -63,7 +63,7 @@ class Scraper:
         """
 
         self._strategy_map = {
-                'scrape_html_simple': [['RSC', 'html'], ['Unknown', 'html']],
+                'scrape_html_simple': [['RSC', 'html'], ['NAT', 'html'], ['Unknown', 'html']],
                 'doi_handler': [['DOI', 'doi']],
                 'scrape_skip': [['Invalid_URL', 'skip']]
                 }
