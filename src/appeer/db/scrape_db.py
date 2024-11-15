@@ -399,6 +399,13 @@ class ScrapeDB(DB):
             job_exists = self._scrape_job_exists(scrape_label)
 
             if not job_exists:
+
+                self._cur.execute("""
+                DELETE FROM scrape WHERE label = ?
+                """, (scrape_label,))
+
+                self._con.commit()
+
                 click.echo(f'Entry {scrape_label} removed.\n')
                 success = True
 
