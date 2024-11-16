@@ -1,3 +1,4 @@
+import os
 import sys
 import click
 import abc
@@ -23,7 +24,7 @@ class DB(abc.ABC):
         ----------
 
         db_type : str
-            Must be 'scrape' or 'parse'.
+            Must be 'jobs' or 'pub'.
 
         """
 
@@ -31,17 +32,17 @@ class DB(abc.ABC):
 
         self._base = datadir.base
 
-        if db_type not in ['scrape', 'parse']:
-            raise ValueError('Failed to initialize the DB class. db_type must be "scrape" or "parse".')
+        if db_type not in ['jobs', 'pub']:
+            raise ValueError('Failed to initialize the DB class. db_type must be "jobs" or "pub".')
 
         else:
             self._db_type = db_type
 
-        if self._db_type == 'scrape':
-            self._db_path = f'{self._base}/db/scrape.db'
+        if self._db_type == 'jobs':
+            self._db_path = os.path.join(datadir.db, 'jobs.db')
 
-        elif self._db_type == 'parse':
-            self._db_path = f'{self._base}/db/parse.db'
+        elif self._db_type == 'pub':
+            self._db_path = os.path.join(datadir.db, 'pub.db')
 
         self._check_existence()
 

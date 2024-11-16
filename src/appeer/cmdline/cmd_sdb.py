@@ -1,6 +1,6 @@
 import click
 
-from appeer.db.scrape_db import ScrapeDB
+from appeer.db.jobs_db import JobsDB
 
 @click.command('sdb', help="""Print scrape jobs summary
 
@@ -29,16 +29,16 @@ def sdb_cli(label, unparsed):
 
     """
 
-    scrape_db = ScrapeDB()
+    jobs_db = JobsDB()
 
     if unparsed:
-        scrape_db.print_all_unparsed()
+        jobs_db.print_all_unparsed()
 
     elif label:
-        scrape_db.print_job_details(label)
+        jobs_db.print_scrape_job_details(label)
 
     else:
-        scrape_db.print_jobs()
+        jobs_db.print_scrape_jobs()
 
 def main():
     sdb_cli()

@@ -7,7 +7,7 @@ import appeer.log
 from appeer.db.db import DB
 #from appeer.scrape.scrape_plan import _get_allowed_strategies
 
-class ScrapeDB(DB):
+class JobsDB(DB):
     """
     Handles the ``scrape.db`` database.
 
@@ -19,7 +19,7 @@ class ScrapeDB(DB):
 
         """
 
-        super().__init__(db_type='scrape')
+        super().__init__(db_type='jobs')
 
         # TODO: strategies in the ScrapePlan will be revised
         #self._allowed_strategies = _get_allowed_strategies()
@@ -96,6 +96,8 @@ class ScrapeDB(DB):
 
         self._cur.execute('CREATE TABLE scrape(label, scrape_index, url, strategy, status, out_file, parsed)')
 
+        self._cur.execute('CREATE TABLE parse_jobs(label, log, scrape_label, scrape_index, scrape_file, status)')
+
         self._con.commit()
 
     def _add_scrape_job(self,
@@ -145,7 +147,7 @@ class ScrapeDB(DB):
 
         self._con.commit()
 
-    def _update_job_entry(self, label, column_name, new_value):
+    def _update_scrape_job_entry(self, label, column_name, new_value):
         """
         Given a ``label``, updates the corresponding ``column_name`` value with ``new_value`` in the ``scrape_jobs`` table.
 
@@ -243,7 +245,7 @@ class ScrapeDB(DB):
 
                 raise ValueError(f'Cannot update the scrape database. Invalid column name {column_name} given.')
 
-    def _get_jobs(self):
+    def _get_scrape_jobs(self):
         """
         Stores the data from the ``scrape_jobs`` table to the ``self.scrape_jobs`` list. 
         
@@ -259,13 +261,13 @@ class ScrapeDB(DB):
 
         self.scrape_jobs = self._cur.fetchall()
 
-    def print_jobs(self):
+    def print_scrape_jobs(self):
         """
         Prints a summary of all entries in the ``scrape_jobs`` table.
 
         """
         
-        self._get_jobs()
+        self._get_scrape_jobs()
 
         header = '{:30s} {:35s} {:^4s} {:^4s} {:^10s}'.format('Label', 'Description', 'S', 'P', 'Succ./Tot.')
         header_length = len(header)
@@ -296,7 +298,7 @@ class ScrapeDB(DB):
 
         click.echo(dashes)
 
-    def _get_job(self, scrape_label):
+    def _get_scrape_job(self, scrape_label):
         """
         Returns an instance of the ``self._ScrapeJob`` named tuple for a scrape job with label ``scrape_label``. 
         
@@ -333,7 +335,7 @@ class ScrapeDB(DB):
 
         """
 
-        job = self._get_job(scrape_label=scrape_label)
+        job = self._get_scrape_job(scrape_label=scrape_label)
 
         if job is None:
             job_exists = False
@@ -343,7 +345,7 @@ class ScrapeDB(DB):
 
         return job_exists
 
-    def _get_bad_jobs(self):
+    def _get_bad_scrape_jobs(self):
         """
         Returns all scrape jobs whose status is not 'X'.
 
@@ -579,7 +581,7 @@ class ScrapeDB(DB):
 
         return scrapes
 
-    def print_job_details(self, label):
+    def print_scrape_job_details(self, label):
         """
         Prints details of the job with the given label.
 
@@ -599,7 +601,7 @@ class ScrapeDB(DB):
 
             dashes = appeer.log.get_log_dashes()
 
-            job = self._get_job(label)
+            job = self._get_scrape_job(label)
 
             click.echo(appeer.log.boxed_message(f'SCRAPE JOB: {job.label}'))
             click.echo(job.description)
@@ -646,18 +648,23 @@ class ScrapeDB(DB):
 
         scrapes = self._get_all_unparsed()
 
-        header = '{:<30s} {:<6s} {:<70s} {:<65s}'.format('Label', 'Index', 'ZIP', 'URL')
-        dashes_details = len(header) * '–'
- 
-        click.echo(dashes_details)
-        click.echo(header)
-        click.echo(dashes_details)
+        if scrapes:
 
-        for scrape in scrapes:
+            header = '{:<30s} {:<6s} {:<70s} {:<65s}'.format('Label', 'Index', 'ZIP', 'URL')
+            dashes_details = len(header) * '–'
+     
+            click.echo(dashes_details)
+            click.echo(header)
+            click.echo(dashes_details)
+    
+            for scrape in scrapes:
+    
+                job = self._get_scrape_job(scrape.label)
+                zip_file = job.zip_file
+    
+                click.echo('{:<30s} {:<6d} {:<70s} {:<65s}'.format(scrape.label, scrape.scrape_index, zip_file, scrape.url))
+    
+            click.echo(dashes_details)
 
-            job = self._get_job(scrape.label)
-            zip_file = job.zip_file
-
-            click.echo('{:<30s} {:<6d} {:<70s} {:<65s}'.format(scrape.label, scrape.scrape_index, zip_file, scrape.url))
-
-        click.echo(dashes_details)
+        else:
+            click.echo('No unparsed scrapes found.')

@@ -3,8 +3,8 @@ import click
 
 from appeer.datadir import Datadir
 from appeer.config import Config
-from appeer.db.scrape_db import ScrapeDB
-from appeer.db.parse_db import ParseDB
+from appeer.db.jobs_db import JobsDB
+from appeer.db.pub_db import PubDB
 
 def create_config():
     """
@@ -30,15 +30,15 @@ def create_databases():
 
     """
 
-    scrape_db = ScrapeDB()
-    scrape_db.create_database()
+    jobs_db = JobsDB()
+    jobs_db.create_database()
 
-    parse_db = ParseDB()
-    parse_db.create_database()
+    pub_db = PubDB()
+    pub_db.create_database()
 
 def initialize_appeer():
     """
-    Create ``appeer`` data directories and #TODO databases.
+    Create ``appeer`` data directories and databases.
     
     """
 

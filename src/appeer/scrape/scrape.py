@@ -6,7 +6,7 @@ import appeer.utils
 import appeer.log
 
 from appeer.datadir import Datadir
-from appeer.db.scrape_db import ScrapeDB
+from appeer.db.jobs_db import JobsDB
 from appeer.config import Config
 from appeer.scrape.input_handling import parse_data_source, handle_input_reading
 from appeer.scrape.scrape_plan import ScrapePlan
@@ -14,7 +14,7 @@ from appeer.scrape.scraper import Scraper
 
 def scrape(scrape_label, scrape_plan, download_directory, _logger, 
         sleep_time, max_tries, retry_sleep_time,
-        scrape_db):
+        jobs_db):
     """
     Download publications data from a list of URLs according to the ``ScrapePlan``.
 
@@ -36,8 +36,8 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
         Maximum number of tries to get a response from an URL before giving up
     retry_sleep_time : float
         Time (in seconds) to wait before retrying an URL again
-    scrape_db : appeer.db.scrape_db.ScrapeDB
-        Instance of the ScrapeDB class referring to the scrape database
+    jobs_db : appeer.db.jobs_db.JobsDB
+        Instance of the JobsDB class referring to the scrape database
 
     """
 
@@ -51,7 +51,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
 
     no_of_publications = len(scrape_plan.url_list)
 
-    scrape_db._update_job_entry(
+    jobs_db._update_scrape_job_entry(
             label=scrape_label,
             column_name='no_of_publications',
             new_value=no_of_publications)
@@ -62,7 +62,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
 
     os.makedirs(download_directory, exist_ok=True)
 
-    scrape_db._update_job_entry(
+    jobs_db._update_scrape_job_entry(
             label=scrape_label,
             column_name='job_status',
             new_value='R')
@@ -72,7 +72,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
         publisher = scrape_plan.publishers[i]
         strategy = scrape_plan.strategies[i]
 
-        scrape_db._add_scrape(
+        jobs_db._add_scrape(
                 label=scrape_label,
                 scrape_index=i,
                 url=url,
@@ -83,7 +83,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
         _logger.info(f'Publisher: {publisher}')
         _logger.info(f'Strategy: {strategy}')
 
-        scrape_db._update_scrape_entry(
+        jobs_db._update_scrape_entry(
                 label=scrape_label,
                 scrape_index=i,
                 column_name='strategy',
@@ -93,7 +93,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
         scraper = Scraper(url, publisher, strategy, _logger=_logger, 
                 max_tries=max_tries, retry_sleep_time=retry_sleep_time)
 
-        scrape_db._update_scrape_entry(
+        jobs_db._update_scrape_entry(
                 label=scrape_label,
                 scrape_index=i,
                 column_name='status',
@@ -106,12 +106,12 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
 
             count_success += 1
 
-            scrape_db._update_job_entry(
+            jobs_db._update_scrape_job_entry(
                 label=scrape_label,
                 column_name='job_successes',
                 new_value=count_success)
 
-            scrape_db._update_scrape_entry(
+            jobs_db._update_scrape_entry(
                     label=scrape_label,
                     scrape_index=i,
                     column_name='status',
@@ -125,7 +125,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
                         scraper.response_text)
                 _logger.info(f'Wrote downloaded text to {writing_path}')
 
-                scrape_db._update_scrape_entry(
+                jobs_db._update_scrape_entry(
                         label=scrape_label,
                         scrape_index=i,
                         column_name='out_file',
@@ -138,12 +138,12 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
             failed_indices.append(i)
             failed_urls.append(url)
 
-            scrape_db._update_job_entry(
+            jobs_db._update_scrape_job_entry(
                 label=scrape_label,
                 column_name='job_fails',
                 new_value=count_fail)
 
-            scrape_db._update_scrape_entry(
+            jobs_db._update_scrape_entry(
                     label=scrape_label,
                     scrape_index=i,
                     column_name='status',
@@ -250,9 +250,9 @@ ir is used (recommended)
     log_dashes = appeer.log.get_log_dashes()
     logo = appeer.log.get_logo()
     
-    scrape_db = ScrapeDB()
+    jobs_db = JobsDB()
 
-    scrape_db._add_scrape_job(
+    jobs_db._add_scrape_job(
             label=scrape_label,
             description=description,
             log=logpath,
@@ -273,7 +273,7 @@ ir is used (recommended)
 
     if not reading_passed:
 
-        scrape_db._update_job_entry(
+        jobs_db._update_scrape_job_entry(
                 label=scrape_label,
                 column_name='job_status',
                 new_value='E'
@@ -292,7 +292,7 @@ ir is used (recommended)
             download_directory=download_dir, 
             _logger=_logger, sleep_time=sleep_time,
             max_tries=max_tries, retry_sleep_time=retry_sleep_time,
-            scrape_db=scrape_db)
+            jobs_db=jobs_db)
 
     appeer.utils.archive_directory(output_filename=output_zip_filename, directory_name=download_dir)
 
@@ -317,7 +317,7 @@ ir is used (recommended)
     end_report = appeer.log.appeer_end(start_datetime=start_datetime)
     _logger.info(end_report)
 
-    scrape_db._update_job_entry(
+    jobs_db._update_scrape_job_entry(
             label=scrape_label,
             column_name='job_status',
             new_value='X'

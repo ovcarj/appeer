@@ -3,7 +3,7 @@ import click
 import appeer.log
 
 from appeer.datadir import Datadir
-from appeer.db.scrape_db import ScrapeDB
+from appeer.db.jobs_db import JobsDB
 
 def clean_scrape_job(scrape_label):
     """
@@ -19,18 +19,19 @@ def clean_scrape_job(scrape_label):
     dashes = appeer.log.get_log_dashes()
     short_dashes = appeer.log.get_short_log_dashes()
 
-    sdb = ScrapeDB()
+    jdb = JobsDB()
 
-    job_exists = sdb._scrape_job_exists(scrape_label)
+    job_exists = jdb._scrape_job_exists(scrape_label)
 
     if not job_exists:
         click.echo(f'Scrape job {scrape_label} does not exist.')
 
     else:
 
-        scrape_job = sdb._get_job(scrape_label)
+        scrape_job = jdb._get_scrape_job(scrape_label)
     
         datadir = Datadir()
+
         data_deleted = datadir.clean_scrape_job_data(
                 scrape_label=scrape_label,
                 download_directory=scrape_job.download_directory,
@@ -40,7 +41,7 @@ def clean_scrape_job(scrape_label):
 
         if data_deleted:
 
-            entry_deleted = sdb.delete_job_entry(scrape_label)
+            entry_deleted = jdb.delete_job_entry(scrape_label)
 
             if entry_deleted:
                 click.echo(dashes)
@@ -68,9 +69,9 @@ def clean_bad_jobs():
 
     """
 
-    sdb = ScrapeDB()
+    jdb = JobsDB()
 
-    bad_jobs = sdb._get_bad_jobs()
+    bad_jobs = jdb._get_bad_scrape_jobs()
 
     bad_labels = [bad_job.label for bad_job in bad_jobs]
 
@@ -82,9 +83,9 @@ def clean_all_jobs():
 
     """
 
-    sdb = ScrapeDB()
-    sdb._get_jobs()
+    jdb = JobsDB()
+    jdb._get_scrape_jobs()
 
-    labels = [job.label for job in sdb.scrape_jobs]
+    labels = [job.label for job in jdb.scrape_jobs]
 
     clean_scrape_jobs(labels)
