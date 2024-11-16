@@ -88,7 +88,7 @@ class JobsDB(DB):
 
     def _initialize_database(self):
         """
-        Initializes the SQL tables when the ``scrape`` database is created.
+        Initializes the SQL tables when the ``jobs`` database is created.
 
         """
 
@@ -96,7 +96,7 @@ class JobsDB(DB):
 
         self._cur.execute('CREATE TABLE scrape(label, scrape_index, url, strategy, status, out_file, parsed)')
 
-        self._cur.execute('CREATE TABLE parse_jobs(label, log, scrape_label, scrape_index, scrape_file, status)')
+        self._cur.execute('CREATE TABLE parse_jobs(label, description, log, mode, parse_directory, date, job_status, job_successes, job_fails, no_of_publications, job_committed)')
 
         self._con.commit()
 
@@ -668,3 +668,50 @@ class JobsDB(DB):
 
         else:
             click.echo('No unparsed scrapes found.')
+
+    def _add_parse_job(self,
+            label,
+            description,
+            log,
+            mode,
+            parse_directory,
+            date):
+        """
+        Initializes an entry for a parse job.
+
+        Parameters
+        ----------
+        label : str
+            Label of the parse job
+        description : str
+            Description of the parse job
+        log : str
+            Path to the log of the parse job
+        mode : str
+            Parsing mode. Must be in ['A', 'S', 'F']
+        parse_directory : str
+            Path to the directory where (temporary) files for parsing are created
+        date : str
+            Date on which the parse job was initialized
+
+        """
+
+        data = ({
+            'label': label,
+            'description': description,
+            'log': log,
+            'mode': mode,
+            'parse_directory': parse_directory,
+            'date': date,
+            'job_status': 'I',
+            'job_successes': 0,
+            'job_fails': 0,
+            'no_of_publications': 0,
+            'job_committed': 'F'
+            })
+
+        self._cur.execute("""
+        INSERT INTO parse_jobs VALUES(:label, :description, :log, :mode, :parse_directory, :date, :job_status, :job_successes, :job_fails, :no_of_publications, :job_committed)
+        """, data)
+
+        self._con.commit()

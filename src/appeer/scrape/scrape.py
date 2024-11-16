@@ -181,15 +181,13 @@ def main(publications, output_zip_filename=None,
     """ 
     Download publications data for later parsing.
 
-    Example usage: appeer scrape -c PoP.json
-
     ``publications`` can be a list of URLs or a string (path to a file).
     In the case a filepath is provided, the file can be either a JSON file 
     (e.g. ``PoP.json`` file containing ``['article_url']`` keys)
     or a plaintext file with each URL in a new line.
 
-    If ``output_zip_filename``, ``logdir`` and ``download_dir`` are not given,
-    the data will be stored in the default directories defined in the 
+    If ``output_zip_filename``, ``logdir`` or ``download_dir`` are not given,
+    the respective data will be stored in the default directories defined in the 
     appeer config file (recommended).
 
     Parameters
@@ -203,9 +201,9 @@ def main(publications, output_zip_filename=None,
     sleep_time: float
         Time (in seconds) between sending requests. If not given, the value from the appeer config file is used
     logdir: str
-        Directory in which to store the logfile. If not given, the ``appeer`` data directory is used (recommended)
+        Directory in which to store the log. If not given, the appeer data directory is used (recommended)
     download_dir: str
-        Directory into which to download the files. If not given, the default ``appeer`` data directory is used (recommended)
+        Directory into which to download the files. If not given, the default appeer data directory is used (recommended)
 ir is used (recommended)
     max_tries : int
         Maximum number of tries to get a response from an URL before giving up. If not given, the value from the appeer config file is used
@@ -248,7 +246,6 @@ ir is used (recommended)
     _logger = appeer.log.init_logger(logdir=logdir, logname=f'{scrape_label}')
     logpath = appeer.log.get_logger_fh_path(_logger)
     log_dashes = appeer.log.get_log_dashes()
-    logo = appeer.log.get_logo()
     
     jobs_db = JobsDB()
 
