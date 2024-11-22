@@ -6,7 +6,7 @@ import appeer.utils
 from appeer.datadir import Datadir
 from appeer.db.jobs_db import JobsDB
 
-from appeer.parse.initialize_parse_job import initialize_parse_job
+from appeer.parse.parsing_flow import initialize_parse_job
 
 def pack_unparsed():
     """
@@ -80,3 +80,7 @@ def parse_automatic(description=None,
             description=description,
             logdir=logdir, parse_directory=parse_directory
             )
+
+    unparsed_pack = pack_unparsed()
+
+    no_of_scrape_jobs = len(unparsed_pack)

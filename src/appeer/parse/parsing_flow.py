@@ -12,9 +12,10 @@ def initialize_parse_job(mode,
     """
     Initializes a parse job of a given ``mode``.
 
-    Available modes: automatic, scrape_job, files
+    Available modes: auto, scrape_job, files
 
-    auto:  finds all unparsed scrapes in the jobs.db database and parses them
+    auto:       finds all unparsed scrapes in the jobs.db database and parses them
+    everything: parse all scrapes, regardless of whether they were already parsed
     scrape_job: parse a scrape job with a given ``label``
     files:      parse a list of files
 
@@ -74,6 +75,9 @@ def initialize_parse_job(mode,
     start_report = appeer.log.appeer_start(start_datetime=start_datetime, logpath=logpath)
     _logger.info(start_report)
     _logger.info(description)
+    _logger.info(log_dashes)
+
+    _logger.info(f'Parse job {parse_label} initialized. (mode {mode})')
     _logger.info(log_dashes)
 
     return parse_label, _logger, start_datetime

@@ -1,6 +1,5 @@
 import click
 import pkgutil
-import importlib
 
 @click.group(name='appeer')
 def appeer_cli():

@@ -86,6 +86,39 @@ class JobsDB(DB):
         self._con.row_factory = scrape_factory
         self._cur = self._con.cursor()
 
+    def _define_parse_job_tuple(self):
+        """
+        Defines the ``self._ParseJob`` named tuple, whose attributes have the same name as the columns in the ``parse_jobs`` table.
+
+        """
+
+        self._ParseJob = namedtuple('ParseJob',
+                """label,
+                description,
+                log,
+                mode,
+                parse_directory,
+                date,
+                job_status,
+                job_successes,
+                job_fails,
+                no_of_publications,
+                job_committed""")
+
+    def _set_parse_job_factory(self):
+        """
+        Make rows returned by the cursor be ``self._ScrapeJob`` instances.
+
+        """
+
+        self._define_parse_job_tuple()
+
+        def parse_job_factory(cursor, row):
+            return self._ParseJob(*row)
+
+        self._con.row_factory = parse_job_factory
+        self._cur = self._con.cursor()
+
     def _initialize_database(self):
         """
         Initializes the SQL tables when the ``jobs`` database is created.
@@ -688,7 +721,7 @@ class JobsDB(DB):
         log : str
             Path to the log of the parse job
         mode : str
-            Parsing mode. Must be in ['A', 'S', 'F']
+            Parsing mode. Must be in ['A', 'S', 'F', 'E']
         parse_directory : str
             Path to the directory where (temporary) files for parsing are created
         date : str
@@ -696,22 +729,81 @@ class JobsDB(DB):
 
         """
 
-        data = ({
-            'label': label,
-            'description': description,
-            'log': log,
-            'mode': mode,
-            'parse_directory': parse_directory,
-            'date': date,
-            'job_status': 'I',
-            'job_successes': 0,
-            'job_fails': 0,
-            'no_of_publications': 0,
-            'job_committed': 'F'
-            })
+        if mode not in ['A', 'S', 'F', 'E']:
+            raise ValueError('Cannot add entry to the parse jobs database; invalid mode {mode} inputted.')
+
+        else:
+
+            data = ({
+                'label': label,
+                'description': description,
+                'log': log,
+                'mode': mode,
+                'parse_directory': parse_directory,
+                'date': date,
+                'job_status': 'I',
+                'job_successes': 0,
+                'job_fails': 0,
+                'no_of_publications': 0,
+                'job_committed': 'F'
+                })
+    
+            self._cur.execute("""
+            INSERT INTO parse_jobs VALUES(:label, :description, :log, :mode, :parse_directory, :date, :job_status, :job_successes, :job_fails, :no_of_publications, :job_committed)
+            """, data)
+    
+            self._con.commit()
+
+    def _get_parse_jobs(self):
+        """
+        Stores the data from the ``parse_jobs`` table to the ``self.parse_jobs`` list. 
+        
+        Each element of the list is a named tuple with attributes with the same name as the ``parse_jobs`` column names.
+
+        """
+
+        self._set_parse_job_factory()
 
         self._cur.execute("""
-        INSERT INTO parse_jobs VALUES(:label, :description, :log, :mode, :parse_directory, :date, :job_status, :job_successes, :job_fails, :no_of_publications, :job_committed)
-        """, data)
+        SELECT * FROM parse_jobs
+        """)
 
-        self._con.commit()
+        self.parse_jobs = self._cur.fetchall()
+
+    def print_parse_jobs(self):
+        """
+        Prints a summary of all entries in the ``parse_jobs`` table.
+
+        """
+        
+        self._get_parse_jobs()
+
+        header = '{:30s} {:25s} {:^4s} {:^4s} {:^4s} {:^10s}'.format('Label', 'Description', 'M', 'S', 'C', 'Succ./Tot.')
+        header_length = len(header)
+        dashes = header_length * '–'
+
+        click.echo(dashes)
+        click.echo(header)
+        click.echo(dashes)
+
+        for i, job in enumerate(self.parse_jobs):
+
+            description = job.description
+
+            if len(description) > 20:
+                description = description[0:20] + '...'
+
+            succ_tot = f'{job.job_successes}/{job.no_of_publications}'
+
+            report = '{:30s} {:25s} {:^4s} {:^4s} {:^4s} {:^10s}'.format(job.label, description, job.mode, job.job_status, job.job_committed, succ_tot)
+
+            click.echo(report)
+
+        click.echo(dashes)
+
+        click.echo('M = Parse job mode: (A) Auto; (E) Everything; (S) Scrape job; (F) File list')
+        click.echo('S = Parse job status: (I) Initialized; (R) Running; (X) Executed/Finished; (E) Error')
+        click.echo('C = Parse job committed: (T) True; (F) False')
+        click.echo('Succ./Tot. = Ratio of successful parsed publications over total inputted publications')
+
+        click.echo(dashes)
