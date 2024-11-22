@@ -624,7 +624,7 @@ class JobsDB(DB):
             else:
                 click.echo(appeer.log.boxed_message('SCRAPE DETAILS'))
 
-                header = '{:<10s} {:<10s} {:^4s} {:^8s} {:<16s} {:<90s}'.format('Index', 'Strategy', 'S', 'P', 'Output', 'URL')
+                header = '{:<10s} {:<10s} {:^4s} {:^8s} {:<16s} {:<80s}'.format('Index', 'Strategy', 'S', 'P', 'Output', 'URL')
                 dashes_details = len(header) * '–'
 
                 click.echo(dashes_details)
@@ -632,7 +632,7 @@ class JobsDB(DB):
                 click.echo(dashes_details)
 
                 for scrape in scrapes:
-                    click.echo('{:<10d} {:<10s} {:^4s} {:^8s} {:<16s} {:<90s}'.format(scrape.scrape_index, scrape.strategy, scrape.status, scrape.parsed, scrape.out_file, scrape.url))
+                    click.echo('{:<10d} {:<10s} {:^4s} {:^8s} {:<16s} {:<80s}'.format(scrape.scrape_index, scrape.strategy, scrape.status, scrape.parsed, scrape.out_file, scrape.url))
 
                 click.echo(dashes_details)
 
