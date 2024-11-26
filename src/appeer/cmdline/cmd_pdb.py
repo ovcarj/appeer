@@ -1,3 +1,7 @@
+"""
+Defines the ``appeer pdb`` CLI
+"""
+
 import click
 
 from appeer.db.jobs_db import JobsDB
@@ -21,7 +25,8 @@ from appeer.db.jobs_db import JobsDB
         appeer clean pjob --help
 
         """)
-@click.option('-u', '--uncommitted', is_flag=True, default=False, help='Print not yet committed entries ')
+@click.option('-u', '--uncommitted', is_flag=True,
+        default=False, help='Print not yet committed entries ')
 @click.argument('label', nargs=1, required=False)
 def pdb_cli(label, uncommitted):
     """
@@ -41,9 +46,3 @@ def pdb_cli(label, uncommitted):
 
     else:
         jobs_db.print_parse_jobs()
-
-def main():
-    pdb_cli()
-
-if __name__ == '__main__':
-    main()

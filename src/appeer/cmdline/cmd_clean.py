@@ -1,3 +1,7 @@
+"""
+Defines the ``appeer clean`` CLI
+"""
+
 import sys
 import click
 
@@ -108,8 +112,10 @@ def clean_config():
 
         """)
 @click.argument('label', nargs=1, required=False)
-@click.option('-b', '--bad', is_flag=True, default=False, help='Delete jobs whose status is not X')
-@click.option('-a', '--all', 'everything', is_flag=True, default=False, help='Delete all scrape jobs')
+@click.option('-b', '--bad', is_flag=True,
+        default=False, help='Delete jobs whose status is not X')
+@click.option('-a', '--all', 'everything', is_flag=True,
+        default=False, help='Delete all scrape jobs')
 def clean_sjob(label, bad, everything):
     """
     Delete data associated with a scrape job with a given ``label``.
@@ -120,7 +126,9 @@ def clean_sjob(label, bad, everything):
         csj.clean_bad_jobs()
 
     elif everything:
-        proceed = appeer.log.ask_yes_no('You are about to delete all scrape jobs data. Do you want to proceed? [Y/n]\n')
+        proceed = appeer.log.ask_yes_no(
+                'You are about to delete all scrape jobs data. Do you want to proceed? [Y/n]\n'
+                )
 
         if proceed == 'Y':
             csj.clean_all_jobs()
@@ -153,8 +161,10 @@ def clean_sjob(label, bad, everything):
 
         """)
 @click.argument('label', nargs=1, required=False)
-@click.option('-b', '--bad', is_flag=True, default=False, help='Delete jobs whose status is not X')
-@click.option('-a', '--all', 'everything', is_flag=True, default=False, help='Delete all parse jobs')
+@click.option('-b', '--bad', is_flag=True,
+        default=False, help='Delete jobs whose status is not X')
+@click.option('-a', '--all', 'everything', is_flag=True,
+        default=False, help='Delete all parse jobs')
 def clean_pjob(label, bad, everything):
     """
     Delete data associated with a parse job with a given ``label``.
@@ -165,7 +175,9 @@ def clean_pjob(label, bad, everything):
         cpj.clean_bad_jobs()
 
     elif everything:
-        proceed = appeer.log.ask_yes_no('You are about to delete all parse jobs data. Do you want to proceed? [Y/n]\n')
+        proceed = appeer.log.ask_yes_no(
+                'You are about to delete all parse jobs data. Do you want to proceed? [Y/n]\n'
+                )
 
         if proceed == 'Y':
             cpj.clean_all_jobs()
@@ -188,7 +200,6 @@ def clean_cli(name='clean', help='Delete contents of the appeer data directory')
     appeer clean downloads
 
     """
-    pass
 
 clean_cli.add_command(clean_all_data)
 clean_cli.add_command(clean_downloads)
@@ -202,9 +213,3 @@ clean_cli.add_command(clean_config)
 
 clean_cli.add_command(clean_sjob)
 clean_cli.add_command(clean_pjob)
-
-def main():
-    clean_cli()
-
-if __name__ == '__main__':
-    main()

@@ -1,3 +1,7 @@
+"""
+Defines the ``appeer sdb`` CLI
+"""
+
 import click
 
 from appeer.db.jobs_db import JobsDB
@@ -39,9 +43,3 @@ def sdb_cli(label, unparsed):
 
     else:
         jobs_db.print_scrape_jobs()
-
-def main():
-    sdb_cli()
-
-if __name__ == '__main__':
-    main()

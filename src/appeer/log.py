@@ -1,3 +1,7 @@
+"""
+Creates and writes log files
+"""
+
 import sys
 import os
 import logging
@@ -9,7 +13,7 @@ from appeer import __version__
 
 def init_logger(logname='appeer', logdir=None):
     """
-    Initialize the logger object.
+    Initialize the logger object
 
     Parameters
     ----------
@@ -35,7 +39,7 @@ def init_logger(logname='appeer', logdir=None):
 
     logger = logging.getLogger(logname)
 
-    logger.setLevel(logging.INFO) 
+    logger.setLevel(logging.INFO)
 
     stream_handler = logging.StreamHandler(sys.stdout)
     logger.addHandler(stream_handler)
@@ -49,7 +53,7 @@ def init_logger(logname='appeer', logdir=None):
 def get_logger_fh_path(logger):
     """
     Get path to where a log is stored 
-    (baseFilename of the logger FileHandler with level INFO).
+    (baseFilename of the logger FileHandler with level INFO)
 
     Parameters
     ----------
@@ -71,22 +75,20 @@ def get_logger_fh_path(logger):
 
         for handler in handlers:
 
-            if type(handler) == logging.FileHandler:
+            if isinstance(handler, logging.FileHandler):
                 if handler.level == 20:
                     base_filename += handler.baseFilename
 
         if base_filename == '':
             return 'No logger file handlers found'
 
-        else:
-            return base_filename
+        return base_filename
 
-    else:
-        return 'No logger handlers found.'
+    return 'No logger handlers found.'
 
 def appeer_start(start_datetime, logpath=None):
     """
-    Report on the beginning of ``appeer`` execution.
+    Report on the beginning of ``appeer`` execution
 
     Parameters
     ----------
@@ -110,7 +112,7 @@ def appeer_start(start_datetime, logpath=None):
     start_report += logo + '\n'
     start_report += log_dashes + '\n'
     start_report += f'appeer started on {start_datetime}\n'
-    start_report += log_dashes 
+    start_report += log_dashes
 
     if logpath:
 
@@ -122,7 +124,7 @@ def appeer_start(start_datetime, logpath=None):
 
 def appeer_end(start_datetime):
     """
-    Report on the end of ``appeer`` execution.
+    Report on the end of ``appeer`` execution
 
     Parameters
     ----------
@@ -168,7 +170,7 @@ def get_log_dashes():
 
 def get_short_log_dashes():
     """
-    Create some dashes for logging.
+    Create some dashes for logging
 
     Returns
     -------
@@ -181,7 +183,7 @@ def get_short_log_dashes():
 
 def get_very_short_log_dashes():
     """
-    Create some dashes for logging.
+    Create some dashes for logging
 
     Returns
     -------
@@ -194,7 +196,7 @@ def get_very_short_log_dashes():
 
 def boxed_message(message):
     """
-    Create a box around a message.
+    Create a box around a message
 
     Returns
     -------
@@ -205,10 +207,10 @@ def boxed_message(message):
 
     dashes = '—' * (len(message) + 4)
 
-    boxed_message = f'{dashes}\n| {message} |\n{dashes}'
+    box_message = f'{dashes}\n| {message} |\n{dashes}'
 
-    return boxed_message
-        
+    return box_message
+
 def get_logo():
     """
     Create the ``appeer`` logo.
@@ -236,7 +238,7 @@ def get_logo():
 
 def ask_yes_no(question):
     """
-    Forces the user to type 'Y' or 'n' and returns the answer.
+    Forces the user to type 'Y' or 'n' and returns the answer
 
     Parameters
     ----------
@@ -254,14 +256,14 @@ def ask_yes_no(question):
 
     input_ok = False
 
-    while(input_ok == False):
+    while input_ok is False:
 
         answer = input(question)
 
         click.echo(dashes)
 
         try:
-            assert (answer == 'Y' or answer == 'n')
+            assert answer in ('Y', 'n')
             input_ok = True
 
         except AssertionError:

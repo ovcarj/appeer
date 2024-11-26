@@ -1,23 +1,30 @@
+"""
+Creates, deletes, reads and edits the ``appeer`` configuration file
+"""
+
 import sys
 import os
+import configparser
 import click
+import platformdirs
 
 import appeer.utils
 import appeer.log
 
-import platformdirs
-import configparser
 
 class Config:
     """
     Class which handles creation, deletion, reading and editing of the
     ``appeer`` config file, which is found at 
-    ``platformdirs.user_config_dir(appname='appeer')/appeer.cfg``.
+    ``platformdirs.user_config_dir(appname='appeer')/appeer.cfg``
+
     """
 
     def __init__(self):
         """
-        Check for the existence of the config file. If it exists, read its contents.
+        Check for the existence of the config file. 
+        If it exists, read its contents
+
         """
 
         self._dashes = appeer.log.get_log_dashes()
@@ -35,14 +42,15 @@ class Config:
     def check_existence(self):
         """
         Checks the existence of the ``self.config`` directory; 
-        the ``self._config_exists`` attribute is updated accordingly.
+        the ``self._config_exists`` attribute is updated accordingly
+
         """
 
         self._config_exists = appeer.utils.file_exists(self._config_path)
 
     def define_default_values(self):
         """
-        Defines the default values for the appeer config file.
+        Defines the default values for the ``appeer`` config file
         """
 
         default_base = platformdirs.user_data_dir(appname='appeer')
@@ -58,7 +66,7 @@ class Config:
     def create_config_file(self):
         """
         Creates the ``appeer`` config file. If ``self._config_path`` already exists, 
-        the user is prompted if they want to proceed with the current config file.
+        the user is prompted if they want to proceed with the current config file
         """
 
         self.check_existence()
@@ -77,7 +85,7 @@ class Config:
                 os.makedirs(self._config_dir)
 
             try:
-                with open(self._config_path, 'w+') as configfile:
+                with open(self._config_path, 'w+', encoding='utf-8') as configfile:
                     self._config.write(configfile)
 
             except:
@@ -96,31 +104,34 @@ class Config:
                 click.echo('Failed to initialize the appeer config file at {self._config_path}. Exiting.')
                 sys.exit()
 
-            click.echo(f'appeer will store all data in a given base directory.')
+            click.echo('appeer will store all data in a given base directory.')
             click.echo(f'The default directory is: {self._base_directory}\n')
 
-            new_path = input(f'Press "Enter" to keep the default or provide another path:\n')
+            new_path = input('Press "Enter" to keep the default or provide another path:\n')
 
             if len(new_path) > 0:
 
-                self.edit_config_file(update_dict={'appeerDataDirectory': {'data_directory': new_path}})
-
+                self.edit_config_file(
+                        update_dict={
+                            'appeerDataDirectory': {'data_directory': new_path}
+                            }
+                        )
 
             click.echo(self._dashes)
-            click.echo(f'appeer config successful!')
+            click.echo('appeer config successful!')
             click.echo(self._dashes)
 
             self.print_config()
 
     def handle_config_exists(self):
         """
-        Handles the case when the user tries to run ``appeer init`` with a preexisting config file.
+        Handles the case when the user tries to run ``appeer init`` with a preexisting config file
         """
-        
+
         self.print_config()
 
         proceed = appeer.log.ask_yes_no('Do you want to proceed with the current config file? [Y/n]\n')
-        
+
         if proceed == 'Y':
 
             click.echo('Proceeding with the current appeer config file.')
@@ -128,8 +139,8 @@ class Config:
 
         elif proceed == 'n':
 
-            click.echo(f'Stopping, as requested.')
-            click.echo(f'Check "appeer config --help" for instructions on editing the config file or run "appeer clean config" to delete the config file.')
+            click.echo('Stopping, as requested.')
+            click.echo('Check "appeer config --help" for instructions on editing the config file or run "appeer clean config" to delete the config file.')
             click.echo(self._dashes)
 
             sys.exit()
@@ -152,14 +163,14 @@ class Config:
 
     def print_config(self):
         """
-        Prints the contents of the config file.
+        Prints the contents of the config file
         """
 
         self.check_existence()
 
         if self._config_exists:
 
-            with open(self._config_path, 'r') as f:
+            with open(self._config_path, 'r', encoding='utf-8') as f:
 
                 click.echo(f'Contents of the appeer config file at {self._config_path}:')
                 click.echo(self._dashes)
@@ -174,13 +185,22 @@ class Config:
         """
         Edit the contents of the config file.
 
-        The update_dict should be of form {section0: {subsection00: value00, subsection01: value01}, section1: {subsection10: value10, subsection11: value11}, ...},
-        where the sections and subsections correspond to the configuration file.
+        The update_dict should be of form:
+
+        {
+        section0: {subsection00: value00, subsection01: value01}, 
+        section1: {subsection10: value10, subsection11: value11}, 
+        ...},
+
+        where the sections and subsections correspond to the configuration file
 
         Parameters
         ----------
         update_dict : dict
-            Dictionary of form {section0: {subsection00: value00, subsection01: value01}, section1: {subsection10: value10, subsection12: value12}, ...}
+            Dictionary of form 
+            {section0: {subsection00: value00, subsection01: value01}, 
+            section1: {subsection10: value10, subsection12: value12}, 
+            ...}
 
         """
 
@@ -217,12 +237,9 @@ class Config:
                                 click.echo('Stopping, as requested.')
                                 return
 
-                            else:
-                                pass
-
                         self._config[section][subsection] = value
-                        
-                        with open(self._config_path, 'w') as configfile:
+
+                        with open(self._config_path, 'w', encoding='utf-8') as configfile:
                             self._config.write(configfile)
 
                         click.echo(f'[{section}]: {subsection} updated to {value}')
@@ -234,7 +251,8 @@ class Config:
 
     def edit_config_by_subsection(self, subsection, value):
         """
-        Edits the contents of the config file by passing only the subsection and the value, while the section is automatically found.
+        Edits the contents of the config file by passing only the 
+        subsection and the value, while the section is automatically found
 
         Parameters
         ----------
@@ -258,13 +276,14 @@ class Config:
                 self.edit_config_file(update_dict=update_dict)
 
                 break
-            
+
         else:
             click.echo(f'Invalid config option "{subsection}"')
 
     def clean_config(self):
         """
-        Deletes the ``self._config_dir`` configuration directory.
+        Deletes the ``self._config_dir`` configuration directory
+
         """
 
         if not appeer.utils.directory_exists(self._config_dir):

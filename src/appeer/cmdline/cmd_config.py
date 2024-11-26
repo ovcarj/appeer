@@ -1,3 +1,7 @@
+"""
+Defines the ``appeer config`` CLI
+"""
+
 import click
 
 from appeer.config import Config
@@ -42,13 +46,6 @@ def config_cli(name='config', help='Print/edit the appeer config file'):
     Print/edit the appeer config file
 
     """
-    pass
 
 config_cli.add_command(show_config)
 config_cli.add_command(edit_config)
-
-def main():
-    config_cli()
-
-if __name__ == '__main__':
-    main()

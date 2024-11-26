@@ -1,20 +1,22 @@
+"""
+Includes various utility functions
+"""
+
 import os
 import glob
 import re
-import sys
 import time
 import json
 
-import click
-
-import pathlib
 from shutil import make_archive, rmtree
 from datetime import datetime
 from random import randint
 
+import click
+
 def load_json(json_filename):
     """
-    Load a JSON file to a list of dictionaries.
+    Load a JSON file to a list of dictionaries
 
     Parameters
     ----------
@@ -37,7 +39,7 @@ def json2list(json_filename):
     """
     Convert a JSON file to a Python list containing only article URLs.
     If an article URL cannot be found for a given entry,
-    'no_url' will be written into the output list.
+    'no_url' will be written into the output list
 
     Parameters
     ----------
@@ -51,16 +53,18 @@ def json2list(json_filename):
 
     """
 
-    loaded_json = load_json(json_filename)
+
+    publications = load_json(json_filename)
+
     url_list = []
 
-    for i, publication in enumerate(loaded_json):
+    for publication in publications:
 
         try:
             url = publication['article_url']
 
         except KeyError:
-            url = f'no_url'
+            url = 'no_url'
 
         url_list.append(url)
 
@@ -69,7 +73,7 @@ def json2list(json_filename):
 def json2txt(json_filename, text_filename):
     """
     Convert a JSON file to a text file containing only article URLs.
-    The URLs are extracted using the ``'article_url'`` keys from the JSON entries.
+    The URLs are extracted using the ``'article_url'`` keys from the JSON entries
 
     Parameters
     ----------
@@ -81,7 +85,7 @@ def json2txt(json_filename, text_filename):
 
     url_list = json2list(json_filename)
 
-    with open(text_filename, 'w+') as f:
+    with open(text_filename, 'w+', encoding='utf-8') as f:
         for url in url_list:
             f.write(f'{url}\n')
 
@@ -99,7 +103,7 @@ def txt2list(text_filename):
     Valid entries start with 'https://' or need to be in DOI format: 10.prefix/suffix.
     If the entry format is invalid, 'no_url' is written into the output list.
 
-    If any line contains more than one entry, an exception is raised.
+    If any line contains more than one entry, an exception is raised
 
     Parameters
     ----------
@@ -115,7 +119,7 @@ def txt2list(text_filename):
 
     url_list = []
 
-    with open(text_filename, 'r') as f:
+    with open(text_filename, 'r', encoding='utf-8') as f:
 
         lines = f.readlines()
 
@@ -126,22 +130,20 @@ def txt2list(text_filename):
         if len(entry.split(' ')) > 1:
             raise ValueError(f'More than one URL entry on line #{i} in file {text_filename}')
 
+        if entry.startswith('https://'):
+            url_list.append(entry)
+
+        elif check_doi_format(entry):
+            url_list.append(f'https://doi.org/{entry}')
+
         else:
-
-            if entry.startswith('https://'):
-                url_list.append(entry)
-
-            elif is_doi_format(entry):
-                url_list.append(f'https://doi.org/{entry}')
-
-            else:
-                url_list.append('no_url')
+            url_list.append('no_url')
 
     return url_list
 
-def is_doi_format(entry):
+def check_doi_format(entry):
     """
-    Check if a string is in DOI format (10.prefix/suffix).
+    Check if a string is in DOI format (10.prefix/suffix)
 
     Parameters
     ----------
@@ -157,19 +159,15 @@ def is_doi_format(entry):
     """
 
     starts_w_10 = entry.startswith('10')
-    has_prefix_suffix = (len(re.split('\.|/', entry)) == 3)
+    has_prefix_suffix = len(re.split(r'\.|/', entry)) == 3
 
-    if (starts_w_10 and has_prefix_suffix):
-        is_doi_format = True
-
-    else:
-        is_doi_format = False
+    is_doi_format = bool(starts_w_10 and has_prefix_suffix)
 
     return is_doi_format
 
 def get_current_datetime():
     """
-    Get current datetime in the ``%Y%m%d-%H%M%S`` format.
+    Get current datetime in the ``%Y%m%d-%H%M%S`` format
 
     Returns
     -------
@@ -184,7 +182,7 @@ def get_current_datetime():
 
 def convert_time_string(time_string):
     """
-    Convert datetime from a string in ``%Y%m%d-%H%M%S`` format to a ``datetime.datetime`` object.
+    Convert datetime from a string in ``%Y%m%d-%H%M%S`` format to a ``datetime.datetime`` object
 
     Parameters
     ----------
@@ -204,7 +202,7 @@ def convert_time_string(time_string):
 
 def get_runtime(start_time, end_time):
     """
-    Calculate runtime between ``end_time`` and ``start_time``.
+    Calculate runtime between ``end_time`` and ``start_time``
 
     Parameters
     ----------
@@ -226,7 +224,7 @@ def get_runtime(start_time, end_time):
 
 def random_number():
     """
-    Generate a random number as a string (used for naming download directories and logs).
+    Generate a random number as a string (used for naming download directories and logs)
 
     Returns
     -------
@@ -241,7 +239,7 @@ def random_number():
 
 def write_text_to_file(path_to_file, text_data):
     """
-    Write text to a file.
+    Write text to a file
 
     Parameters
     ----------
@@ -252,12 +250,12 @@ def write_text_to_file(path_to_file, text_data):
 
     """
 
-    with open(path_to_file, 'w+') as f:
+    with open(path_to_file, 'w+', encoding='utf-8') as f:
         f.write(text_data)
 
 def archive_directory(output_filename, directory_name):
     """
-    Create .zip archive from a directory called ``directory_name``.
+    Create .zip archive from a directory called ``directory_name``
 
     Parameters
     ----------
@@ -274,7 +272,7 @@ def archive_directory(output_filename, directory_name):
 
 def delete_directory(directory_name):
     """
-    Delete directory called ``directory_name``.
+    Delete directory called ``directory_name``
 
     Parameters
     ----------
@@ -286,7 +284,7 @@ def delete_directory(directory_name):
     if directory_exists(directory_name):
 
         rmtree(directory_name)
-    
+
         if not directory_exists(directory_name):
             click.echo(f'Deleted {directory_name}')
 
@@ -298,7 +296,7 @@ def delete_directory(directory_name):
 
 def delete_file(file_name):
     """
-    Delete file called ``file_name``.
+    Delete file called ``file_name``
 
     Parameters
     ----------
@@ -321,7 +319,7 @@ def delete_file(file_name):
 
 def directory_exists(directory_path):
     """
-    Check if directory ``directory_path`` exists.
+    Check if directory ``directory_path`` exists
 
     Parameters
     ----------
@@ -341,7 +339,7 @@ def directory_exists(directory_path):
 
 def file_exists(file_path):
     """
-    Check if file at ``file_path`` exists.
+    Check if file at ``file_path`` exists
 
     Parameters
     ----------
@@ -361,7 +359,7 @@ def file_exists(file_path):
 
 def is_directory_empty(directory_path):
     """
-    Check if directory ``directory_path`` is not empty.
+    Check if directory ``directory_path`` is not empty
 
     Parameters
     ----------
@@ -388,7 +386,7 @@ def is_directory_empty(directory_path):
 
 def get_files_in_dir(directory_path):
     """
-    Get a list of files in a directory (excluding subdirectories).
+    Get a list of files in a directory (excluding subdirectories)
 
     Parameters
     ----------
@@ -400,7 +398,7 @@ def get_files_in_dir(directory_path):
         List of filepaths in the searched directory
 
     """
-    
+
     files = glob.glob(f'{directory_path}/*')
     files = [f for f in files if os.path.isfile(f)]
 
@@ -408,7 +406,8 @@ def get_files_in_dir(directory_path):
 
 def delete_directory_files(directory_path):
     """
-    Deletes files in a directory (does not delete subdirectories and their file content).
+    Deletes files in a directory 
+    (does not delete subdirectories and their file content)
 
     Parameters
     ----------
@@ -420,10 +419,13 @@ def delete_directory_files(directory_path):
     files = get_files_in_dir(directory_path)
 
     if files:
+
         for f in files:
+
             try:
                 os.remove(f)
-            except:
+
+            except PermissionError:
                 click.echo(f'Could not delete file {f}.')
     else:
         click.echo('Nothing to delete.')
@@ -439,7 +441,7 @@ def delete_directory_files(directory_path):
 
 def delete_directory_content(directory_path):
     """
-    Deletes everything in a directory.
+    Deletes everything in a directory
 
     Parameters
     ----------
@@ -449,7 +451,7 @@ def delete_directory_content(directory_path):
     """
 
     contents = glob.glob(f'{directory_path}/*')
-    
+
     if len(contents) == 0:
         click.echo('Nothing to delete.')
         return

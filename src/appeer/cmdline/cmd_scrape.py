@@ -1,3 +1,7 @@
+"""
+Defines the ``appeer scrape`` CLI
+"""
+
 import click
 
 from appeer.scrape.scrape import main as scrape_main
@@ -34,21 +38,42 @@ Valid entries start with 'https://' or need to be in DOI format (10.prefix/suffi
 If the entry format is invalid, the invalid URL is not scraped.
 """)
 @click.argument('filename')
-@click.option('-o', '--output', 'output_zip_filename', help="Name of the ZIP archive containing the downloaded data. If not given, a default name based on the timestamp is generated")
-@click.option('-s', '--description', 'description', default=None, help="Optional description of the scrape job")
-@click.option('-t', '--sleep_time', default=default_sleep_time, show_default=True, help="Time (in seconds) between sending requests")
-@click.option('-m', '--max_tries', default=default_max_tries, show_default=True, help="Maximum number of tries to get a response from an URL before giving up")
-@click.option('-rt', '--retry_sleep_time', default=default_retry_sleep_time, show_default=True, help="Time (in seconds) between retrying a URL")
-@click.option('-l', '--logdir', default=None, help="Directory in which to store the log. If not given, the default appeer data directory is used")
-@click.option('-d', '--download_dir', default=None, help="Directory into which to download the files. If not given, the default appeer data directory is used")
-@click.option('-c', '--cleanup', is_flag=True, default=False, help="Delete the directory with the downloaded data upon successful completion (output ZIP archive is kept)")
-@click.option('-p','--preview', is_flag=True, default=False, help="Get a preview of the scraping strategy for a given input file (no scraping is done)")
+@click.option('-o', '--output', 'output_zip_filename',
+        help="Name of the ZIP archive containing the downloaded data. If not given, a default name based on the timestamp is generated")
+@click.option('-s', '--description', 'description',
+        default=None,
+        help="Optional description of the scrape job")
+@click.option('-t', '--sleep_time',
+        default=default_sleep_time, show_default=True,
+        help="Time (in seconds) between sending requests")
+@click.option('-m', '--max_tries',
+        default=default_max_tries, show_default=True,
+        help="Maximum number of tries to get a response from an URL before giving up")
+@click.option('-rt', '--retry_sleep_time',
+        default=default_retry_sleep_time, show_default=True,
+        help="Time (in seconds) between retrying a URL")
+@click.option('-l', '--logdir',
+        default=None,
+        help="Directory in which to store the log. If not given, the default appeer data directory is used")
+@click.option('-d', '--download_dir',
+        default=None,
+        help="Directory into which to download the files. If not given, the default appeer data directory is used")
+@click.option('-c', '--cleanup',
+        is_flag=True, default=False,
+        help="Delete the directory with the downloaded data after scrape")
+@click.option('-p','--preview',
+        is_flag=True, default=False,
+        help="Get a preview of the scraping strategy for a given input file")
 def scrape_cli(filename, output_zip_filename,
         description,
         sleep_time, max_tries, retry_sleep_time,
         logdir, download_dir,
         cleanup,
         preview):
+    """
+    Scrape publications
+
+    """
 
     publications = filename
 
@@ -56,11 +81,8 @@ def scrape_cli(filename, output_zip_filename,
         scrape_planning(publications)
 
     else:
-        scrape_main(publications, output_zip_filename, 
+        scrape_main(publications, output_zip_filename,
             description,
             sleep_time, max_tries, retry_sleep_time,
             logdir, download_dir,
             cleanup)
-
-if __name__ == '__main__':
-    scrape_cli()

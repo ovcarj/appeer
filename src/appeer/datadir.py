@@ -1,5 +1,9 @@
+"""
+Handles creation, deletion and checking of the ``appeer`` data directory,
+which is defined in the ``appeer`` configuration file
+"""
+
 import os
-import platformdirs
 import click
 
 import appeer.utils
@@ -10,8 +14,11 @@ from appeer.config import Config
 class Datadir:
     """
     Handles creation, deletion and checking of the
-    ``appeer`` data directory, which is, by default, 
-    found at ``platformdirs.user_data_dir(appname='appeer')``.
+    ``appeer`` data directory defined in the ``appeer``
+    configuration file.
+
+    The default location is given by 
+    ``platformdirs.user_data_dir(appname='appeer')``.
 
     """
 
@@ -24,9 +31,9 @@ class Datadir:
         config = Config()
 
         self.base = config._base_directory
-        
+
         self.downloads = os.path.join(self.base, 'downloads')
-        
+
         self.scrape_archives = os.path.join(self.base, 'scrape')
         self.scrape_logs = os.path.join(self.base, 'scrape_logs')
 
@@ -54,8 +61,6 @@ class Datadir:
 
         """
 
-        input_ok = False
-        
         if self._base_exists:
 
             overwrite = appeer.log.ask_yes_no(f'WARNING: appeer data base directory exists at {self.base}\nDo you want to overwrite it? All data will be deleted. [Y/n]\n')

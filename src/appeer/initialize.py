@@ -1,5 +1,10 @@
-import appeer.log
+"""
+Initializes the ``appeer`` configuration file, databases 
+and creates all the default directories
+"""
+
 import click
+import appeer.log
 
 from appeer.datadir import Datadir
 from appeer.config import Config
@@ -55,7 +60,7 @@ def initialize_appeer():
     click.echo(dashes)
 
     create_databases()
-    
+
     click.echo(dashes)
 
     click.echo('appeer initialization complete!')
