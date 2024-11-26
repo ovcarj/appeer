@@ -1,13 +1,15 @@
+"""Base abstract class for handling appeer databases"""
+
 import os
 import sys
-import click
 import abc
 import sqlite3
+import click
 
-import appeer.log 
-import appeer.utils
+from appeer.general import log
+from appeer.general import utils
 
-from appeer.datadir import Datadir
+from appeer.general.datadir import Datadir
 
 class DB(abc.ABC):
     """
@@ -35,8 +37,7 @@ class DB(abc.ABC):
         if db_type not in ['jobs', 'pub']:
             raise ValueError('Failed to initialize the DB class. db_type must be "jobs" or "pub".')
 
-        else:
-            self._db_type = db_type
+        self._db_type = db_type
 
         if self._db_type == 'jobs':
             self._db_path = os.path.join(datadir.db, 'jobs.db')
@@ -51,7 +52,7 @@ class DB(abc.ABC):
             self._con = sqlite3.connect(self._db_path)
             self._cur = self._con.cursor()
 
-        self._dashes = appeer.log.get_log_dashes()
+        self._dashes = log.get_log_dashes()
 
     def _check_existence(self):
         """
@@ -60,7 +61,7 @@ class DB(abc.ABC):
 
         """
 
-        self._db_exists = appeer.utils.file_exists(self._db_path)
+        self._db_exists = utils.file_exists(self._db_path)
 
     def create_database(self):
         """
@@ -82,7 +83,7 @@ class DB(abc.ABC):
                 self._con = sqlite3.connect(self._db_path)
                 self._cur = self._con.cursor()
 
-            except:
+            except PermissionError:
                 click.echo(f'Failed to initialize the {self._db_type} database at {self._db_path}. Do you have the required permissions to write to the requested directory? Exiting.')
                 sys.exit()
 
@@ -98,23 +99,14 @@ class DB(abc.ABC):
                 click.echo(f'Failed to initialize the {self._db_type} database at {self._db_path}. Exiting.')
                 sys.exit()
 
-    @abc.abstractmethod
-    def _initialize_database(self):
-        """
-        Initializes the SQL tables when the database is created.
-
-        """
-        pass
-
     def _handle_database_exists(self):
         """
-        Handles the case when the user tries to run ``self.create_database()`` with a preexisting database.
+        Handles the case when the user tries to run ``self.create_database()`` 
+        with a preexisting database.
 
         """
-        
-        input_ok = False
 
-        proceed = appeer.log.ask_yes_no(f'Do you want to proceed with the current {self._db_type} database? [Y/n]\n')
+        proceed = log.ask_yes_no(f'Do you want to proceed with the current {self._db_type} database? [Y/n]\n')
 
         if proceed == 'Y':
 
@@ -122,7 +114,14 @@ class DB(abc.ABC):
 
         elif proceed == 'n':
 
-            click.echo(f'Stopping, as requested.')
+            click.echo('Stopping, as requested.')
             click.echo(self._dashes)
 
             sys.exit()
+
+    @abc.abstractmethod
+    def _initialize_database(self):
+        """
+        Initializes the SQL tables when the database is created.
+
+        """

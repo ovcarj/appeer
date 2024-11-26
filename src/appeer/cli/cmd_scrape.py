@@ -6,7 +6,7 @@ import click
 
 from appeer.scrape.scrape import main as scrape_main
 from appeer.scrape.scrape_plan import main as scrape_planning
-from appeer.config import Config
+from appeer.general.config import Config
 
 cfg = Config()._config
 

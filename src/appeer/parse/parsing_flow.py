@@ -1,9 +1,9 @@
 import os
 
-import appeer.log
-import appeer.utils
+from appeer.general import log
+from appeer.general import utils
 
-from appeer.datadir import Datadir
+from appeer.general.datadir import Datadir
 from appeer.db.jobs_db import JobsDB
 
 def initialize_parse_job(mode,
@@ -42,8 +42,8 @@ def initialize_parse_job(mode,
 
     """
 
-    start_datetime = appeer.utils.get_current_datetime()
-    random_number = appeer.utils.random_number()
+    start_datetime = utils.get_current_datetime()
+    random_number = utils.random_number()
     parse_label = f'parse_{start_datetime}_{random_number}'
 
     default_dirs = Datadir()
@@ -57,22 +57,22 @@ def initialize_parse_job(mode,
     if parse_directory is None:
         parse_directory = os.path.join(default_dirs.parse, parse_label)
 
-    _logger = appeer.log.init_logger(logdir=logdir, logname=f'{parse_label}')
-    logpath = appeer.log.get_logger_fh_path(_logger)
-    log_dashes = appeer.log.get_log_dashes()
+    _logger = log.init_logger(logdir=logdir, logname=f'{parse_label}')
+    logpath = log.get_logger_fh_path(_logger)
+    log_dashes = log.get_log_dashes()
 
     jobs_db = JobsDB()
 
     jobs_db._add_parse_job(
             label=parse_label,
             description=description,
-            log=logpath,
+            log_path=logpath,
             mode=mode,
             parse_directory=parse_directory,
             date=start_datetime
             )
 
-    start_report = appeer.log.appeer_start(start_datetime=start_datetime, logpath=logpath)
+    start_report = log.appeer_start(start_datetime=start_datetime, logpath=logpath)
     _logger.info(start_report)
     _logger.info(description)
     _logger.info(log_dashes)

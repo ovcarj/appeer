@@ -2,7 +2,7 @@ import click
 
 from collections import namedtuple
 
-import appeer.log
+from appeer.general import log
 
 from appeer.db.db import DB
 

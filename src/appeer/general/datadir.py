@@ -6,10 +6,10 @@ which is defined in the ``appeer`` configuration file
 import os
 import click
 
-import appeer.utils
-import appeer.log
+from appeer.general import log
+from appeer.general import utils
 
-from appeer.config import Config
+from appeer.general.config import Config
 
 class Datadir:
     """
@@ -44,7 +44,7 @@ class Datadir:
 
         self.check_existence()
 
-        self._dashes = appeer.log.get_log_dashes()
+        self._dashes = log.get_log_dashes()
 
     def check_existence(self):
         """
@@ -52,7 +52,7 @@ class Datadir:
         the ``self._base_exists`` attribute is updated accordingly.
         """
 
-        self._base_exists = appeer.utils.directory_exists(self.base)
+        self._base_exists = utils.directory_exists(self.base)
 
     def create_directories(self):
         """
@@ -63,7 +63,7 @@ class Datadir:
 
         if self._base_exists:
 
-            overwrite = appeer.log.ask_yes_no(f'WARNING: appeer data base directory exists at {self.base}\nDo you want to overwrite it? All data will be deleted. [Y/n]\n')
+            overwrite = log.ask_yes_no(f'WARNING: appeer data base directory exists at {self.base}\nDo you want to overwrite it? All data will be deleted. [Y/n]\n')
 
             if overwrite == 'Y':
 
@@ -112,7 +112,7 @@ class Datadir:
             click.echo('Nothing to clean.')
 
         else:
-            appeer.utils.delete_directory(self.base)
+            utils.delete_directory(self.base)
 
         self.check_existence()
 
@@ -122,7 +122,7 @@ class Datadir:
 
         """
 
-        appeer.utils.delete_directory_content(self.downloads)
+        utils.delete_directory_content(self.downloads)
 
     def clean_scrape_archives(self):
         """
@@ -130,7 +130,7 @@ class Datadir:
 
         """
 
-        appeer.utils.delete_directory_files(self.scrape_archives)
+        utils.delete_directory_files(self.scrape_archives)
 
     def clean_scrape_logs(self):
         """
@@ -138,7 +138,7 @@ class Datadir:
 
         """
 
-        appeer.utils.delete_directory_files(self.scrape_logs)
+        utils.delete_directory_files(self.scrape_logs)
 
     def clean_parse(self):
         """
@@ -146,7 +146,7 @@ class Datadir:
 
         """
 
-        appeer.utils.delete_directory_files(self.parse)
+        utils.delete_directory_files(self.parse)
 
     def clean_parse_logs(self):
         """
@@ -154,7 +154,7 @@ class Datadir:
 
         """
 
-        appeer.utils.delete_directory_files(self.parse_logs)
+        utils.delete_directory_files(self.parse_logs)
 
     def clean_db(self):
         """
@@ -162,7 +162,7 @@ class Datadir:
 
         """
 
-        appeer.utils.delete_directory_files(self.db)
+        utils.delete_directory_files(self.db)
 
     def clean_scrape_job_data(self, scrape_label, download_directory, zip_file, log):
         """
@@ -188,14 +188,14 @@ class Datadir:
 
         click.echo(f'Deleting data associated with the scrape job: {scrape_label} ...')
 
-        appeer.utils.delete_directory(download_directory)
-        appeer.utils.delete_file(zip_file)
-        appeer.utils.delete_file(log)
+        utils.delete_directory(download_directory)
+        utils.delete_file(zip_file)
+        utils.delete_file(log)
 
         if (
-            not appeer.utils.directory_exists(download_directory) and
-            not appeer.utils.file_exists(zip_file) and
-            not appeer.utils.file_exists(log)
+            not utils.directory_exists(download_directory) and
+            not utils.file_exists(zip_file) and
+            not utils.file_exists(log)
             ):
 
             success = True
@@ -229,12 +229,12 @@ class Datadir:
 
         click.echo(f'Deleting data associated with the parse job: {parse_label} ...')
 
-        appeer.utils.delete_directory(parse_directory)
-        appeer.utils.delete_file(log)
+        utils.delete_directory(parse_directory)
+        utils.delete_file(log)
 
         if (
-            not appeer.utils.directory_exists(parse_directory) and
-            not appeer.utils.file_exists(log)
+            not utils.directory_exists(parse_directory) and
+            not utils.file_exists(log)
             ):
 
             success = True

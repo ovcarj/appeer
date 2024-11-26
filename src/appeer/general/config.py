@@ -8,8 +8,8 @@ import configparser
 import click
 import platformdirs
 
-import appeer.utils
-import appeer.log
+from appeer.general import log
+from appeer.general import utils
 
 
 class Config:
@@ -27,7 +27,7 @@ class Config:
 
         """
 
-        self._dashes = appeer.log.get_log_dashes()
+        self._dashes = log.get_log_dashes()
 
         self._config = configparser.ConfigParser()
 
@@ -46,7 +46,7 @@ class Config:
 
         """
 
-        self._config_exists = appeer.utils.file_exists(self._config_path)
+        self._config_exists = utils.file_exists(self._config_path)
 
     def define_default_values(self):
         """
@@ -81,7 +81,7 @@ class Config:
 
             self.define_default_values()
 
-            if not appeer.utils.directory_exists(self._config_dir):
+            if not utils.directory_exists(self._config_dir):
                 os.makedirs(self._config_dir)
 
             try:
@@ -130,7 +130,7 @@ class Config:
 
         self.print_config()
 
-        proceed = appeer.log.ask_yes_no('Do you want to proceed with the current config file? [Y/n]\n')
+        proceed = log.ask_yes_no('Do you want to proceed with the current config file? [Y/n]\n')
 
         if proceed == 'Y':
 
@@ -231,7 +231,7 @@ class Config:
                             editing_datadir = True
 
                             click.echo('WARNING: You are attempting to edit the path to the base appeer data directory. If the directory was not previously initialized, you will have to rerun "appeer init".')
-                            proceed = appeer.log.ask_yes_no('Do you wish to proceed?\n')
+                            proceed = log.ask_yes_no('Do you wish to proceed?\n')
 
                             if proceed == 'n':
                                 click.echo('Stopping, as requested.')
@@ -286,8 +286,8 @@ class Config:
 
         """
 
-        if not appeer.utils.directory_exists(self._config_dir):
+        if not utils.directory_exists(self._config_dir):
             click.echo('Nothing to delete.')
 
         else:
-            appeer.utils.delete_directory(self._config_dir)
+            utils.delete_directory(self._config_dir)

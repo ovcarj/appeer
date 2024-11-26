@@ -4,7 +4,7 @@ Defines the ``appeer config`` CLI
 
 import click
 
-from appeer.config import Config
+from appeer.general.config import Config
 
 @click.command('print', help='Print the appeer config file')
 def show_config():

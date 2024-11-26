@@ -2,12 +2,12 @@ import os
 import sys
 import time
 
-import appeer.utils
-import appeer.log
+from appeer.general import utils
+from appeer.general import log
 
-from appeer.datadir import Datadir
+from appeer.general.datadir import Datadir
 from appeer.db.jobs_db import JobsDB
-from appeer.config import Config
+from appeer.general.config import Config
 from appeer.scrape.input_handling import parse_data_source, handle_input_reading
 from appeer.scrape.scrape_plan import ScrapePlan
 from appeer.scrape.scraper import Scraper
@@ -41,8 +41,8 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
 
     """
 
-    log_dashes = appeer.log.get_log_dashes()
-    short_log_dashes = appeer.log.get_short_log_dashes()
+    log_dashes = log.get_log_dashes()
+    short_log_dashes = log.get_short_log_dashes()
 
     count_success = 0
     count_fail = 0
@@ -56,7 +56,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
             column_name='no_of_publications',
             new_value=no_of_publications)
     
-    _logger.info(f'{appeer.log.boxed_message("SCRAPE JOB")}\n')
+    _logger.info(f'{log.boxed_message("SCRAPE JOB")}\n')
     _logger.info(f'Starting to download {no_of_publications} publications to {download_directory}\n')
     _logger.info(log_dashes)
 
@@ -121,7 +121,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
             if scraper._write_text:
 
                 writing_path = f'{download_directory}/{i}_html.dat'
-                appeer.utils.write_text_to_file(writing_path, 
+                utils.write_text_to_file(writing_path, 
                         scraper.response_text)
                 _logger.info(f'Wrote downloaded text to {writing_path}')
 
@@ -156,7 +156,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
 
         time.sleep(sleep_time)
 
-    _logger.info(f'\n{appeer.log.boxed_message("SCRAPE JOB SUMMARY")}\n')
+    _logger.info(f'\n{log.boxed_message("SCRAPE JOB SUMMARY")}\n')
     _logger.info('Scraping job finished!')
     _logger.info(f'Success: {count_success}/{no_of_publications}')
     _logger.info(f'Fail: {count_fail}/{no_of_publications}\n')
@@ -214,8 +214,8 @@ ir is used (recommended)
 
     """
 
-    start_datetime = appeer.utils.get_current_datetime()
-    random_number = appeer.utils.random_number()
+    start_datetime = utils.get_current_datetime()
+    random_number = utils.random_number()
     scrape_label = f'scrape_{start_datetime}_{random_number}'
 
     default_dirs = Datadir()
@@ -243,22 +243,22 @@ ir is used (recommended)
     if download_dir is None:
         download_dir = os.path.join(default_dirs.downloads, f'{scrape_label}')
 
-    _logger = appeer.log.init_logger(logdir=logdir, logname=f'{scrape_label}')
-    logpath = appeer.log.get_logger_fh_path(_logger)
-    log_dashes = appeer.log.get_log_dashes()
+    _logger = log.init_logger(logdir=logdir, logname=f'{scrape_label}')
+    logpath = log.get_logger_fh_path(_logger)
+    log_dashes = log.get_log_dashes()
     
     jobs_db = JobsDB()
 
     jobs_db._add_scrape_job(
             label=scrape_label,
             description=description,
-            log=logpath,
+            log_path=logpath,
             download_directory=download_dir,
             zip_file=output_zip_filename,
             date=start_datetime
             )
 
-    start_report = appeer.log.appeer_start(start_datetime=start_datetime, logpath=logpath)
+    start_report = log.appeer_start(start_datetime=start_datetime, logpath=logpath)
     _logger.info(start_report)
     _logger.info(description)
     _logger.info(log_dashes)
@@ -276,7 +276,7 @@ ir is used (recommended)
                 new_value='E'
                 )
 
-        end_report = appeer.log.appeer_end(start_datetime=start_datetime)
+        end_report = log.appeer_end(start_datetime=start_datetime)
         _logger.info(end_report)
         sys.exit()
 
@@ -291,7 +291,7 @@ ir is used (recommended)
             max_tries=max_tries, retry_sleep_time=retry_sleep_time,
             jobs_db=jobs_db)
 
-    appeer.utils.archive_directory(output_filename=output_zip_filename, directory_name=download_dir)
+    utils.archive_directory(output_filename=output_zip_filename, directory_name=download_dir)
 
     if output_zip_filename.endswith('.zip'):
         zip_name_log = output_zip_filename
@@ -304,14 +304,14 @@ ir is used (recommended)
 
     if cleanup:
 
-        appeer.utils.delete_directory(download_dir)
+        utils.delete_directory(download_dir)
 
         _logger.info(f'Deleted directory {download_dir}, as requested.')
         _logger.info(log_dashes)
 
     _logger.info('Job done!')
 
-    end_report = appeer.log.appeer_end(start_datetime=start_datetime)
+    end_report = log.appeer_end(start_datetime=start_datetime)
     _logger.info(end_report)
 
     jobs_db._update_scrape_job_entry(

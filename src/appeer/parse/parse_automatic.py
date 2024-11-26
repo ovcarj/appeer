@@ -1,9 +1,9 @@
 import click
 
-import appeer.log
-import appeer.utils
+from appeer.general import log
+from appeer.general import utils
 
-from appeer.datadir import Datadir
+from appeer.general.datadir import Datadir
 from appeer.db.jobs_db import JobsDB
 
 from appeer.parse.parsing_flow import initialize_parse_job

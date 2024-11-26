@@ -1,8 +1,8 @@
 import sys
 import click
 
-import appeer.utils
-import appeer.log
+from appeer.general import utils
+from appeer.general import log
 
 from appeer.scrape.input_handling import parse_data_source, handle_input_reading
 
@@ -171,10 +171,10 @@ class ScrapePlan:
         """
     
         strategy_report = ''
-        dashes = appeer.log.get_log_dashes()
-        short_dashes = appeer.log.get_short_log_dashes()
+        dashes = log.get_log_dashes()
+        short_dashes = log.get_short_log_dashes()
 
-        strategy_report += f'{appeer.log.boxed_message("SCRAPE PLAN SUMMARY")}\n\n'
+        strategy_report += f'{log.boxed_message("SCRAPE PLAN SUMMARY")}\n\n'
 
         no_of_urls = len(self.url_list)
     
@@ -197,7 +197,7 @@ class ScrapePlan:
             if count > 0:
                 strategy_report += f'{strategy}: {count}/{no_of_urls}\n'
     
-        strategy_report += f'\n{appeer.log.boxed_message("DETAILED SCRAPE PLAN (url publisher strategy)")}\n\n'
+        strategy_report += f'\n{log.boxed_message("DETAILED SCRAPE PLAN (url publisher strategy)")}\n\n'
         
         for i, url in enumerate(self.url_list):
             strategy_report += f'{url} {self.publishers[i]} {self.strategies[i]}\n'
@@ -215,8 +215,8 @@ def main(publications):
 
     """
 
-    start_datetime = appeer.utils.get_current_datetime()
-    start_report = appeer.log.appeer_start(start_datetime)
+    start_datetime = utils.get_current_datetime()
+    start_report = log.appeer_start(start_datetime)
     click.echo(start_report)
 
     data_source, data_source_type, plaintext_ex_message, json_ex_message = parse_data_source(publications)
@@ -225,7 +225,7 @@ def main(publications):
     click.echo(reading_report)
 
     if not reading_passed:
-        end_report = appeer.log.appeer_end(start_datetime=start_datetime)
+        end_report = log.appeer_end(start_datetime=start_datetime)
         click.echo(end_report)
         sys.exit()
     
@@ -234,7 +234,7 @@ def main(publications):
     strategy_report = plan._strategy_report
     click.echo(strategy_report)
 
-    end_report = appeer.log.appeer_end(start_datetime)
+    end_report = log.appeer_end(start_datetime)
     click.echo(end_report)
 
 def _get_allowed_strategies():

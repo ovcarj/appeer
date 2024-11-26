@@ -1,8 +1,8 @@
 import click
 
-import appeer.log
+from appeer.general import log
 
-from appeer.datadir import Datadir
+from appeer.general.datadir import Datadir
 from appeer.db.jobs_db import JobsDB
 
 def clean_scrape_job(scrape_label):
@@ -16,8 +16,8 @@ def clean_scrape_job(scrape_label):
 
     """
 
-    dashes = appeer.log.get_log_dashes()
-    short_dashes = appeer.log.get_short_log_dashes()
+    dashes = log.get_log_dashes()
+    short_dashes = log.get_short_log_dashes()
 
     jdb = JobsDB()
 

@@ -4,10 +4,12 @@ and creates all the default directories
 """
 
 import click
-import appeer.log
 
-from appeer.datadir import Datadir
-from appeer.config import Config
+from appeer.general import log
+from appeer.general import utils
+
+from appeer.general.datadir import Datadir
+from appeer.general.config import Config
 from appeer.db.jobs_db import JobsDB
 from appeer.db.pub_db import PubDB
 
@@ -47,11 +49,11 @@ def initialize_appeer():
     
     """
 
-    dashes = appeer.log.get_log_dashes()
+    dashes = log.get_log_dashes()
 
-    start_datetime = appeer.utils.get_current_datetime()
+    start_datetime = utils.get_current_datetime()
 
-    start_report = appeer.log.appeer_start(start_datetime)
+    start_report = log.appeer_start(start_datetime)
     click.echo(start_report)
 
     create_config()
@@ -65,7 +67,7 @@ def initialize_appeer():
 
     click.echo('appeer initialization complete!')
 
-    end_report = appeer.log.appeer_end(start_datetime)
+    end_report = log.appeer_end(start_datetime)
     click.echo(end_report)
 
 if __name__ == '__main__':

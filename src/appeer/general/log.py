@@ -7,7 +7,7 @@ import os
 import logging
 import click
 
-import appeer.utils
+from appeer.general import utils
 
 from appeer import __version__
 
@@ -138,15 +138,15 @@ def appeer_end(start_datetime):
  
     """
 
-    end_datetime = appeer.utils.get_current_datetime()
+    end_datetime = utils.get_current_datetime()
 
     end_report = ''
 
     log_dashes = get_log_dashes()
 
-    runtime = appeer.utils.get_runtime(
-            appeer.utils.convert_time_string(start_datetime),
-            appeer.utils.convert_time_string(end_datetime)
+    runtime = utils.get_runtime(
+            utils.convert_time_string(start_datetime),
+            utils.convert_time_string(end_datetime)
             )
 
     end_report += log_dashes + '\n'

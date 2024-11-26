@@ -25,7 +25,7 @@ dependencies = [
 ]
 
 [project.scripts]
-appeer = 'appeer.cmdline:appeer_cli'
+appeer = 'appeer.cli:appeer_cli'
 
 [project.optional-dependencies]
 test = ['pytest>=6.0', 'pytest-cov']

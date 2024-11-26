@@ -1,34 +1,30 @@
-import click
+"""Handles the jobs database, which includes scrape and parse jobs"""
 
 from collections import namedtuple
 
-import appeer.log
+import click
+
+from appeer.general import log
 
 from appeer.db.db import DB
 #from appeer.scrape.scrape_plan import _get_allowed_strategies
 
 class JobsDB(DB):
     """
-    Handles the ``scrape.db`` database.
+    Handles the ``jobs.db`` database.
 
     """
 
     def __init__(self):
         """
-        If the scrape database exists, establishes a connection and a cursor.
+        If the jobs database exists, establishes a connection and a cursor.
+
+        Defines ScrapeJob, Scrape, ParseJob and Parse named tuples
+        to conveniently extract data from the SQL tables.
 
         """
 
         super().__init__(db_type='jobs')
-
-        # TODO: strategies in the ScrapePlan will be revised
-        #self._allowed_strategies = _get_allowed_strategies()
-
-    def _define_scrape_job_tuple(self):
-        """
-        Defines the ``self._ScrapeJob`` named tuple, whose attributes have the same name as the columns in the ``scrape_jobs`` table.
-
-        """
 
         self._ScrapeJob = namedtuple('ScrapeJob',
                 """label,
@@ -43,12 +39,6 @@ class JobsDB(DB):
                 no_of_publications,
                 job_parsed""")
 
-    def _define_scrape_tuple(self):
-        """
-        Defines the ``self._Scrape`` named tuple, whose attributes have the same name as the columns in the ``scrape`` table.
-
-        """
-
         self._Scrape = namedtuple('Scrape',
                 """label,
                 scrape_index,
@@ -57,40 +47,6 @@ class JobsDB(DB):
                 status,
                 out_file,
                 parsed""")
-
-    def _set_scrape_job_factory(self):
-        """
-        Make rows returned by the cursor be ``self._ScrapeJob`` instances.
-
-        """
-
-        self._define_scrape_job_tuple()
-
-        def scrape_job_factory(cursor, row):
-            return self._ScrapeJob(*row)
-
-        self._con.row_factory = scrape_job_factory
-        self._cur = self._con.cursor()
-
-    def _set_scrape_factory(self):
-        """
-        Make rows returned by the cursor be ``self._Scrape`` instances.
-
-        """
-
-        self._define_scrape_tuple()
-
-        def scrape_factory(cursor, row):
-            return self._Scrape(*row)
-
-        self._con.row_factory = scrape_factory
-        self._cur = self._con.cursor()
-
-    def _define_parse_job_tuple(self):
-        """
-        Defines the ``self._ParseJob`` named tuple, whose attributes have the same name as the columns in the ``parse_jobs`` table.
-
-        """
 
         self._ParseJob = namedtuple('ParseJob',
                 """label,
@@ -105,18 +61,49 @@ class JobsDB(DB):
                 no_of_publications,
                 job_committed""")
 
-    def _set_parse_job_factory(self):
+        # TODO: strategies in the ScrapePlan will be revised
+        #self._allowed_strategies = _get_allowed_strategies()
+
+    def _set_job_factory(self, job_type):
         """
-        Make rows returned by the cursor be ``self._ScrapeJob`` instances.
+        Make rows returned by the cursor be instances of the
+        self._{job_type} named tuples.
+
+        job_type must be in ('ScrapeJob', 'Scrape', 'ParseJob', 'Parse')
+
+        Parameters
+        ----------
+        job_type : str
+            Specifies which job type is to be returned
 
         """
 
-        self._define_parse_job_tuple()
+        if job_type not in ('ScrapeJob', 'Scrape', 'ParseJob', 'Parse'):
+            raise ValueError("Invalid job_type {job_type} specified. Must be in ('ScrapeJob', 'Scrape', 'ParseJob', 'Parse').")
 
-        def parse_job_factory(cursor, row):
-            return self._ParseJob(*row)
+        match job_type:
 
-        self._con.row_factory = parse_job_factory
+            case 'ScrapeJob':
+
+                def scrape_job_factory(cursor, row):
+                    return self._ScrapeJob(*row)
+
+                self._con.row_factory = scrape_job_factory
+
+            case 'Scrape':
+
+                def scrape_factory(cursor, row):
+                    return self._Scrape(*row)
+
+                self._con.row_factory = scrape_factory
+
+            case 'ParseJob':
+
+                def parse_job_factory(cursor, row):
+                    return self._ParseJob(*row)
+
+                self._con.row_factory = parse_job_factory
+
         self._cur = self._con.cursor()
 
     def _initialize_database(self):
@@ -136,7 +123,7 @@ class JobsDB(DB):
     def _add_scrape_job(self,
             label,
             description,
-            log,
+            log_path,
             download_directory,
             zip_file,
             date):
@@ -149,7 +136,7 @@ class JobsDB(DB):
             Label of the scrape job
         description : str
             Description of the scrape job
-        log : str
+        log_path : str
             Path to the log of the scrape job
         download_directory : str
             Path to the directory where the data is being downloaded
@@ -163,7 +150,7 @@ class JobsDB(DB):
         data = ({
             'label': label,
             'description': description,
-            'log': log,
+            'log': log_path,
             'download_directory': download_directory,
             'zip_file': zip_file,
             'date': date,
@@ -182,7 +169,8 @@ class JobsDB(DB):
 
     def _update_scrape_job_entry(self, label, column_name, new_value):
         """
-        Given a ``label``, updates the corresponding ``column_name`` value with ``new_value`` in the ``scrape_jobs`` table.
+        Given a ``label``, updates the corresponding ``column_name`` value 
+        with ``new_value`` in the ``scrape_jobs`` table.
 
         ``column_name`` must be in ['job_status', 'job_successes', 'job_fails', 'no_of publications', 'job_parsed'].
 
@@ -204,75 +192,65 @@ class JobsDB(DB):
 
                 if new_value not in ['I', 'R', 'X', 'E']:
                     raise ValueError(f'Cannot update the scrape database. Invalid job_status={new_value} given; must be "I", "R", "X" or "E".')
-        
-                else:
-        
-                    self._cur.execute("""
-                    UPDATE scrape_jobs SET job_status = ? WHERE label = ?
-                    """, (new_value, label))
-        
-                    self._con.commit()
+
+                self._cur.execute("""
+                UPDATE scrape_jobs SET job_status = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
 
             case 'no_of_publications':
 
                 if not isinstance(new_value, int):
                     raise ValueError(f'Cannot update the scrape database. Invalid no_of_publications={new_value} given; must be a positive integer.')
-        
-                elif not (new_value > 0):
+
+                if not new_value > 0:
                     raise ValueError(f'Cannot update the scrape database. Invalid no_of_publications={new_value} given; must be a positive integer.')
 
-                else:
-        
-                    self._cur.execute("""
-                    UPDATE scrape_jobs SET no_of_publications = ? WHERE label = ?
-                    """, (new_value, label))
-        
-                    self._con.commit()
+                self._cur.execute("""
+                UPDATE scrape_jobs SET no_of_publications = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
 
             case 'job_successes':
 
                 if not isinstance(new_value, int):
                     raise ValueError(f'Cannot update the scrape database. Invalid no_of_success={new_value} given; must be an integer.')
         
-                elif not (new_value >= 0):
+                if not new_value >= 0:
                     raise ValueError(f'Cannot update the scrape database. Invalid no_of_success={new_value} given; must be a non-negative integer.')
 
-                else:
-        
-                    self._cur.execute("""
-                    UPDATE scrape_jobs SET job_successes = ? WHERE label = ?
-                    """, (new_value, label))
-        
-                    self._con.commit()
+                self._cur.execute("""
+                UPDATE scrape_jobs SET job_successes = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
 
             case 'job_fails':
 
                 if not isinstance(new_value, int):
                     raise ValueError(f'Cannot update the scrape database. Invalid no_of_fails={new_value} given; must be an integer.')
-        
-                elif not (new_value >= 0):
+
+                if not new_value >= 0:
                     raise ValueError(f'Cannot update the scrape database. Invalid no_of_fails={new_value} given; must be a non-negative integer.')
 
-                else:
-        
-                    self._cur.execute("""
-                    UPDATE scrape_jobs SET job_fails = ? WHERE label = ?
-                    """, (new_value, label))
-        
-                    self._con.commit()
+                self._cur.execute("""
+                UPDATE scrape_jobs SET job_fails = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
 
             case 'job_parsed':
 
                 if new_value not in ['T', 'F']:
                     raise ValueError(f'Cannot update the scrape database. Invalid job_parsed={new_value} given; must be "T" or "F".')
-        
-                else:
-        
-                    self._cur.execute("""
-                    UPDATE scrape_jobs SET job_parsed = ? WHERE label = ?
-                    """, (new_value, label))
-        
-                    self._con.commit()
+
+                self._cur.execute("""
+                UPDATE scrape_jobs SET job_parsed = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
 
             case _:
 
@@ -282,11 +260,12 @@ class JobsDB(DB):
         """
         Stores the data from the ``scrape_jobs`` table to the ``self.scrape_jobs`` list. 
         
-        Each element of the list is a named tuple with attributes with the same name as the ``scrape_jobs`` column names.
+        Each element of the list is a named tuple 
+        with attributes with the same name as the ``scrape_jobs`` column names.
 
         """
 
-        self._set_scrape_job_factory()
+        self._set_job_factory(job_type='ScrapeJob')
 
         self._cur.execute("""
         SELECT * FROM scrape_jobs
@@ -299,7 +278,7 @@ class JobsDB(DB):
         Prints a summary of all entries in the ``scrape_jobs`` table.
 
         """
-        
+
         self._get_scrape_jobs()
 
         header = '{:30s} {:35s} {:^4s} {:^4s} {:^10s}'.format('Label', 'Description', 'S', 'P', 'Succ./Tot.')
@@ -310,7 +289,7 @@ class JobsDB(DB):
         click.echo(header)
         click.echo(dashes)
 
-        for i, job in enumerate(self.scrape_jobs):
+        for job in self.scrape_jobs:
 
             description = job.description
 
@@ -342,7 +321,7 @@ class JobsDB(DB):
 
         """
 
-        self._set_scrape_job_factory()
+        self._set_job_factory(job_type='ScrapeJob')
 
         self._cur.execute("""
         SELECT * FROM scrape_jobs WHERE label = ?
@@ -389,7 +368,7 @@ class JobsDB(DB):
 
         """
 
-        self._set_scrape_job_factory()
+        self._set_job_factory(job_type='ScrapeJob')
 
         self._cur.execute("""
         SELECT * FROM scrape_jobs WHERE job_status!='X'
@@ -424,7 +403,7 @@ class JobsDB(DB):
             success = False
 
         else:
-            
+
             self._cur.execute("""
             DELETE FROM scrape_jobs WHERE label = ?
             """, (scrape_label,))
@@ -585,10 +564,13 @@ class JobsDB(DB):
         job_exists = self._scrape_job_exists(label)
 
         if not job_exists:
+
             click.echo(f'Scrape job {label} does not exist.')
+            scrapes = None
 
         else:
-            self._set_scrape_factory()
+
+            self._set_job_factory(job_type='Scrape')
 
             self._cur.execute("""
             SELECT * FROM scrape WHERE label = ?
@@ -604,7 +586,7 @@ class JobsDB(DB):
 
         """
 
-        self._set_scrape_factory()
+        self._set_job_factory(job_type='Scrape')
 
         self._cur.execute("""
         SELECT * FROM scrape WHERE status = ? AND parsed = ?
@@ -632,11 +614,11 @@ class JobsDB(DB):
 
         else:
 
-            dashes = appeer.log.get_log_dashes()
+            dashes = log.get_log_dashes()
 
             job = self._get_scrape_job(label)
 
-            click.echo(appeer.log.boxed_message(f'SCRAPE JOB: {job.label}'))
+            click.echo(log.boxed_message(f'SCRAPE JOB: {job.label}'))
             click.echo(job.description)
             click.echo(f'Date: {job.date}')
             click.echo(dashes)
@@ -655,7 +637,7 @@ class JobsDB(DB):
                 click.echo('No files downloaded')
 
             else:
-                click.echo(appeer.log.boxed_message('SCRAPE DETAILS'))
+                click.echo(log.boxed_message('SCRAPE DETAILS'))
 
                 header = '{:<10s} {:<10s} {:^4s} {:^8s} {:<16s} {:<80s}'.format('Index', 'Strategy', 'S', 'P', 'Output', 'URL')
                 dashes_details = len(header) * '–'
@@ -705,7 +687,7 @@ class JobsDB(DB):
     def _add_parse_job(self,
             label,
             description,
-            log,
+            log_path,
             mode,
             parse_directory,
             date):
@@ -737,7 +719,7 @@ class JobsDB(DB):
             data = ({
                 'label': label,
                 'description': description,
-                'log': log,
+                'log': log_path,
                 'mode': mode,
                 'parse_directory': parse_directory,
                 'date': date,
@@ -762,7 +744,7 @@ class JobsDB(DB):
 
         """
 
-        self._set_parse_job_factory()
+        self._set_job_factory(job_type='ParseJob')
 
         self._cur.execute("""
         SELECT * FROM parse_jobs
@@ -819,7 +801,7 @@ class JobsDB(DB):
 
         """
 
-        self._set_parse_job_factory()
+        self._set_job_factory(job_type='ParseJob')
 
         self._cur.execute("""
         SELECT * FROM parse_jobs WHERE label = ?

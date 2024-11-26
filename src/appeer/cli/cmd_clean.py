@@ -5,10 +5,10 @@ Defines the ``appeer clean`` CLI
 import sys
 import click
 
-import appeer.log
+from appeer.general import log
 
-from appeer.datadir import Datadir
-from appeer.config import Config
+from appeer.general.datadir import Datadir
+from appeer.general.config import Config
 from appeer.scrape import clean_scrape_jobs as csj
 from appeer.parse import clean_parse_jobs as cpj
 
@@ -126,7 +126,7 @@ def clean_sjob(label, bad, everything):
         csj.clean_bad_jobs()
 
     elif everything:
-        proceed = appeer.log.ask_yes_no(
+        proceed = log.ask_yes_no(
                 'You are about to delete all scrape jobs data. Do you want to proceed? [Y/n]\n'
                 )
 
@@ -175,7 +175,7 @@ def clean_pjob(label, bad, everything):
         cpj.clean_bad_jobs()
 
     elif everything:
-        proceed = appeer.log.ask_yes_no(
+        proceed = log.ask_yes_no(
                 'You are about to delete all parse jobs data. Do you want to proceed? [Y/n]\n'
                 )
 

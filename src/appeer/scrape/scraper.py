@@ -1,6 +1,6 @@
 import requests
 
-import appeer.log
+from appeer.general import log
 
 from appeer.scrape.scrape_plan import ScrapePlan
 from appeer.scrape.request import Request
@@ -43,9 +43,9 @@ class Scraper:
         self._define_strategy_map()
 
         self._report = ''
-        self._dashes = appeer.log.get_log_dashes()
-        self._short_dashes = appeer.log.get_short_log_dashes()
-        self._very_short_dashes = appeer.log.get_very_short_log_dashes()
+        self._dashes = log.get_log_dashes()
+        self._short_dashes = log.get_short_log_dashes()
+        self._very_short_dashes = log.get_very_short_log_dashes()
 
         self._write_text = False
         self._publisher_change = False

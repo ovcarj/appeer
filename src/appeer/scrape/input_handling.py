@@ -1,8 +1,8 @@
 import sys
 import json
 
-import appeer.utils
-import appeer.log
+from appeer.general import utils
+from appeer.general import log
 
 def parse_data_source(publications):
     """
@@ -40,7 +40,7 @@ def parse_data_source(publications):
 
         try:
 
-            data_source = appeer.utils.txt2list(publications)
+            data_source = utils.txt2list(publications)
             data_source_type = 'plaintext'
 
         except ValueError:
@@ -49,7 +49,7 @@ def parse_data_source(publications):
             
             try:
 
-                data_source = appeer.utils.json2list(publications)
+                data_source = utils.json2list(publications)
                 data_source_type = 'JSON'
 
             except json.decoder.JSONDecodeError:
@@ -100,10 +100,10 @@ def handle_input_reading(publications, data_source_type, plaintext_ex_message, j
     """
 
     report = ''
-    log_dashes = appeer.log.get_log_dashes()
-    short_log_dashes = appeer.log.get_short_log_dashes()
+    log_dashes = log.get_log_dashes()
+    short_log_dashes = log.get_short_log_dashes()
 
-    report += f'{appeer.log.boxed_message("READING INPUT FILE")}\n\n'
+    report += f'{log.boxed_message("READING INPUT FILE")}\n\n'
 
     report += 'Attempting to read the input data...\n'
 

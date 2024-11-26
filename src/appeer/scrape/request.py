@@ -2,7 +2,7 @@ import sys
 import time
 import requests
 
-from appeer.log import get_very_short_log_dashes as short_dashes
+from appeer.general.log import get_very_short_log_dashes as short_dashes
 
 class Request:
     """

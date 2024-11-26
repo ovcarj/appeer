@@ -163,4 +163,5 @@ cython_debug/
 # .swp files
 *.swp
 
-# appeer related stuff
+# Pylint
+# .pylintrc
