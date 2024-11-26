@@ -201,3 +201,42 @@ class Datadir:
             click.echo(f'Failed to delete all data associated with {scrape_label}.\n')
 
         return success
+
+    def clean_parse_job_data(self, parse_label, parse_directory, log):
+        """
+        Deletes all data associated with a parse job.
+
+        Parameters
+        ----------
+        parse_label : str
+            Label of the parse job whose data is being deleted
+        parse_directory : str
+            Path to the directory where the data was downloaded
+        log : str
+            Path to the parse log
+
+        Returns
+        -------
+        success : str
+            True if any data does not exist after attempting deletion, False if it does
+
+        """
+
+        click.echo(f'Deleting data associated with the parse job: {parse_label} ...')
+
+        appeer.utils.delete_directory(parse_directory)
+        appeer.utils.delete_file(log)
+
+        if (
+            not appeer.utils.directory_exists(parse_directory) and
+            not appeer.utils.file_exists(log)
+            ):
+
+            success = True
+            click.echo(f'Data associated with {parse_label} deleted.\n')
+
+        else:
+            success = False
+            click.echo(f'Failed to delete all data associated with {parse_label}.\n')
+
+        return success

@@ -807,3 +807,102 @@ class JobsDB(DB):
         click.echo('Succ./Tot. = Ratio of successful parsed publications over total inputted publications')
 
         click.echo(dashes)
+
+    def _get_parse_job(self, parse_label):
+        """
+        Returns an instance of the ``self._ParseJob`` named tuple for a parse job with label ``parse_label``. 
+        
+        Parameters
+        ----------
+        parse_label | str
+            Label of the sought parse job
+
+        """
+
+        self._set_parse_job_factory()
+
+        self._cur.execute("""
+        SELECT * FROM parse_jobs WHERE label = ?
+        """, (parse_label,))
+
+        parse_job = self._cur.fetchone()
+
+        return parse_job
+
+    def _parse_job_exists(self, parse_label):
+        """
+        Checks whether the parse job with ``parse_label`` exists in the database.
+
+        Parameters
+        ----------
+        parse_label | str
+            Label of the parse job whose existence is being checked
+
+        Returns
+        -------
+        job_exists | bool
+            True if parse job exists, False if it does not
+
+        """
+
+        job = self._get_parse_job(parse_label=parse_label)
+
+        if job is None:
+            job_exists = False
+
+        else:
+            job_exists = True
+
+        return job_exists
+
+    def delete_parse_job_entry(self, parse_label):
+        """
+        Deletes the row given by ``parse_label`` from the ``parse_jobs`` table.
+
+        Parameters
+        ----------
+        parse_label | str
+            Label of the parse job whose entry is being removed
+
+        Returns
+        -------
+        success | bool
+            True if the entry was removed, False if it was not
+
+        """
+
+        click.echo(f'Removing entry {parse_label} from the parse database ...')
+
+        job_exists = self._parse_job_exists(parse_label)
+
+        if not job_exists:
+            click.echo(f'The entry for parse job {parse_label} does not exist.')
+            success = False
+
+        else:
+            
+            self._cur.execute("""
+            DELETE FROM parse_jobs WHERE label = ?
+            """, (parse_label,))
+
+            self._con.commit()
+
+            job_exists = self._parse_job_exists(parse_label)
+
+            if not job_exists:
+                success = True
+
+#                self._cur.execute("""
+#                DELETE FROM parse WHERE label = ?
+#                """, (parse_label,))
+
+#                self._con.commit()
+
+#                click.echo(f'Entry {parse_label} removed.\n')
+#                success = True
+
+            else:
+                click.echo(f'Could not delete entry {parse_label}\n')
+                success = False
+
+        return success
