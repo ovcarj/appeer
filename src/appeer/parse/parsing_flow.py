@@ -63,7 +63,7 @@ def initialize_parse_job(mode,
 
     jobs_db = JobsDB()
 
-    jobs_db._add_parse_job(
+    jobs_db.parse_jobs.add_entry(
             label=parse_label,
             description=description,
             log_path=logpath,

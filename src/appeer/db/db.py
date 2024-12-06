@@ -3,13 +3,18 @@
 import os
 import sys
 import abc
+import importlib
 import sqlite3
+
+from functools import partial
+
 import click
 
 from appeer.general import log
 from appeer.general import utils
-
 from appeer.general.datadir import Datadir
+
+from appeer.db.tables.registered_tables import get_registered_tables
 
 class DB(abc.ABC):
     """
@@ -17,6 +22,41 @@ class DB(abc.ABC):
     which are found at ``Datadir().base/db``.
 
     """
+
+    def __init_subclass__(cls, tables):
+        """
+        Attributes the given tables to the database class
+
+        Parameters
+        ----------
+        tables : list
+            List of tables belonging to the database
+
+        """
+
+        if not isinstance(tables, list):
+            raise TypeError('Tables must be given as a list.')
+
+        registered_tables = get_registered_tables().keys()
+
+        for table in tables:
+
+            if not isinstance(table, str):
+                raise TypeError('Table name must be a string.')
+
+            if not table in registered_tables:
+                raise PermissionError(f'Unknown table {table} given. Allowed table names: {list(registered_tables)}')
+
+        cls._table_classes = {}
+        cls.tables = tables
+
+        for table in tables:
+
+            _table_module = importlib.import_module(f'appeer.db.tables.{table}')
+            _table_class_name = "".join([word.capitalize() for word in table.split('_')])
+            _table_class = getattr(_table_module, _table_class_name)
+
+            cls._table_classes[f'{table}'] = _table_class
 
     def __init__(self, db_type):
         """
@@ -34,7 +74,7 @@ class DB(abc.ABC):
 
         self._base = datadir.base
 
-        if db_type not in ['jobs', 'pub']:
+        if db_type not in ['jobs', 'pubs']:
             raise ValueError('Failed to initialize the DB class. db_type must be "jobs" or "pub".')
 
         self._db_type = db_type
@@ -42,8 +82,8 @@ class DB(abc.ABC):
         if self._db_type == 'jobs':
             self._db_path = os.path.join(datadir.db, 'jobs.db')
 
-        elif self._db_type == 'pub':
-            self._db_path = os.path.join(datadir.db, 'pub.db')
+        elif self._db_type == 'pubs':
+            self._db_path = os.path.join(datadir.db, 'pubs.db')
 
         self._check_existence()
 
@@ -51,6 +91,17 @@ class DB(abc.ABC):
 
             self._con = sqlite3.connect(self._db_path)
             self._cur = self._con.cursor()
+
+            def _get_table_instance(self, connection, tab_class):
+                return tab_class(connection)
+
+            for table_name, table_class in self._table_classes.items():
+                setattr(self.__class__,
+                        table_name,
+                        property(partial(_get_table_instance,
+                                         connection=self._con,
+                                         tab_class=table_class))
+                        )
 
         self._dashes = log.get_log_dashes()
 
@@ -91,6 +142,8 @@ class DB(abc.ABC):
 
             if self._db_exists:
 
+                self.__init__()
+
                 self._initialize_database()
 
                 click.echo(f'{self._db_type} database initialized at {self._db_path}')
@@ -119,9 +172,11 @@ class DB(abc.ABC):
 
             sys.exit()
 
-    @abc.abstractmethod
     def _initialize_database(self):
         """
         Initializes the SQL tables when the database is created.
 
         """
+
+        for table in self.tables:
+            getattr(self, table).initialize_table()

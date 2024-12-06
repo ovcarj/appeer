@@ -36,10 +36,10 @@ def sdb_cli(label, unparsed):
     jobs_db = JobsDB()
 
     if unparsed:
-        jobs_db.print_all_unparsed()
+        jobs_db.scrapes.print_unparsed()
 
     elif label:
-        jobs_db.print_scrape_job_details(label)
+        jobs_db.scrape_jobs.print_job_details(label=label)
 
     else:
-        jobs_db.print_scrape_jobs()
+        jobs_db.scrape_jobs.print_summary()

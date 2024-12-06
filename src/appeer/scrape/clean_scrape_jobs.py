@@ -1,3 +1,5 @@
+"""Deletes scrape jobs"""
+
 import click
 
 from appeer.general import log
@@ -17,19 +19,18 @@ def clean_scrape_job(scrape_label):
     """
 
     dashes = log.get_log_dashes()
-    short_dashes = log.get_short_log_dashes()
 
     jdb = JobsDB()
 
-    job_exists = jdb._scrape_job_exists(scrape_label)
+    job_exists = jdb.scrape_jobs.job_exists(scrape_label)
 
     if not job_exists:
         click.echo(f'Scrape job {scrape_label} does not exist.')
 
     else:
 
-        scrape_job = jdb._get_scrape_job(scrape_label)
-    
+        scrape_job = jdb.scrape_jobs.get_job(label=scrape_label)
+
         datadir = Datadir()
 
         data_deleted = datadir.clean_scrape_job_data(
@@ -41,7 +42,7 @@ def clean_scrape_job(scrape_label):
 
         if data_deleted:
 
-            entry_deleted = jdb.delete_job_entry(scrape_label)
+            entry_deleted = jdb.scrape_jobs.delete_entry(label=scrape_label)
 
             if entry_deleted:
                 click.echo(dashes)
@@ -71,7 +72,7 @@ def clean_bad_jobs():
 
     jdb = JobsDB()
 
-    bad_jobs = jdb._get_bad_scrape_jobs()
+    bad_jobs = jdb.scrape_jobs.bad_jobs
 
     bad_labels = [bad_job.label for bad_job in bad_jobs]
 
@@ -84,8 +85,7 @@ def clean_all_jobs():
     """
 
     jdb = JobsDB()
-    jdb._get_scrape_jobs()
 
-    labels = [job.label for job in jdb.scrape_jobs]
+    labels = [job.label for job in jdb.scrape_jobs.entries]
 
     clean_scrape_jobs(labels)

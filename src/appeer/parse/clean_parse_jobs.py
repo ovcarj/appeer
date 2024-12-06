@@ -17,19 +17,18 @@ def clean_parse_job(parse_label):
     """
 
     dashes = log.get_log_dashes()
-    short_dashes = log.get_short_log_dashes()
 
     jdb = JobsDB()
 
-    job_exists = jdb._parse_job_exists(parse_label)
+    job_exists = jdb.parse_jobs.job_exists(label=parse_label)
 
     if not job_exists:
         click.echo(f'Parse job {parse_label} does not exist.')
 
     else:
 
-        parse_job = jdb._get_parse_job(parse_label)
-    
+        parse_job = jdb.parse_jobs.get_job(label=parse_label)
+
         datadir = Datadir()
 
         data_deleted = datadir.clean_parse_job_data(
@@ -40,7 +39,7 @@ def clean_parse_job(parse_label):
 
         if data_deleted:
 
-            entry_deleted = jdb.delete_parse_job_entry(parse_label)
+            entry_deleted = jdb.parse_jobs.delete_entry(label=parse_label)
 
             if entry_deleted:
                 click.echo(dashes)
@@ -70,7 +69,7 @@ def clean_bad_jobs():
 
     jdb = JobsDB()
 
-    bad_jobs = jdb._get_bad_parse_jobs()
+    bad_jobs = jdb.parse_jobs.bad_jobs
 
     bad_labels = [bad_job.label for bad_job in bad_jobs]
 
@@ -83,8 +82,7 @@ def clean_all_jobs():
     """
 
     jdb = JobsDB()
-    jdb._get_parse_jobs()
 
-    labels = [job.label for job in jdb.parse_jobs]
+    labels = [job.label for job in jdb.parse_jobs.entries]
 
     clean_parse_jobs(labels)

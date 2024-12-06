@@ -28,7 +28,7 @@ def pack_unparsed():
 
     jobs_db = JobsDB()
 
-    unparsed_scrapes = jobs_db._get_all_unparsed()
+    unparsed_scrapes = jobs_db.scrapes.unparsed
 
     unique_job_labels = list(set([scrape.label for scrape in unparsed_scrapes]))
 
@@ -38,7 +38,7 @@ def pack_unparsed():
                 {
                 f'{job_label}':
                     {
-                    'zip_file': jobs_db._get_scrape_job(job_label).zip_file,
+                    'zip_file': jobs_db.scrape_jobs.get_job(label=job_label).zip_file,
                     'scrapes': [scrape for scrape in unparsed_scrapes if scrape.label == job_label]
                     }
                 }
@@ -52,7 +52,7 @@ def pack_unparsed():
     return unparsed_pack
 
 def parse_automatic(description=None,
-        logdir=None, parse_directory=None, 
+        logdir=None, parse_directory=None,
         commit=False, cleanup=True):
     """
     Searches the scrape database for unparsed files, performs the parsing,

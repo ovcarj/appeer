@@ -11,7 +11,7 @@ from appeer.general import utils
 from appeer.general.datadir import Datadir
 from appeer.general.config import Config
 from appeer.db.jobs_db import JobsDB
-from appeer.db.pub_db import PubDB
+from appeer.db.pubs_db import PubsDB
 
 def create_config():
     """
@@ -40,8 +40,8 @@ def create_databases():
     jobs_db = JobsDB()
     jobs_db.create_database()
 
-    pub_db = PubDB()
-    pub_db.create_database()
+    pubs_db = PubsDB()
+    pubs_db.create_database()
 
 def initialize_appeer():
     """
