@@ -38,11 +38,9 @@ def pdb_cli(label, uncommitted):
 
     if uncommitted:
         pass
-#        jobs_db.print_all_uncommitted()
 
     elif label:
         pass
-#        jobs_db.print_parse_job_details(label)
 
     else:
-        jobs_db.print_parse_jobs()
+        jobs_db.parse_jobs.print_summary()
