@@ -65,11 +65,12 @@ class Config:
     def define_default_values(self):
         """
         Defines the default values for the ``appeer`` config file
+
         """
 
         default_base = platformdirs.user_data_dir(appname='appeer')
 
-        self._config['appeerDataDirectory'] = {'data_directory': default_base}
+        self._config['Global'] = {'data_directory': default_base}
 
         self._config['ScrapeDefaults'] = {
                 'sleep_time': 1.0,
@@ -79,8 +80,10 @@ class Config:
 
     def create_config_file(self):
         """
-        Creates the ``appeer`` config file. If ``self._config_path`` already exists, 
-        the user is prompted if they want to proceed with the current config file
+        Creates the ``appeer`` config file. If ``self._config_path``
+        already exists, the user is prompted if they want to proceed
+        with the current config file
+
         """
 
         if self._config_exists:
@@ -100,7 +103,7 @@ class Config:
                 with open(self._config_path, 'w+', encoding='utf-8') as configfile:
                     self._config.write(configfile)
 
-            except:
+            except PermissionError:
                 click.echo('Failed to initialize the appeer config file at {self._config_path}. Exiting.')
                 sys.exit()
 
@@ -123,7 +126,7 @@ class Config:
 
                 self.edit_config_file(
                         update_dict={
-                            'appeerDataDirectory': {'data_directory': new_path}
+                            'Global': {'data_directory': new_path}
                             }
                         )
 
@@ -158,13 +161,14 @@ class Config:
     def read_config(self):
         """
         Reads the contents of the config file and stores the values to ``self._config``.
+
         """
 
         if self._config_exists:
 
             self._config.read(self._config_path)
 
-            self._base_directory = self._config['appeerDataDirectory']['data_directory']
+            self._base_directory = self._config['Global']['data_directory']
 
         else:
             click.echo('The appeer config file does not exist.')
@@ -232,7 +236,7 @@ class Config:
 
                         editing_datadir = False
 
-                        if (section == 'appeerDataDirectory' and subsection == 'data_directory'):
+                        if (section == 'Global' and subsection == 'data_directory'):
 
                             editing_datadir = True
 
