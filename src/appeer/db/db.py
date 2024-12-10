@@ -44,7 +44,7 @@ class DB(abc.ABC):
             if not isinstance(table, str):
                 raise TypeError('Table name must be a string.')
 
-            if not table in registered_tables:
+            if table not in registered_tables:
                 raise PermissionError(f'Unknown table {table} given. Allowed table names: {list(registered_tables)}')
 
         cls._table_classes = {}
@@ -85,8 +85,6 @@ class DB(abc.ABC):
         elif self._db_type == 'pubs':
             self._db_path = os.path.join(datadir.db, 'pubs.db')
 
-        self._check_existence()
-
         if self._db_exists:
 
             self._con = sqlite3.connect(self._db_path)
@@ -105,22 +103,36 @@ class DB(abc.ABC):
 
         self._dashes = log.get_log_dashes()
 
-    def _check_existence(self):
+    @property
+    def _db_exists(self):
         """
-        Checks the existence of the ``appeer`` database;
-        the ``self._db_exists`` attribute is updated accordingly
+        Checks for the existence of a database at self._db_path
+
+        Returns
+        -------
+        _db_exists : bool
+            True if a file exists at self._db_path, False otherwise
 
         """
 
-        self._db_exists = utils.file_exists(self._db_path)
+        exists = utils.file_exists(self._db_path)
+
+        return exists
+
+    @_db_exists.setter
+    def _db_exists(self, value):
+        """
+        This attribute should never be set directly
+
+        """
+
+        raise PermissionError('The "_db_exists" attribute cannot be directly set')
 
     def create_database(self):
         """
         Creates the database.
 
         """
-
-        self._check_existence()
 
         if self._db_exists:
 
@@ -138,8 +150,6 @@ class DB(abc.ABC):
                 click.echo(f'Failed to initialize the {self._db_type} database at {self._db_path}. Do you have the required permissions to write to the requested directory? Exiting.')
                 sys.exit()
 
-            self._check_existence()
-
             if self._db_exists:
 
                 self.__init__()
@@ -154,7 +164,7 @@ class DB(abc.ABC):
 
     def _handle_database_exists(self):
         """
-        Handles the case when the user tries to run ``self.create_database()`` 
+        Handles the case when the user tries to run ``self.create_database()``
         with a preexisting database.
 
         """
