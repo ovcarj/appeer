@@ -15,14 +15,14 @@ from appeer.general import utils
 class Config:
     """
     Class which handles creation, deletion, reading and editing of the
-    ``appeer`` config file, which is found at 
+    ``appeer`` config file, which is found at
     ``platformdirs.user_config_dir(appname='appeer')/appeer.cfg``
 
     """
 
     def __init__(self):
         """
-        Check for the existence of the config file. 
+        Check for the existence of the config file.
         If it exists, read its contents
 
         """
@@ -34,19 +34,33 @@ class Config:
         self._config_dir = platformdirs.user_config_dir(appname='appeer')
         self._config_path = os.path.join(self._config_dir, 'appeer.cfg')
 
-        self.check_existence()
-
         if self._config_exists:
             self.read_config()
 
-    def check_existence(self):
+    @property
+    def _config_exists(self):
         """
-        Checks the existence of the ``self.config`` directory; 
-        the ``self._config_exists`` attribute is updated accordingly
+        Checks for the existence of a file at self._config_path
+
+        Returns
+        -------
+        _config_exists : bool
+            True if a file exists at self._config_path, False otherwise
 
         """
 
-        self._config_exists = utils.file_exists(self._config_path)
+        exists = utils.file_exists(self._config_path)
+
+        return exists
+
+    @_config_exists.setter
+    def _config_exists(self, value):
+        """
+        This attribute should never be set directly
+
+        """
+
+        raise PermissionError('The "_config_exists" attribute cannot be directly set')
 
     def define_default_values(self):
         """
@@ -69,8 +83,6 @@ class Config:
         the user is prompted if they want to proceed with the current config file
         """
 
-        self.check_existence()
-
         if self._config_exists:
 
             click.echo(f'WARNING: appeer config file already exists at {self._config_path}')
@@ -91,8 +103,6 @@ class Config:
             except:
                 click.echo('Failed to initialize the appeer config file at {self._config_path}. Exiting.')
                 sys.exit()
-
-            self.check_existence()
 
             if self._config_exists:
 
@@ -150,8 +160,6 @@ class Config:
         Reads the contents of the config file and stores the values to ``self._config``.
         """
 
-        self.check_existence()
-
         if self._config_exists:
 
             self._config.read(self._config_path)
@@ -165,8 +173,6 @@ class Config:
         """
         Prints the contents of the config file
         """
-
-        self.check_existence()
 
         if self._config_exists:
 
@@ -188,8 +194,8 @@ class Config:
         The update_dict should be of form:
 
         {
-        section0: {subsection00: value00, subsection01: value01}, 
-        section1: {subsection10: value10, subsection11: value11}, 
+        section0: {subsection00: value00, subsection01: value01},
+        section1: {subsection10: value10, subsection11: value11},
         ...},
 
         where the sections and subsections correspond to the configuration file
@@ -197,9 +203,9 @@ class Config:
         Parameters
         ----------
         update_dict : dict
-            Dictionary of form 
-            {section0: {subsection00: value00, subsection01: value01}, 
-            section1: {subsection10: value10, subsection12: value12}, 
+            Dictionary of form
+            {section0: {subsection00: value00, subsection01: value01},
+            section1: {subsection10: value10, subsection12: value12},
             ...}
 
         """
@@ -251,7 +257,7 @@ class Config:
 
     def edit_config_by_subsection(self, subsection, value):
         """
-        Edits the contents of the config file by passing only the 
+        Edits the contents of the config file by passing only the
         subsection and the value, while the section is automatically found
 
         Parameters
