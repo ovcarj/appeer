@@ -11,13 +11,14 @@ from appeer.general import utils
 
 from appeer.general.config import Config
 
+
 class Datadir:
     """
     Handles creation, deletion and checking of the
     ``appeer`` data directory defined in the ``appeer``
     configuration file.
 
-    The default location is given by 
+    The default location is given by
     ``platformdirs.user_data_dir(appname='appeer')``.
 
     """
@@ -30,7 +31,7 @@ class Datadir:
 
         config = Config()
 
-        self.base = config._base_directory
+        self.base = config.settings['GlobalSettings']['data_directory']
 
         self.downloads = os.path.join(self.base, 'downloads')
 

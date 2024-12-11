@@ -1,6 +1,4 @@
-"""
-Includes various utility functions
-"""
+"""Includes various utility functions"""
 
 import os
 import glob

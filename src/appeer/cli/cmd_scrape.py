@@ -8,14 +8,15 @@ from appeer.scrape.scrape import main as scrape_main
 from appeer.scrape.scrape_plan import main as scrape_planning
 from appeer.general.config import Config
 
-cfg = Config()._config
+settings = Config().settings
 
-try:
-    default_sleep_time = float(cfg['ScrapeDefaults']['sleep_time'])
-    default_max_tries = int(cfg['ScrapeDefaults']['max_tries'])
-    default_retry_sleep_time = float(cfg['ScrapeDefaults']['retry_sleep_time'])
+if settings:
 
-except KeyError:
+    default_sleep_time = float(settings['ScrapeDefaults']['sleep_time'])
+    default_max_tries = int(settings['ScrapeDefaults']['max_tries'])
+    default_retry_sleep_time = float(settings['ScrapeDefaults']['retry_sleep_time'])
+
+else:
     # most probably "appeer init" was not yet run
     default_sleep_time = 1.0
     default_max_tries = 3

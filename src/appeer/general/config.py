@@ -1,6 +1,4 @@
-"""
-Creates, deletes, reads and edits the ``appeer`` configuration file
-"""
+"""Creates, deletes, reads and edits the ``appeer`` configuration file"""
 
 import sys
 import os
@@ -35,7 +33,7 @@ class Config:
         self._config_path = os.path.join(self._config_dir, 'appeer.cfg')
 
         if self._config_exists:
-            self.read_config()
+            self._read_config()
 
     @property
     def _config_exists(self):
@@ -62,7 +60,36 @@ class Config:
 
         raise PermissionError('The "_config_exists" attribute cannot be directly set')
 
-    def define_default_values(self):
+    @property
+    def settings(self):
+        """
+        Reads the config file and stores the settings 
+        to the ``self.settings`` dictionary
+
+        """
+
+        if self._config_exists:
+
+            self._read_config()
+
+            _settings = {s:dict(self._config.items(s))
+                             for s in self._config.sections()}
+
+        else:
+            _settings = None
+
+        return _settings
+
+    @settings.setter
+    def settings(self, value):
+        """
+        This attribute should never be set directly
+
+        """
+
+        raise PermissionError('The "settings" attribute cannot be directly set')
+
+    def _define_default_values(self):
         """
         Defines the default values for the ``appeer`` config file
 
@@ -70,7 +97,7 @@ class Config:
 
         default_base = platformdirs.user_data_dir(appname='appeer')
 
-        self._config['Global'] = {'data_directory': default_base}
+        self._config['GlobalSettings'] = {'data_directory': default_base}
 
         self._config['ScrapeDefaults'] = {
                 'sleep_time': 1.0,
@@ -90,11 +117,11 @@ class Config:
 
             click.echo(f'WARNING: appeer config file already exists at {self._config_path}')
             click.echo(self._dashes)
-            self.handle_config_exists()
+            self._handle_config_exists()
 
         else:
 
-            self.define_default_values()
+            self._define_default_values()
 
             if not utils.directory_exists(self._config_dir):
                 os.makedirs(self._config_dir)
@@ -111,14 +138,16 @@ class Config:
 
                 click.echo(f'Path to the appeer configuration file: {self._config_path}')
                 click.echo(self._dashes)
-                self.read_config()
+                self._read_config()
 
             else:
                 click.echo('Failed to initialize the appeer config file at {self._config_path}. Exiting.')
                 sys.exit()
 
+            default_base = self.settings['GlobalSettings']['data_directory']
+
             click.echo('appeer will store all data in a given base directory.')
-            click.echo(f'The default directory is: {self._base_directory}\n')
+            click.echo(f'The default directory is: {default_base}\n')
 
             new_path = input('Press "Enter" to keep the default or provide another path:\n')
 
@@ -126,7 +155,7 @@ class Config:
 
                 self.edit_config_file(
                         update_dict={
-                            'Global': {'data_directory': new_path}
+                            'GlobalSettings': {'data_directory': new_path}
                             }
                         )
 
@@ -136,9 +165,11 @@ class Config:
 
             self.print_config()
 
-    def handle_config_exists(self):
+    def _handle_config_exists(self):
         """
-        Handles the case when the user tries to run ``appeer init`` with a preexisting config file
+        Handles the case when the user tries to run ``appeer init``
+        with a preexisting config file
+
         """
 
         self.print_config()
@@ -158,9 +189,10 @@ class Config:
 
             sys.exit()
 
-    def read_config(self):
+    def _read_config(self):
         """
-        Reads the contents of the config file and stores the values to ``self._config``.
+        Reads the contents of the config file and
+        stores the values to ``self.{section_name}``
 
         """
 
@@ -168,14 +200,14 @@ class Config:
 
             self._config.read(self._config_path)
 
-            self._base_directory = self._config['Global']['data_directory']
-
         else:
+
             click.echo('The appeer config file does not exist.')
 
     def print_config(self):
         """
         Prints the contents of the config file
+
         """
 
         if self._config_exists:
@@ -193,7 +225,7 @@ class Config:
 
     def edit_config_file(self, update_dict):
         """
-        Edit the contents of the config file.
+        Edit the contents of the config file
 
         The update_dict should be of form:
 
@@ -214,7 +246,7 @@ class Config:
 
         """
 
-        self.read_config()
+        self._read_config()
 
         all_sections = self._config.sections()
 
@@ -236,7 +268,7 @@ class Config:
 
                         editing_datadir = False
 
-                        if (section == 'Global' and subsection == 'data_directory'):
+                        if (section == 'GlobalSettings' and subsection == 'data_directory'):
 
                             editing_datadir = True
 
@@ -257,7 +289,7 @@ class Config:
                         if editing_datadir:
                             click.echo('You have edited the path to the base appeer data directory. If necessary, rerun "appeer init".')
 
-                        self.read_config()
+                        self._read_config()
 
     def edit_config_by_subsection(self, subsection, value):
         """
@@ -273,7 +305,7 @@ class Config:
 
         """
 
-        self.read_config()
+        self._read_config()
         all_sections = self._config.sections()
 
         update_dict = {}

@@ -226,13 +226,13 @@ ir is used (recommended)
         description = 'No description'
 
     if sleep_time is None:
-        sleep_time = float(cfg._config['ScrapeDefaults']['sleep_time'])
+        sleep_time = float(cfg.settings['ScrapeDefaults']['sleep_time'])
 
     if max_tries is None:
-        max_tries = int(cfg._config['ScrapeDefaults']['max_tries'])
+        max_tries = int(cfg.settings['ScrapeDefaults']['max_tries'])
 
     if retry_sleep_time is None:
-        retry_sleep_time = float(cfg._config['ScrapeDefaults']['retry_sleep_time'])
+        retry_sleep_time = float(cfg.settings['ScrapeDefaults']['retry_sleep_time'])
 
     if output_zip_filename is None:
         output_zip_filename = os.path.join(default_dirs.scrape_archives, f'{scrape_label}.zip')

@@ -10,6 +10,7 @@ from appeer.general import utils
 
 from appeer.general.datadir import Datadir
 from appeer.general.config import Config
+
 from appeer.db.jobs_db import JobsDB
 from appeer.db.pubs_db import PubsDB
 
