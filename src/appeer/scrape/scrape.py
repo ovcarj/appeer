@@ -176,7 +176,7 @@ def scrape(scrape_label, scrape_plan, download_directory, _logger,
 def main(publications, output_zip_filename=None,
         description=None,
         sleep_time=None, max_tries=None, retry_sleep_time=None,
-        logdir=None, download_dir=None,
+        log_dir=None, download_dir=None,
         cleanup=False):
     """ 
     Download publications data for later parsing.
@@ -186,7 +186,7 @@ def main(publications, output_zip_filename=None,
     (e.g. ``PoP.json`` file containing ``['article_url']`` keys)
     or a plaintext file with each URL in a new line.
 
-    If ``output_zip_filename``, ``logdir`` or ``download_dir`` are not given,
+    If ``output_zip_filename``, ``log_dir`` or ``download_dir`` are not given,
     the respective data will be stored in the default directories defined in the 
     appeer config file (recommended).
 
@@ -200,7 +200,7 @@ def main(publications, output_zip_filename=None,
         Optional description of the scrape job
     sleep_time: float
         Time (in seconds) between sending requests. If not given, the value from the appeer config file is used
-    logdir: str
+    log_dir: str
         Directory in which to store the log. If not given, the appeer data directory is used (recommended)
     download_dir: str
         Directory into which to download the files. If not given, the default appeer data directory is used (recommended)
@@ -237,14 +237,14 @@ ir is used (recommended)
     if output_zip_filename is None:
         output_zip_filename = os.path.join(default_dirs.scrape_archives, f'{scrape_label}.zip')
 
-    if logdir is None:
-        logdir = default_dirs.scrape_logs
+    if log_dir is None:
+        log_dir = default_dirs.scrape_logs
 
     if download_dir is None:
         download_dir = os.path.join(default_dirs.downloads, f'{scrape_label}')
 
-    _logger = log.init_logger(logdir=logdir, logname=f'{scrape_label}')
-    logpath = log.get_logger_fh_path(_logger)
+    _logger = log.init_logger(log_dir=log_dir, log_name=f'{scrape_label}')
+    log_path = log.get_logger_fh_path(_logger)
     log_dashes = log.get_log_dashes()
 
     jobs_db = JobsDB()
@@ -252,13 +252,13 @@ ir is used (recommended)
     jobs_db.scrape_jobs.add_entry(
             label=scrape_label,
             description=description,
-            log_path=logpath,
+            log_path=log_path,
             download_directory=download_dir,
             zip_file=output_zip_filename,
             date=start_datetime
             )
 
-    start_report = log.appeer_start(start_datetime=start_datetime, logpath=logpath)
+    start_report = log.appeer_start(start_datetime=start_datetime, log_path=log_path)
     _logger.info(start_report)
     _logger.info(description)
     _logger.info(log_dashes)

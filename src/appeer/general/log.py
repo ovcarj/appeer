@@ -11,16 +11,17 @@ from appeer.general import utils
 
 from appeer import __version__
 
-def init_logger(logname='appeer', logdir=None):
+def init_logger(log_name='appeer', log_dir=None):
     """
     Initialize the logger object
 
     Parameters
     ----------
-    logname : str
+    log_name : str
         Name of the logger object (also used in naming in the log file)
-    logdir : str
-        Directory in which to store the log file. If not given, default to current directory
+    log_dir : str
+        Directory in which to store the log file.
+            If not given, default to current directory
 
     Returns
     ----------
@@ -29,22 +30,22 @@ def init_logger(logname='appeer', logdir=None):
 
     """
 
-    if logdir is None:
-        logdir = os.getcwd()
+    if log_dir is None:
+        log_dir = os.getcwd()
 
-    os.makedirs(logdir, exist_ok=True)
+    os.makedirs(log_dir, exist_ok=True)
 
-    if not logname.endswith('.log'):
-        logname += '.log'
+    if not log_name.endswith('.log'):
+        log_name += '.log'
 
-    logger = logging.getLogger(logname)
+    logger = logging.getLogger(log_name)
 
     logger.setLevel(logging.INFO)
 
     stream_handler = logging.StreamHandler(sys.stdout)
     logger.addHandler(stream_handler)
 
-    file_handler = logging.FileHandler(os.path.join(logdir, logname))
+    file_handler = logging.FileHandler(os.path.join(log_dir, log_name))
     file_handler.setLevel(logging.INFO)
     logger.addHandler(file_handler)
 
@@ -86,7 +87,7 @@ def get_logger_fh_path(logger):
 
     return 'No logger handlers found.'
 
-def appeer_start(start_datetime, logpath=None):
+def appeer_start(start_datetime, log_path=None):
     """
     Report on the beginning of ``appeer`` execution
 
@@ -94,7 +95,7 @@ def appeer_start(start_datetime, logpath=None):
     ----------
     start_datetime : str
         Starting datetime in ``%Y%m%d-%H%M%S`` format
-    logpath : str | None
+    log_path : str | None
         Path to the logfile
 
     Returns
@@ -114,10 +115,10 @@ def appeer_start(start_datetime, logpath=None):
     start_report += f'appeer started on {start_datetime}\n'
     start_report += log_dashes
 
-    if logpath:
+    if log_path:
 
         start_report += '\n'
-        start_report += f'Logfile: {logpath}\n'
+        start_report += f'Logfile: {log_path}\n'
         start_report += log_dashes
 
     return start_report

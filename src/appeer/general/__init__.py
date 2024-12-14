@@ -1,4 +1,1 @@
-"""
-General appeer functionality
-"""
-
+"""General appeer functionality"""
