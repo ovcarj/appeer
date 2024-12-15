@@ -21,6 +21,7 @@ def get_registered_tables():
                 'zip_file',
                 'date',
                 'job_status',
+                'job_step',
                 'job_successes',
                 'job_fails',
                 'no_of_publications',

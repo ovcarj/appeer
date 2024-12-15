@@ -79,6 +79,7 @@ class ScrapeJobs(Table,
             'zip_file': kwargs['zip_file'],
             'date': kwargs['date'],
             'job_status': 'I',
+            'job_step': 0,
             'job_successes': 0,
             'job_fails': 0,
             'no_of_publications': 0,
@@ -88,7 +89,7 @@ class ScrapeJobs(Table,
         self._sanity_check()
 
         add_query = """
-        INSERT INTO scrape_jobs VALUES(:label, :description, :log, :download_directory, :zip_file, :date, :job_status, :job_successes, :job_fails, :no_of_publications, :job_parsed)
+        INSERT INTO scrape_jobs VALUES(:label, :description, :log, :download_directory, :zip_file, :date, :job_status, :job_step, :job_successes, :job_fails, :no_of_publications, :job_parsed)
         """
 
         self._cur.execute(add_query, data)
@@ -144,6 +145,20 @@ class ScrapeJobs(Table,
 
                 self._cur.execute("""
                 UPDATE scrape_jobs SET no_of_publications = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
+
+            case 'job_step':
+
+                if not isinstance(new_value, int):
+                    raise ValueError(f'Cannot update the scrape database. Invalid job_step={new_value} given; must be an integer.')
+
+                if not new_value >= 0:
+                    raise ValueError(f'Cannot update the scrape database. Invalid job_step={new_value} given; must be a non-negative integer.')
+
+                self._cur.execute("""
+                UPDATE scrape_jobs SET job_step = ? WHERE label = ?
                 """, (new_value, label))
 
                 self._con.commit()
