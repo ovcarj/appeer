@@ -1,0 +1,35 @@
+{"DSM":
+	[
+	
+	{
+	"web_domain":    "invalid_url",
+	"journal_code":  "Invalid_URL",
+	"strategy_code": "skip"
+	},
+
+	{
+	"web_domain":    "unknown",
+	"journal_code":  "Unknown",
+	"strategy_code": "skip"
+	},
+
+	{
+	"web_domain":    "doi.org",
+	"journal_code":  "DOI",
+	"strategy_code": "doi"
+	},
+
+	{
+	"web_domain":    "pubs.rsc.org",
+	"journal_code":  "RSC",
+	"strategy_code": "html"
+	},
+
+	{
+	"web_domain":    "www.nature.com",
+	"journal_code":  "NAT",
+	"strategy_code": "html"
+	}
+
+	]
+}

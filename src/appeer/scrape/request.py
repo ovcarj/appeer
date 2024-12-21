@@ -1,181 +1,155 @@
-import sys
+"""Send requests, get and handle responses"""
+
 import time
 import requests
 
-from appeer.general.log import get_very_short_log_dashes as short_dashes
+import click
+
+from appeer.general import log as _log
+from appeer.general.config import Config
+from appeer.scrape import reports
 
 class Request:
     """
-    Sends requests, handle responses, errors, etc...
+    Send requests, get and handle responses
 
     """
 
-    def __init__(self, url, max_tries=3, retry_sleep_time=10, _logger=None):
+    def __init__(self, url, _queue=None):
         """
-        Initializes Request instance.
+        Initializes a Request instance
     
         Parameters
         ----------
         url : str
             URL string
-        max_tries : int
-            Maximum number of tries to get a response from an URL before giving up
-        retry_sleep_time : float
-            Time (in seconds) to wait before trying an URL again
-        _logger : logging.Logger | None
-            If given, logging.Logger object used to write into the logfile
-    
+        _queue : queue.Queue
+            If given, messages will be logged in the job log file
+   
         """
-    
-        self._report = ''
-        self._dashes = short_dashes()
+
+        self.__queue = _queue
 
         self.url = url
 
-        self._max_tries = max_tries
-        self._retry_sleep_time = retry_sleep_time
-        self._logger = _logger
+        self.success = False
+        self.status = None
+        self.error = None
+        self.response = None
 
-        self._tries_counter = max_tries
-        self._429_flag = False
-
-        self._success = False
-
-        self._initialize_headers()
-
-    def send(self, head=False):
+    def send(self, head=False, **kwargs):
         """
-        Sends a request to get the content of ``self.url``.
+        Sends a request to get the content of ``self.url``
 
         Parameters
         -------
         head : bool
-            If True, get just the response header with allowed redirects (for resolving DOI)
- 
-        """
+            If True, get just the response header with allowed redirects
+                (useful when resolving DOI)
 
-        self._log(f'Sending a request to {self.url} ...')
-
-        try:
-            
-            if head:
-                self.response = requests.head(self.url, headers=self._headers, timeout=30, allow_redirects=True)
-
-            else:
-                self.response = requests.get(self.url, headers=self._headers, timeout=30) 
-
-            try:
-    
-                self._check_response()
-    
-                self._log(f'Response OK. (Status code = {self.response.status_code})')
-    
-                self._success = True
-    
-            except:
-    
-                self._handle_failure()
-
-        except:
-
-            self._handle_failure()
-
-    def _check_response(self):
-        """
-        Checks the status code of the response.
+        Keyword Arguments
+        -----------------
+        max_tries : int
+            Maximum number of tries to get a response from an URL before
+                giving up
+        retry_sleep_time : float
+            Time (in seconds) to wait before trying a nonresponsive URL again
+        _429_sleep_time : float
+            Time (in minutes) to wait if received a 429 status code
 
         """
 
-        try:
-            self.response.raise_for_status()
-
-        except:
-
-            if self.response.status_code == 429:
-
-                self._429_flag = True
-                self._handle_failure()
-
-            else:
-                # Does it make sense to retry for any other status codes?
-                # For now, we immediately give up.
-                self._all_requests_failed()
-
-    def _handle_failure(self):
-        """
-        Handle failure of a single request due to, e.g., invalid URL, connection failure,...
-
-        """
-
-        response_ex_type, response_ex_message, response_ex_traceback = sys.exc_info()
-        
-        self._log(self._dashes)
-        self._log(f'Sending a request to {self.url} failed with the following exception:')
-        self._log(f'{response_ex_type.__name__}: {response_ex_message}')
-
-        self._tries_counter -= 1
-
-        if self._tries_counter > 0:
-
-            if self._429_flag:
-
-                self._log(f'Got a 429 status code. Will sleep for 5 minutes and try again. Remaining # of tries: {self._tries_counter}')
-                time.sleep(5 * 60)
-
-                self._429_flag = False
-
-            else:
-
-                self._log(f'Trying again in {self._retry_sleep_time} s. Remaining # of tries: {self._tries_counter}')
-                time.sleep(self._retry_sleep_time)
-
-            self.send()
-
-        else:
-
-            self._all_requests_failed()
-
-    def _all_requests_failed(self):
-        """
-        Prints a message in the case of failure.
-
-        """
-
-        self._log(self._dashes)
-        self._log(f'Sending a request to {self.url} failed.')
-        self._success = False
-
-    def _initialize_headers(self):
-        """ 
-        Creates a default header using ``requests.utils.default_headers()``.
-    
-        Returns
-        -------
-        headers : requests.structures.CaseInsensitiveDict
-            Default requests header
-
-        """
-    
         headers = requests.utils.default_headers()
         headers.update({'User-Agent': 'My User Agent 1.0'})
 
-        self._headers = headers
+        scrape_defaults = Config().settings['ScrapeDefaults']
 
-    def _log(self, text):
-        """
-        Adds text to self._report and, if self._logger exist, writes to log.
+        kwargs.setdefault('max_tries',
+                int(scrape_defaults['max_tries']))
+        kwargs.setdefault('retry_sleep_time',
+                float(scrape_defaults['retry_sleep_time']))
+        kwargs.setdefault('_429_sleep_time',
+                float(scrape_defaults['429_sleep_time']))
 
-        Parameters
-        -------
-        text : str
-            text to write into the log
+        max_tries = kwargs['max_tries']
+        retry_sleep_time = kwargs['retry_sleep_time']
+        _429_sleep_time = kwargs['_429_sleep_time']
 
-        """
+        for i in range(max_tries):
 
-        self._report += text + '\n'
+            self._rprint(_log.underlined_message(f'HTTPS Request {i+1}/{max_tries}'))
 
-        if self._logger:
-            self._logger.info(text)
+            try:
+
+                if head:
+                    self.response = requests.head(self.url,
+                            headers=headers,
+                            timeout=30,
+                            allow_redirects=True)
+
+                else:
+                    self.response = requests.get(self.url,
+                            headers=headers,
+                            timeout=30)
+
+                if self.response.status_code == 429:
+
+                    self.status = self.response.status_code
+                    self.error = 'Too many requests'
+
+                    self._rprint(reports.requests_report(self))
+                    self._rprint(f'Got a 429 status code; sleeping for {_429_sleep_time} minutes and trying again...\n')
+                    time.sleep(_429_sleep_time * 60)
+
+                    continue
+
+                try:
+                    self.response.raise_for_status()
+
+                except requests.exceptions.HTTPError as err:
+
+                    self.success = False
+                    self.error = None
+                    self.status = err.response.status_code
+
+                self.success = True
+                self.error = None
+                self.status = self.response.status_code
+
+            except requests.exceptions.ConnectionError as err:
+
+                self.success = False
+                self.status = None
+                self.error = type(err).__name__
+
+            self._rprint(reports.requests_report(self))
+
+            if self.success:
+                break
+
+            if i < (max_tries - 1):
+                time.sleep(retry_sleep_time)
 
         else:
-            pass
+            self.success = False
+            self._rprint('Scraping failed.\n')
+
+    def _rprint(self, message):
+        """
+        Prints a ``message`` to stdout or puts it in the queue
+        
+        If the message is put into the queue, it will be logged in
+            the job log file
+
+        Parameters
+        ----------
+        message : str
+            String to be printed to stdout or logged in the job log file
+
+        """
+
+        if self.__queue:
+            self.__queue.put(message)
+
+        else:
+            click.echo(message)

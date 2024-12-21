@@ -1,31 +1,38 @@
+"""Parse the scrape input and handle the result"""
+
 import sys
 import json
 
 from appeer.general import utils
 from appeer.general import log
 
+
 def parse_data_source(publications):
     """
     (1) Analyze whether the inputted ``publications`` are a Python list, 
-    a path to a JSON file or a path to a plaintext file.
+        a path to a JSON file or a path to a plaintext file.
 
     (2) Convert the inputted data source to a Python list
 
     Parameters
     ----------
     publications : list | str
-        A list of URLs or a filepath to a JSON or plaintext file containing the URLs
+        A list of URLs or a filepath to a JSON or plaintext file
+            containing the URLs
 
     Returns
     -------
     data_source : list
         The data source converted to a Python list
     data_source_type : str 
-        One of the following: 'pylist', 'JSON', 'plaintext', 'invalid file', 'invalid input type'
+        One of the following: 'pylist', 'JSON', 'plaintext',
+            'invalid file', 'invalid input type'
     plaintext_ex_message : str
-        The exception message catched while trying to read a text file containing URLs
+        The exception message catched while trying to read
+            a text file containing URLs
     json_ex_message : str
-        The exception message catched while trying to read a JSON file containing URLs
+        The exception message catched while trying to read
+            a JSON file containing URLs
 
     """
 
@@ -45,8 +52,8 @@ def parse_data_source(publications):
 
         except ValueError:
 
-            plaintext_ex_type, plaintext_ex_message, plaintext_ex_traceback = sys.exc_info()
-            
+            _p_extype, plaintext_ex_message, _p_extcbk = sys.exc_info()
+
             try:
 
                 data_source = utils.json2list(publications)
@@ -54,15 +61,15 @@ def parse_data_source(publications):
 
             except json.decoder.JSONDecodeError:
 
-                json_ex_type, json_ex_message, json_ex_traceback = sys.exc_info()
+                _j_extype, json_ex_message, _j_extcbk = sys.exc_info()
 
                 data_source = None
                 data_source_type = 'invalid file'
 
         except FileNotFoundError:
 
-            plaintext_ex_type, plaintext_ex_message, plaintext_ex_traceback = sys.exc_info()
-            json_ex_type, json_ex_message, json_ex_traceback = sys.exc_info()
+            _p_extype, plaintext_ex_message, _p_extcbk = sys.exc_info()
+            _j_extype, json_ex_message, _j_extcbk = sys.exc_info()
 
             data_source = None
             data_source_type = 'invalid file'
@@ -74,24 +81,31 @@ def parse_data_source(publications):
 
     return data_source, data_source_type, plaintext_ex_message, json_ex_message
 
-def handle_input_reading(publications, data_source_type, plaintext_ex_message, json_ex_message):
+def handle_input_reading(publications,
+        data_source_type,
+        plaintext_ex_message,
+        json_ex_message):
     """
-    Handle reading of the input depending on the results of ``parse_input_data``.
+    Handle reading of the input
+        depending on the results of ``parse_input_data``
 
     Parameters
     ----------
     publications : list | str
-        A list of URLs or a filepath to a JSON or plaintext file containing URLs
+        A list of URLs or a filepath to a JSON or plaintext file
+            containing URLs
     data_source_type : str 
-        One of the following: 'pylist', 'JSON', 'plaintext', 'invalid file', 'invalid input type'
+        One of the following: 'pylist', 'JSON', 'plaintext',
+            'invalid file', 'invalid input type'
      plaintext_ex_message : str
-        The exception message catched while trying to read a text file containing URLs
+        The exception message catched while trying to read
+            a text file containing URLs
     json_ex_message : str
-        The exception message catched while trying to read a JSON file containing URLs
-
+        The exception message catched while trying to read
+            a JSON file containing URLs
 
     Returns
-    ----------
+    -------
     success : bool
         True if parsing the input data went OK, False if it failed
     report : str
@@ -103,7 +117,7 @@ def handle_input_reading(publications, data_source_type, plaintext_ex_message, j
     log_dashes = log.get_log_dashes()
     short_log_dashes = log.get_short_log_dashes()
 
-    report += f'{log.boxed_message("READING INPUT FILE")}\n\n'
+    report += f'{log.boxed_message("READING INPUT FILE", centered=True)}\n\n'
 
     report += 'Attempting to read the input data...\n'
 
@@ -112,13 +126,13 @@ def handle_input_reading(publications, data_source_type, plaintext_ex_message, j
         case 'invalid input type' :
 
             success = False
-            report += 'ERROR: Input file was not provided or the input data type is invalid. A path to a JSON/text file or a Python list must be provided.'
- 
+            report += 'Error: Input file was not provided or the input data type is invalid. A path to a JSON/text file or a Python list must be provided.'
+
         case 'invalid file' :
 
             success = False
 
-            report += 'ERROR: The input file could not be read.\n'
+            report += 'Error: The input file could not be read.\n'
             report += log_dashes + '\n'
 
             report += 'While attempting to read the file as plaintext, the following error occurred:\n'
@@ -132,7 +146,7 @@ def handle_input_reading(publications, data_source_type, plaintext_ex_message, j
 
             success = True
 
-            report += f'Successfully read data from the input Python list!\n'
+            report += 'Successfully read data from the input Python list!\n'
 
         case 'plaintext' :
 

@@ -13,15 +13,16 @@ from appeer.general import utils
 class Config:
     """
     Class which handles creation, deletion, reading and editing of the
-    ``appeer`` config file, which is found at
-    ``platformdirs.user_config_dir(appname='appeer')/appeer.cfg``
+        ``appeer`` config file, which is found at
+        ``platformdirs.user_config_dir(appname='appeer')/appeer.cfg``
 
     """
 
     def __init__(self):
         """
-        Check for the existence of the config file.
-        If it exists, read its contents
+        Check for the existence of the config file
+        
+        If the config file exists, read its contents
 
         """
 
@@ -64,7 +65,7 @@ class Config:
     def settings(self):
         """
         Reads the config file and stores the settings 
-        to the ``self.settings`` dictionary
+            to the ``self.settings`` dictionary
 
         """
 
@@ -103,6 +104,7 @@ class Config:
                 'sleep_time': 1.0,
                 'max_tries': 3,
                 'retry_sleep_time': 10.0,
+                '429_sleep_time': 5.0
                 }
 
     def create_config_file(self):
@@ -127,7 +129,8 @@ class Config:
                 os.makedirs(self._config_dir)
 
             try:
-                with open(self._config_path, 'w+', encoding='utf-8') as configfile:
+                with open(self._config_path, 'w+',
+                        encoding='utf-8') as configfile:
                     self._config.write(configfile)
 
             except PermissionError:
@@ -266,28 +269,14 @@ class Config:
 
                     else:
 
-                        editing_datadir = False
-
-                        if (section == 'GlobalSettings' and subsection == 'data_directory'):
-
-                            editing_datadir = True
-
-                            click.echo('WARNING: You are attempting to edit the path to the base appeer data directory. If the directory was not previously initialized, you will have to rerun "appeer init".')
-                            proceed = log.ask_yes_no('Do you wish to proceed?\n')
-
-                            if proceed == 'n':
-                                click.echo('Stopping, as requested.')
-                                return
-
                         self._config[section][subsection] = value
 
-                        with open(self._config_path, 'w', encoding='utf-8') as configfile:
+                        with open(self._config_path, 'w',
+                                encoding='utf-8') as configfile:
+
                             self._config.write(configfile)
 
                         click.echo(f'[{section}]: {subsection} updated to {value}')
-
-                        if editing_datadir:
-                            click.echo('You have edited the path to the base appeer data directory. If necessary, rerun "appeer init".')
 
                         self._read_config()
 

@@ -9,7 +9,7 @@ from appeer.db.jobs_db import JobsDB
 
 def clean_scrape_job(scrape_label):
     """
-    Deletes all data associated with the scrape job with the label ``scrape_label``.
+    Deletes all data associated with the scrape job with the given label
 
     Parameters
     ----------

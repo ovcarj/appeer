@@ -1,20 +1,21 @@
-"""
-Defines the ``appeer scrape`` CLI
-"""
+"""Defines the ``appeer scrape`` CLI"""
 
 import click
 
-from appeer.scrape.scrape import main as scrape_main
-from appeer.scrape.scrape_plan import main as scrape_planning
+from appeer.scrape import scrape_scripts
+from appeer.scrape.strategies.scrape_plan import preview_plan
 from appeer.general.config import Config
 
 settings = Config().settings
 
 if settings:
 
-    default_sleep_time = float(settings['ScrapeDefaults']['sleep_time'])
-    default_max_tries = int(settings['ScrapeDefaults']['max_tries'])
-    default_retry_sleep_time = float(settings['ScrapeDefaults']['retry_sleep_time'])
+    default_sleep_time = float(
+            settings['ScrapeDefaults']['sleep_time'])
+    default_max_tries = int(
+            settings['ScrapeDefaults']['max_tries'])
+    default_retry_sleep_time = float(
+            settings['ScrapeDefaults']['retry_sleep_time'])
 
 else:
     # most probably "appeer init" was not yet run
@@ -39,8 +40,8 @@ Valid entries start with 'https://' or need to be in DOI format (10.prefix/suffi
 If the entry format is invalid, the invalid URL is not scraped.
 """)
 @click.argument('filename')
-@click.option('-o', '--output', 'output_zip_filename',
-        help="Name of the ZIP archive containing the downloaded data. If not given, a default name based on the timestamp is generated")
+@click.option('-o', '--output', 'zip_file',
+        help="Name of the ZIP archive containing the downloaded data")
 @click.option('-s', '--description', 'description',
         default=None,
         help="Optional description of the scrape job")
@@ -53,37 +54,33 @@ If the entry format is invalid, the invalid URL is not scraped.
 @click.option('-rt', '--retry_sleep_time',
         default=default_retry_sleep_time, show_default=True,
         help="Time (in seconds) between retrying a URL")
-@click.option('-l', '--logdir',
+@click.option('-l', '--log_directory',
         default=None,
-        help="Directory in which to store the log. If not given, the default appeer data directory is used")
-@click.option('-d', '--download_dir',
+        help="Directory in which to store the log")
+@click.option('-d', '--download_directory',
         default=None,
-        help="Directory into which to download the files. If not given, the default appeer data directory is used")
+        help="Directory into which to download the files")
 @click.option('-c', '--cleanup',
         is_flag=True, default=False,
-        help="Delete the directory with the downloaded data after scrape")
+        help="Delete the directory containing the downloaded data after job ends")
+@click.option('-j', '--job_label',
+        default=None,
+        help="Scrape job label")
 @click.option('-p','--preview',
         is_flag=True, default=False,
         help="Get a preview of the scraping strategy for a given input file")
-def scrape_cli(filename, output_zip_filename,
-        description,
-        sleep_time, max_tries, retry_sleep_time,
-        logdir, download_dir,
-        cleanup,
-        preview):
+def scrape_cli(filename, **kwargs):
     """
-    Scrape publications
+    Scrape CLI
 
     """
 
     publications = filename
 
-    if preview:
-        scrape_planning(publications)
+    if kwargs['preview']:
+        preview_plan(publications)
 
     else:
-        scrape_main(publications, output_zip_filename,
-            description,
-            sleep_time, max_tries, retry_sleep_time,
-            logdir, download_dir,
-            cleanup)
+        scrape_scripts.create_and_run(publications=publications,
+                                      label=kwargs['job_label'],
+                                      **kwargs)

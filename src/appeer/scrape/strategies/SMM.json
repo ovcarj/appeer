@@ -1,0 +1,20 @@
+{"SMM":
+	[
+	
+	{
+	"strategy_code":   "skip",
+	"scraping_method": "_scrape_skip"
+	},
+
+	{
+	"strategy_code":   "doi",
+	"scraping_method": "_doi_handler"
+	},
+
+	{
+	"strategy_code":   "html",
+	"scraping_method": "_scrape_html_simple"
+	}
+
+	]
+}

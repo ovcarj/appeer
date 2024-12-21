@@ -19,7 +19,7 @@ from appeer.db.tables.registered_tables import get_registered_tables
 class DB(abc.ABC):
     """
     Base abstract class for handling ``appeer`` databases,
-    which are found at ``Datadir().base/db``.
+        which are found at ``Datadir().base/db``
 
     """
 

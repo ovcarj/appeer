@@ -1,6 +1,4 @@
-"""
-Creates and writes log files
-"""
+"""Creates and writes log files"""
 
 import sys
 import os
@@ -11,17 +9,17 @@ from appeer.general import utils
 
 from appeer import __version__
 
-def init_logger(log_name='appeer', log_dir=None):
+
+def init_logger(log_path, log_name=None):
     """
     Initialize the logger object
 
     Parameters
     ----------
+    log_path : str
+        Path to the log file
     log_name : str
-        Name of the logger object (also used in naming in the log file)
-    log_dir : str
-        Directory in which to store the log file.
-            If not given, default to current directory
+        Optional name of the logger object
 
     Returns
     ----------
@@ -30,31 +28,37 @@ def init_logger(log_name='appeer', log_dir=None):
 
     """
 
-    if log_dir is None:
-        log_dir = os.getcwd()
+    if not log_path.endswith('.log'):
+        log_path += '.log'
 
-    os.makedirs(log_dir, exist_ok=True)
+    log_dir = os.path.dirname(log_path)
 
-    if not log_name.endswith('.log'):
-        log_name += '.log'
+    if not utils.directory_exists(log_dir):
+        os.makedirs(log_dir, exist_ok=True)
 
-    logger = logging.getLogger(log_name)
+    if log_name:
+        logger = logging.getLogger(log_name)
+
+    else:
+        logger = logging.getLogger(__name__)
 
     logger.setLevel(logging.INFO)
 
-    stream_handler = logging.StreamHandler(sys.stdout)
-    logger.addHandler(stream_handler)
+    if not logger.hasHandlers():
 
-    file_handler = logging.FileHandler(os.path.join(log_dir, log_name))
-    file_handler.setLevel(logging.INFO)
-    logger.addHandler(file_handler)
+        stream_handler = logging.StreamHandler(sys.stdout)
+        logger.addHandler(stream_handler)
+
+        file_handler = logging.FileHandler(log_path)
+        file_handler.setLevel(logging.INFO)
+        logger.addHandler(file_handler)
 
     return logger
 
 def get_logger_fh_path(logger):
     """
     Get path to where a log is stored 
-    (baseFilename of the logger FileHandler with level INFO)
+        (baseFilename of the logger FileHandler with level INFO)
 
     Parameters
     ----------
@@ -62,7 +66,7 @@ def get_logger_fh_path(logger):
         logging.Logger object
 
     Returns
-    ----------
+    -------
     base_filename : str
         Path to where the log is stored.
 
@@ -99,7 +103,7 @@ def appeer_start(start_datetime, log_path=None):
         Path to the logfile
 
     Returns
-    ----------
+    -------
     start_report : str
         Report on the beginning of ``appeer`` execution
  
@@ -195,26 +199,147 @@ def get_very_short_log_dashes():
 
     return '–' * 10
 
-def boxed_message(message):
+def center(message, width=None):
     """
-    Create a box around a message
+    Center a message
+
+    Parameters
+    ----------
+    message : str
+        A message to be centered
+    width : int
+        Width of the line for centering
 
     Returns
     -------
-    boxed_message : str
+    centered : str
+        Centered message
+
+    """
+
+    if not width:
+        width = 80
+
+    centered = ''
+
+    lines = message.split('\n')
+
+    if len(lines) > 1:
+
+        for line in lines:
+            centered += line.center(width) + '\n'
+
+        centered = centered.rstrip('\n')
+
+    else:
+        centered = message.center(width)
+
+    return centered
+
+def boxed_message(message, centered=False, width=None, header=None):
+    """
+    Create a box around a message
+
+    Parameters
+    ----------
+    message : str
+        A string to be written in a box
+    center : bool
+        If given, the message will be centered using str.center(width=width)
+    width : int
+        Width of the line for centering
+    header : str
+        If given, write a header above the box
+
+    Returns
+    -------
+    box_message : str
         Message with a box around it
 
     """
 
-    dashes = '—' * (len(message) + 4)
+    box_message = ''
 
-    box_message = f'{dashes}\n| {message} |\n{dashes}'
+    lines = message.split('\n')
+
+    longest_line_length = len(max(lines, key=len))
+    dashes = '+' + '—' * (longest_line_length + 2) + '+'
+
+    if header:
+        box_message += header.center(len(dashes)) + '\n'
+
+    box_message += dashes + '\n'
+
+    for line in lines:
+        box_message += f'| {line:<{longest_line_length}} |\n'
+
+    box_message += dashes
+
+    if centered:
+        box_message = center(box_message, width=width)
 
     return box_message
 
-def get_logo():
+def outlined_message(message):
     """
-    Create the ``appeer`` logo.
+    Create a message with dashed lines surrounding it
+
+    Parameters
+    ----------
+    message : str
+        A string to be surrounded by dashed lines
+
+    Returns
+    -------
+    outlined : str
+        A message surrounded by dashed lines
+
+    """
+
+    dashes = '–'* len(message)
+
+    outlined = dashes
+    outlined += '\n'
+    outlined += message
+    outlined += '\n'
+    outlined += dashes
+
+    return outlined
+
+def underlined_message(message):
+    """
+    Create a message with a dashed line below it
+
+    Parameters
+    ----------
+    message : str
+        A string to be underlined by a dashed line
+
+    Returns
+    -------
+    underlined : str
+        A message underlined by a dashed line
+
+    """
+
+    dashes = '–'* len(message)
+
+    underlined = message
+    underlined += '\n'
+    underlined += dashes
+
+    return underlined
+
+def get_logo(centered=True, width=None):
+    """
+    Create the ``appeer`` logo
+
+    Parameters
+    ----------
+    center : bool
+        If given, the logo will be centered using str.center(width=width)
+    width : int
+        Width of the line for centering
 
     Returns
     -------
@@ -224,16 +349,19 @@ def get_logo():
     """
 
     logo = rf"""
-#                                         
-#    __ _  _ __   _ __    ___   ___  _ __ 
-#   / _` || '_ \ | '_ \  / _ \ / _ \| '__|
-#  | (_| || |_) || |_) ||  __/|  __/| |   
-#   \__,_|| .__/ | .__/  \___| \___||_|   
-#         | |    | |                      
-#         |_|    |_|    v={__version__}                  
-#
-#
++-------------------------------------------+
+|    __ _  _ __   _ __    ___   ___  _ __   |
+|   / _` || '_ \ | '_ \  / _ \ / _ \| '__|  |
+|  | (_| || |_) || |_) ||  __/|  __/| |     |
+|   \__,_|| .__/ | .__/  \___| \___||_|     |
+|         | |    | |                        |
+|         |_|    |_|     >>> v={__version__}        |
+|                                           |
++-------------------------------------------+
 """
+
+    if centered:
+        logo = center(logo, width=width)
 
     return logo
 

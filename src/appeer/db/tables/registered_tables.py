@@ -29,9 +29,13 @@ def get_registered_tables():
 
             'scrapes':
                 ['label',
-                 'scrape_index',
+                 'action_index',
+                 'date',
                  'url',
+                 'journal',
                  'strategy',
+                 'method',
+                 'success',
                  'status',
                  'out_file',
                  'parsed'],
@@ -59,7 +63,7 @@ def get_registered_tables():
                  'journal',
                  'title',
                  'affiliations']
- 
+
                 }
 
     return registered_tables

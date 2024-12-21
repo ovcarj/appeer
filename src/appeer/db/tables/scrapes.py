@@ -55,21 +55,31 @@ class Scrapes(Table,
         -----------------
         label : str
             Label of the scrape job
-        scrape_index : int
+        action_index : int
             Index of the URL in the input
+        date : str
+            Date and time of the scrape
         url : str
             Inputted URL
+        journal : str
+            Internal journal code of the URL
         strategy : str
-            Strategy used for scraping
+            Internal code of the strategy used for scraping
+        method : str
+            Internal name of the method used for scraping
 
         """
 
         data = ({
             'label': kwargs['label'],
-            'scrape_index': kwargs['scrape_index'],
+            'action_index': kwargs['action_index'],
+            'date': kwargs['date'],
             'url': kwargs['url'],
+            'journal': kwargs['journal'],
             'strategy': kwargs['strategy'],
-            'status': 'I',
+            'method': kwargs['method'],
+            'success': 'F',
+            'status': 'W',
             'out_file': 'no_file',
             'parsed': 'F'
             })
@@ -77,7 +87,7 @@ class Scrapes(Table,
         self._sanity_check()
 
         add_query = """
-        INSERT INTO scrapes VALUES(:label, :scrape_index, :url, :strategy, :status, :out_file, :parsed)
+        INSERT INTO scrapes VALUES(:label, :action_index, :date, :url, :journal, :strategy, :method, :success, :status, :out_file, :parsed)
         """
 
         self._cur.execute(add_query, data)
@@ -86,16 +96,17 @@ class Scrapes(Table,
 
     def update_entry(self, **kwargs):
         """
-        Given a ``label`` and ``scrape_index``, updates the corresponding 
-        ``column_name`` value with ``new_value`` in the ``scrape`` table
+        Given a ``label`` and ``action_index``, updates the corresponding 
+            ``column_name`` value with ``new_value`` in the ``scrape`` table
 
-        ``column_name`` must be in ['strategy', 'status', 'out_file', 'parsed']
+        ``column_name`` must be in ['date', 'journal', 'strategy', 'status',
+            'success', 'out_file', 'parsed']
 
         Keyword Arguments
         -----------------
         label : str
             Label of the job that the scrape belongs to
-        scrape_index : int
+        action_index : int
             Index of the URL in the input
         column_name : str
             Name of the column whose value is being updated
@@ -107,7 +118,7 @@ class Scrapes(Table,
         self._sanity_check()
 
         label = kwargs['label']
-        scrape_index = kwargs['scrape_index']
+        action_index = kwargs['action_index']
         column_name = kwargs['column_name']
         new_value = kwargs['new_value']
 
@@ -123,19 +134,60 @@ class Scrapes(Table,
                 else:
 
                     self._cur.execute("""
-                    UPDATE scrapes SET strategy = ? WHERE label = ? AND scrape_index = ?
-                    """, (new_value, label, scrape_index))
+                    UPDATE scrapes SET strategy = ? WHERE label = ? AND action_index = ?
+                    """, (new_value, label, action_index))
 
                     self._con.commit()
 
-            case 'status':
+            case 'method':
 
-                if not new_value in ['I', 'R', 'E', 'X']:
-                    raise ValueError(f'Cannot update the scrape database. Invalid status={new_value} given; must be one of ["I", "R", "E", "X"].')
+                # TODO: strategies in the ScrapePlan will be revised
+                # if False is left as a placeholder
+                if False:
+                    raise ValueError(f'Cannot update the scrape database. Invalid method={new_value} given; must be ...')
+
+                else:
+
+                    self._cur.execute("""
+                    UPDATE scrapes SET method = ? WHERE label = ? AND action_index = ?
+                    """, (new_value, label, action_index))
+
+                    self._con.commit()
+
+            case 'journal':
+
+                # TODO: journals in the ScrapePlan will be revised
+                # if False is left as a placeholder
+                if False:
+                    raise ValueError(f'Cannot update the scrape database. Invalid journal={new_value} given; must be ...')
+
+                else:
+
+                    self._cur.execute("""
+                    UPDATE scrapes SET journal = ? WHERE label = ? AND action_index = ?
+                    """, (new_value, label, action_index))
+
+                    self._con.commit()
+
+            case 'success':
+
+                if not new_value in ('T', 'F'):
+                    raise ValueError(f'Cannot update the scrape database. Invalid success={new_value} given; must be one of ("T", "F").')
 
                 self._cur.execute("""
-                UPDATE scrapes SET status = ? WHERE label = ? AND scrape_index = ?
-                """, (new_value, label, scrape_index))
+                UPDATE scrapes SET success = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
+
+            case 'status':
+
+                if not new_value in ('I', 'W', 'R', 'E', 'X'):
+                    raise ValueError(f'Cannot update the scrape database. Invalid status={new_value} given; must be one of ("I", "W", "R", "E", "X").')
+
+                self._cur.execute("""
+                UPDATE scrapes SET status = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
 
                 self._con.commit()
 
@@ -145,10 +197,19 @@ class Scrapes(Table,
                     raise ValueError(f'Cannot update the scrape database. Invalid out_file={new_value} given; must be a string.')
 
                 self._cur.execute("""
-                UPDATE scrapes SET out_file = ? WHERE label = ? AND scrape_index = ?
-                """, (new_value, label, scrape_index))
+                UPDATE scrapes SET out_file = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
 
                 self._con.commit()
+
+            case 'date':
+
+                if not isinstance(new_value, str):
+                    raise ValueError(f'Cannot update the scrape database. Invalid date={new_value} given; must be a string')
+
+                self._cur.execute("""
+                UPDATE scrapes SET date = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
 
             case 'parsed':
 
@@ -156,25 +217,28 @@ class Scrapes(Table,
                     raise ValueError(f'Cannot update the scrape database. Invalid parsed={new_value} given; must be "T" or "F".')
 
                 self._cur.execute("""
-                UPDATE scrapes SET parsed = ? WHERE label = ? AND scrape_index = ?
-                """, (new_value, label, scrape_index))
+                UPDATE scrapes SET parsed = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
 
                 self._con.commit()
 
             case _:
 
-                raise ValueError(f'Cannot update the scrape database. Invalid column name {column_name} given.')
+                self._con.close()
+                raise ValueError(f'Cannot update the scrape database. Invalid column name "{column_name}" given.')
+
+        self._con.close()
 
     def delete_entry(self, **kwargs):
         """
         Deletes an entry from the ``scrapes`` table with a
-        given label and index
+        given label and action_index
 
         Keyword Arguments
         -----------------
         label : str
             Label of the scrape job that the scrape belongs to
-        index : int
+        action_index : int
             Index of the scrape
 
         Returns
@@ -185,27 +249,27 @@ class Scrapes(Table,
         """
 
         label = kwargs['label']
-        index = kwargs['index']
+        action_index = kwargs['action_index']
 
-        click.echo(f'Removing scrape {index} from job {label} from the scrape database ...')
+        click.echo(f'Removing scrape {action_index} from job {label} from the scrape database ...')
 
-        exists = self.scrape_exists(label, index)
+        exists = self.scrape_exists(label, action_index)
 
         if not exists:
-            click.echo(f'The entry for scrape {index} for job {label} does not exist.')
+            click.echo(f'The entry for scrape {action_index} for job {label} does not exist.')
             success = False
 
         else:
 
             self._cur.execute("""
-            DELETE FROM scrapes WHERE (label = ?) AND (index = ?)
-            """, (label, index))
+            DELETE FROM scrapes WHERE (label = ?) AND (action_index = ?)
+            """, (label, action_index))
 
             self._con.commit()
 
-            if not self.scrape_exists(label, index):
+            if not self.scrape_exists(label, action_index):
 
-                click.echo(f'Entry {index} removed from job {label}')
+                click.echo(f'Entry {action_index} removed from job {label}')
                 success = True
 
             else:
@@ -215,16 +279,16 @@ class Scrapes(Table,
 
         return success
 
-    def scrape_exists(self, label, index):
+    def scrape_exists(self, label, action_index):
         """
-        Checks whether the scrape with ``label`` and ``index``
+        Checks whether the scrape with ``label`` and ``action_index``
         exists in the table
 
         Parameters
         ----------
         label : str
             Label of the scrape job that scrape belongs to
-        index : int
+        action_index : int
             Index of the scrape
 
         Returns
@@ -234,22 +298,22 @@ class Scrapes(Table,
 
         """
 
-        scrape = self.get_scrape(label=label, index=index)
+        scrape = self.get_scrape(label=label, action_index=action_index)
 
         exists = bool(scrape)
 
         return exists
 
-    def get_scrape(self, label, index):
+    def get_scrape(self, label, action_index):
         """
         Returns an instance of the ``self._Scrape`` named tuple
-        for a scrape job with the given ``label`` and ``index``
+        for a scrape job with the given ``label`` and ``action_index``
         
         Parameters
         ----------
         label : str
             Label of the scrape job that scrape belongs to
-        index : int
+        action_index : int
             Index of the scrape
 
         Returns
@@ -259,7 +323,7 @@ class Scrapes(Table,
 
         """
 
-        scrape = self._search_table(label=label, index=index)
+        scrape = self._search_table(label=label, action_index=action_index)
 
         if scrape:
             scrape = scrape[0]
@@ -307,7 +371,7 @@ class Scrapes(Table,
             for scrape in scrapes:
 
                 click.echo('{:<30s} {:<6d} {:<65s}'.format(
-                    scrape.label, scrape.scrape_index, scrape.url))
+                    scrape.label, scrape.action_index, scrape.url))
 
             click.echo(dashes_details)
 

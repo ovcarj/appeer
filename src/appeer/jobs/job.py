@@ -11,7 +11,7 @@ from appeer.general import log as _log
 from appeer.db.jobs_db import JobsDB
 from appeer.db.tables.registered_tables import get_registered_tables
 
-from appeer.jobs.db_properties import DBProperty
+from appeer.jobs.db_properties import JobProperty
 
 def _validate_job_label(label):
     """
@@ -82,7 +82,7 @@ class Job(abc.ABC):
 
         for field in job_fields:
 
-            prop = DBProperty(field)
+            prop = JobProperty(field)
             setattr(cls, field, prop)
 
     def __init__(self, label=None, job_mode='read'):
@@ -109,8 +109,6 @@ class Job(abc.ABC):
         self.label = label
         self._job_mode = job_mode
 
-        self._db = JobsDB()
-
         job_fields = get_registered_tables()[f'{self._job_type}s']
 
         Job._define_db_properties(job_fields=job_fields)
@@ -118,6 +116,22 @@ class Job(abc.ABC):
         self.__job_lab = self._job_type.split('_')[0]
         self.__date = None
         self._logger = None
+
+    @property
+    def _db(self):
+        """
+        Connects to the database
+
+        Returns
+        -------
+        db : appeer.db.jobs_db.JobsDB
+            appeer jobs database interface
+
+        """
+
+        db = JobsDB()
+
+        return db
 
     @property
     def _job_exists(self):
@@ -207,7 +221,7 @@ class Job(abc.ABC):
         self.label = label
 
         if self._job_exists:
-            raise PermissionError(f'Job with label {self.label} already exists.')
+            raise PermissionError(f'Job with label "{self.label}" already exists.')
 
         self.__date = date
 
@@ -258,8 +272,6 @@ class Job(abc.ABC):
                 log_path=log_path,
                 **kwargs)
 
-        self._logger = _log.init_logger(log_name=log_name, log_dir=log_dir)
-
     def _initialize_db_entry(self, description, date, log_path, **kwargs):
         """
         Initializes an entry in the corresponding jobs table
@@ -278,7 +290,7 @@ class Job(abc.ABC):
         """
 
         if self._job_exists:
-            raise PermissionError('Cannot add job entry to the database; the job with label "{self.label}" already exists.')
+            raise PermissionError(f'Cannot add job entry to the database; the job with label "{self.label}" already exists.')
 
         match self._job_type:
 
@@ -305,7 +317,7 @@ class Job(abc.ABC):
 
     def _wlog(self, text):
         """
-        Writes to the log file through self._logger
+        Writes to the ``self.log`` file through the logger object
 
         Parameters
         ----------
@@ -314,7 +326,5 @@ class Job(abc.ABC):
 
         """
 
-        if not self._logger:
-            raise AssertionError('Cannot write to log; the _logger object is not set.')
-
-        self._logger.info(text)
+        _logger = _log.init_logger(log_path=self.log, log_name=self.label)
+        _logger.info(text)

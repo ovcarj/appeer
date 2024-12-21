@@ -1,6 +1,7 @@
 """Base abstract class for handling tables in sqlite3 databases"""
 
 import abc
+
 from collections import namedtuple
 
 from appeer.db.tables.registered_tables import sanity_check, check_column
@@ -73,7 +74,7 @@ class Table(abc.ABC):
 
         self._sanity_check()
 
-        def row_factory(cursor, row):
+        def row_factory(cursor, row): #pylint:disable=unused-argument
             return self._row_tuple(*row)
 
         self._con.row_factory = row_factory
@@ -106,6 +107,7 @@ class Table(abc.ABC):
         self._cur.execute(entries_query)
 
         all_entries = self._cur.fetchall()
+#        self._con.close()
 
         return all_entries
 
@@ -130,7 +132,7 @@ class Table(abc.ABC):
 
         """
 
-    def _search_table(self, and_or=None, contains=None, **kwargs):
+    def _search_table(self, and_or=None, contains=None, **kwargs): #pylint:disable=too-many-branches
         """
         Performs simple table searches
 
@@ -141,16 +143,18 @@ class Table(abc.ABC):
         ----------
         and_or : list of str
             List of 'AND'/'OR' values for combining (column, value) pairs;
-            must be of length ``len(kwargs) - 1``;
-            defaults to a list of 'AND'
+                must be of length ``len(kwargs) - 1``;
+                defaults to a list of 'AND'
 
         contains : list of bool
-            If True, search the table for rows containing (column, value) pairs;
-            if False, search for rows NOT containing (column, value) pairs
+            If True, search the table for rows containing
+                (column, value) pairs;
+            if False, search for rows NOT containing
+                (column, value) pairs
             
         kwargs
-            The table is searched for rows (not) containing (column, value) pairs
-            defined by (key, value) in kwargs
+            The table is searched for rows (not) containing
+                (column, value) pairs defined by (key, value) in kwargs
 
         Returns
         -------
@@ -207,7 +211,7 @@ class Table(abc.ABC):
             for j, val in enumerate(value):
 
                 if j > 0:
-                    query += f' OR '
+                    query += ' OR '
 
                 query += f'{column} {equality} ?'
 

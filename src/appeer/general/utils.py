@@ -5,6 +5,7 @@ import glob
 import re
 import time
 import json
+import zipfile
 
 from shutil import make_archive, rmtree
 from datetime import datetime
@@ -35,9 +36,10 @@ def load_json(json_filename):
 
 def json2list(json_filename):
     """
-    Convert a JSON file to a Python list containing only article URLs.
+    Convert a JSON file to a Python list containing only article URLs
+
     If an article URL cannot be found for a given entry,
-    'no_url' will be written into the output list
+        'no_url' will be written into the output list
 
     Parameters
     ----------
@@ -70,8 +72,10 @@ def json2list(json_filename):
 
 def json2txt(json_filename, text_filename):
     """
-    Convert a JSON file to a text file containing only article URLs.
-    The URLs are extracted using the ``'article_url'`` keys from the JSON entries
+    Convert a JSON file to a text file containing only article URLs
+
+    The URLs are extracted using the ``'article_url'``
+        keys from the JSON entries
 
     Parameters
     ----------
@@ -89,17 +93,20 @@ def json2txt(json_filename, text_filename):
 
 def txt2list(text_filename):
     """
-    Convert a text file to a Python list containing only article URLs.
+    Convert a text file to a Python list containing only article URLs
+
     Each URL should be written in a separate line.
 
     The URLs can be written either as a full URL or a DOI.
-    E.g., the following entries are equally valid:
+        E.g., the following entries are equally valid:
 
     https://pubs.rsc.org/en/content/articlelanding/2023/ob/d3ob00424d
     10.1039/D3OB00424D
 
-    Valid entries start with 'https://' or need to be in DOI format: 10.prefix/suffix.
-    If the entry format is invalid, 'no_url' is written into the output list.
+    Valid entries start with 'https://' or need to be
+        in DOI format: 10.prefix/suffix
+    If the entry format is invalid, 'no_url'
+        is written into the output list
 
     If any line contains more than one entry, an exception is raised
 
@@ -180,12 +187,13 @@ def get_current_datetime():
 
 def convert_time_string(time_string):
     """
-    Convert datetime from a string in ``%Y%m%d-%H%M%S`` format to a ``datetime.datetime`` object
+    Convert datetime from a string in ``%Y%m%d-%H%M%S`` format
+        to a ``datetime.datetime`` object
 
     Parameters
     ----------
     time_string : str
-        Datetime string in ``%Y%m%d-%H%M%S`` format. 
+        Datetime string in ``%Y%m%d-%H%M%S`` format 
 
     Returns
     -------
@@ -197,6 +205,29 @@ def convert_time_string(time_string):
     datetime_object = datetime.strptime(time_string, '%Y%m%d-%H%M%S')
 
     return datetime_object
+
+def human_datetime(time_string):
+    """
+    Convert a string in ``%Y%m%d-%H%M%S`` format
+        to a human-readable date and time string
+
+    Parameters
+    ----------
+    time_string : str
+        Datetime string in ``%Y%m%d-%H%M%S`` format
+
+    Returns
+    -------
+    human_time : str
+        Date and time in nice format (e.g. Dec 25th 2024)
+
+    """
+
+    dt = convert_time_string(time_string)
+    human_time = datetime.strftime(dt,
+            '%a %d %B %Y, %H:%M:%S')
+
+    return human_time
 
 def get_runtime(start_time, end_time):
     """
@@ -222,7 +253,7 @@ def get_runtime(start_time, end_time):
 
 def random_number():
     """
-    Generate a random number as a string (used for naming download directories and logs)
+    Generate a random number as a string
 
     Returns
     -------
@@ -253,7 +284,7 @@ def write_text_to_file(path_to_file, text_data):
 
 def archive_directory(output_filename, directory_name):
     """
-    Create .zip archive from a directory called ``directory_name``
+    Create a ZIP archive from a directory called ``directory_name``
 
     Parameters
     ----------
@@ -266,9 +297,28 @@ def archive_directory(output_filename, directory_name):
     if output_filename.endswith('.zip'):
         output_filename = output_filename[:-4]
 
-    make_archive(base_name=output_filename, format='zip', base_dir=directory_name)
+    make_archive(base_name=output_filename,
+            format='zip', base_dir=directory_name)
 
-def delete_directory(directory_name):
+def archive_list_of_files(output_filename, file_list):
+    """
+    Create a ZIP archive from a list of files
+
+    Parameters
+    ----------
+    output_filename : str
+        Name of the output .zip directory
+    file_list : list
+        List of files to be archived
+
+    """
+
+    with zipfile.ZipFile(output_filename, 'w') as zipper:
+        for f in file_list:
+            zipper.write(f, os.path.basename(f),
+                    compress_type=zipfile.ZIP_DEFLATED)
+
+def delete_directory(directory_name, verbose=True):
     """
     Delete directory called ``directory_name``
 
@@ -276,6 +326,8 @@ def delete_directory(directory_name):
     ----------
     directory_name : str
         Path to the directory to be deleted
+    verbose : bool
+        If True, echo messages
 
     """
 
@@ -284,13 +336,16 @@ def delete_directory(directory_name):
         rmtree(directory_name)
 
         if not directory_exists(directory_name):
-            click.echo(f'Deleted {directory_name}')
+            if verbose:
+                click.echo(f'Deleted {directory_name}')
 
         else:
-            click.echo(f'Could not delete {directory_name}')
+            if verbose:
+                click.echo(f'Could not delete {directory_name}')
 
     else:
-        click.echo(f'Directory {directory_name} does not exist')
+        if verbose:
+            click.echo(f'Directory {directory_name} does not exist')
 
 def delete_file(file_name):
     """

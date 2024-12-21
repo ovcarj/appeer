@@ -2,10 +2,12 @@
 
 import click
 
+from appeer.general import log
+from appeer.scrape import reports
+
 from appeer.db.tables.table import Table
 from appeer.db.tables.scrapes import Scrapes
 from appeer.db.tables.registered_tables import get_registered_tables
-from appeer.general import log
 
 class ScrapeJobs(Table,
                  name='scrape_jobs',
@@ -101,9 +103,11 @@ class ScrapeJobs(Table,
         Updates an entry in the scrape_jobs table
 
         Given a ``label``, updates the corresponding ``column_name``
-        with ``new_value`` in the ``scrape_jobs`` table.
+            with ``new_value`` in the ``scrape_jobs`` table
 
-        ``column_name`` must be in ['job_status', 'job_successes', 'job_fails', 'no_of publications', 'job_parsed'].
+        ``column_name`` must be in
+            ('job_status', 'job_successes', 'job_fails',
+            'no_of publications', 'job_parsed')
 
         Keyword Arguments
         -----------------
@@ -126,7 +130,7 @@ class ScrapeJobs(Table,
 
             case 'job_status':
 
-                if new_value not in ['I', 'R', 'X', 'E']:
+                if new_value not in ('I', 'W', 'R', 'X', 'E'):
                     raise ValueError(f'Cannot update the scrape database. Invalid job_status={new_value} given; must be "I", "R", "X" or "E".')
 
                 self._cur.execute("""
@@ -193,7 +197,7 @@ class ScrapeJobs(Table,
 
             case 'job_parsed':
 
-                if new_value not in ['T', 'F']:
+                if new_value not in ('T', 'F'):
                     raise ValueError(f'Cannot update the scrape database. Invalid job_parsed={new_value} given; must be "T" or "F".')
 
                 self._cur.execute("""
@@ -204,7 +208,9 @@ class ScrapeJobs(Table,
 
             case _:
 
-                raise ValueError(f'Cannot update the scrape database. Invalid column name {column_name} given.')
+                self._con.close()
+                raise ValueError(f'Cannot update the scrape database. Invalid column name "{column_name}" given.')
+
 
     def delete_entry(self, **kwargs):
         """
@@ -316,7 +322,7 @@ class ScrapeJobs(Table,
 
         Returns
         -------
-        scrapes : lits
+        scrapes : list
             List of Scrape instances for the given label
 
         """
@@ -364,7 +370,7 @@ class ScrapeJobs(Table,
 
         click.echo(dashes)
 
-        click.echo('S = Scrape job status: (I) Initialized; (R) Running; (X) Executed/Finished; (E) Error')
+        click.echo('S = Scrape job status: (I) Initialized; (W) Waiting; (R) Running; (X) Executed/Finished; (E) Error')
         click.echo('P = Scrape job completely parsed: (T) True; (F) False')
         click.echo('Succ./Tot. = Ratio of successful scrapes over total inputted URLs')
 
@@ -393,14 +399,10 @@ class ScrapeJobs(Table,
 
             job = self.get_job(label)
 
-            click.echo(log.boxed_message(f'SCRAPE JOB: {job.label}'))
-            click.echo(job.description)
-            click.echo(f'Date: {job.date}')
-            click.echo(dashes)
-            click.echo('{:19s} {:s}'.format('Log', job.log))
-            click.echo('{:19s} {:s}'.format('Download directory', job.download_directory))
-            click.echo('{:19s} {:s}'.format('Output ZIP file', job.zip_file))
-            click.echo(dashes)
+            sgr = reports.scrape_general_report(job=job)
+
+            click.echo(sgr)
+
             click.echo('{:19s} {:s}'.format('Job status', job.job_status))
             click.echo('{:19s} {:d}/{:d}'.format('Succ./Tot.', job.job_successes, job.no_of_publications))
             click.echo('{:19s} {:s}'.format('Completely parsed', job.job_parsed))
@@ -424,10 +426,10 @@ class ScrapeJobs(Table,
 
                 for scrape in scrapes:
 
-                    click.echo('{:<10d} {:<10s} {:^4s} {:^8s} {:<16s} {:<80s}'.format(scrape.scrape_index, scrape.strategy, scrape.status, scrape.parsed, scrape.out_file, scrape.url))
+                    click.echo('{:<10d} {:<10s} {:^4s} {:^8s} {:<16s} {:<80s}'.format(scrape.action_index, scrape.strategy, scrape.status, scrape.parsed, scrape.out_file, scrape.url))
 
                 click.echo(dashes_details)
 
-                click.echo('S = Scrape status: (I) Initialized; (R) Running; (X) Executed/Finished; (E) Error')
+                click.echo('S = Scrape status: (I) Initialized; (W) Waiting; (R) Running; (X) Executed/Finished; (E) Error')
                 click.echo('P = Scrape parsed: (T) True; (F) False')
                 click.echo(dashes_details)
