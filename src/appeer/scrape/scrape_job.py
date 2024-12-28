@@ -197,19 +197,30 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         datadir = Datadir()
 
+
         default_download_directory = os.path.join(datadir.downloads,
                 self.label)
-
         kwargs.setdefault('download_directory', default_download_directory)
-        kwargs['download_directory'] = os.path.abspath(kwargs['download_directory'])
+
+        if kwargs['download_directory'] is None:
+            kwargs['download_directory'] = default_download_directory
+
+        kwargs['download_directory'] = os.path.abspath(
+                kwargs['download_directory'])
 
         default_zip_file = os.path.join(datadir.scrape_archives,
                 f'{self.label}.zip')
 
         kwargs.setdefault('zip_file', default_zip_file)
 
+        if kwargs['zip_file'] is None:
+            kwargs['zip_file'] = default_zip_file
+
         if not kwargs['zip_file'].endswith('.zip'):
             kwargs['zip_file'] += '.zip'
+
+        kwargs['zip_file'] = os.path.abspath(
+                kwargs['zip_file'])
 
         kwargs.setdefault('description', None)
         kwargs.setdefault('log_directory', None)

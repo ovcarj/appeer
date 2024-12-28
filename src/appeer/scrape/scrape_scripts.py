@@ -12,7 +12,7 @@ def create_new_job(**kwargs):
         Unique job label
     description : str
         Optional job description
-    log_dir : str
+    log_directory : str
         Directory into which to store the log file
     download_directory : str
         Directory into which to download the data
@@ -26,7 +26,7 @@ def create_new_job(**kwargs):
 
     """
 
-    sj = ScrapeJob()
+    sj = ScrapeJob(job_mode='write')
     sj.new_job(**kwargs)
 
     return sj
@@ -49,7 +49,7 @@ def append_publications(label, publications):
         Scrape job instance with appeded publications
 
     """
-    sj = ScrapeJob(label=label)
+    sj = ScrapeJob(label=label, job_mode='write')
     sj.add_publications(publications=publications)
 
     return sj
@@ -85,7 +85,7 @@ def run_job(label,
 
     """
 
-    sj = ScrapeJob(label=label)
+    sj = ScrapeJob(label=label, job_mode='write')
     sj.run_job(scrape_mode=scrape_mode,
                cleanup=cleanup,
                **kwargs)
@@ -112,7 +112,7 @@ def create_and_run(publications,
     -----------------
     description : str
         Optional job description
-    log_dir : str
+    log_directory : str
         Directory into which to store the log file
     download_directory : str
         Directory into which to download the data
@@ -130,7 +130,7 @@ def create_and_run(publications,
 
     """
 
-    sj = ScrapeJob()
+    sj = ScrapeJob(job_mode='write')
 
     sj.new_job(label=label, **kwargs)
 

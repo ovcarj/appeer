@@ -227,20 +227,20 @@ class Job(abc.ABC):
 
     def _initialize_job_common(self,
                      description=None,
-                     log_dir=None,
+                     log_directory=None,
                      **kwargs):
         """
         The part of ``appeer`` job initialization common to all job types
 
         If ``description`` is not given, it is set to 'No description'
 
-        If ``log_dir`` is not given, a default value is generated
+        If ``log_directory`` is not given, a default value is generated
 
         Parameters
         ----------
         description : str
             Optional job description
-        log_dir : str
+        log_directory : str
             Optional path to the directory in which to store the log file
         kwargs : *
             Keyword arguments dependent on the job type
@@ -259,13 +259,13 @@ class Job(abc.ABC):
         if not description:
             description = 'No description'
 
-        if not log_dir:
+        if not log_directory:
 
             data_dir = Datadir()
-            log_dir = getattr(data_dir, f'{self.__job_lab}_logs')
+            log_directory = getattr(data_dir, f'{self.__job_lab}_logs')
 
         log_name = f'{self.label}.log'
-        log_path = os.path.join(log_dir, log_name)
+        log_path = os.path.abspath(os.path.join(log_directory, log_name))
 
         self._initialize_db_entry(description=description,
                 date=self.__date,
