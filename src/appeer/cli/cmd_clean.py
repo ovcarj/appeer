@@ -1,6 +1,4 @@
-"""
-Defines the ``appeer clean`` CLI
-"""
+"""Defines the ``appeer clean`` CLI"""
 
 import sys
 import click
@@ -22,7 +20,8 @@ def clean_all_data():
     ad = Datadir()
     ad.clean_all_directories()
 
-@click.command('downloads', help='Delete contents of the appeer/downloads directory')
+@click.command('downloads',
+        help='Delete contents of the appeer/downloads directory')
 def clean_downloads():
     """
     Deletes the contents of the ``appeer/downloads`` directory
@@ -32,7 +31,8 @@ def clean_downloads():
     ad = Datadir()
     ad.clean_downloads()
 
-@click.command('scrape_archives', help='Delete contents of the appeer/scrape_archives directory')
+@click.command('scrape_archives',
+        help='Delete contents of the appeer/scrape_archives directory')
 def clean_scrape_archives():
     """
     Deletes the contents of the ``appeer/scrape_archives`` directory
@@ -42,7 +42,8 @@ def clean_scrape_archives():
     ad = Datadir()
     ad.clean_scrape_archives()
 
-@click.command('scrape_logs', help='Delete contents of the appeer/scrape_logs directory')
+@click.command('scrape_logs',
+        help='Delete contents of the appeer/scrape_logs directory')
 def clean_scrape_logs():
     """
     Deletes the contents of the ``appeer/scrape_logs`` directory
@@ -52,7 +53,8 @@ def clean_scrape_logs():
     ad = Datadir()
     ad.clean_scrape_logs()
 
-@click.command('parse', help='Delete contents of the appeer/parse directory')
+@click.command('parse',
+        help='Delete contents of the appeer/parse directory')
 def clean_parse():
     """
     Deletes the contents of the ``appeer/parse`` directory
@@ -62,7 +64,8 @@ def clean_parse():
     ad = Datadir()
     ad.clean_parse()
 
-@click.command('parse_logs', help='Delete contents of the appeer/parse_logs directory')
+@click.command('parse_logs',
+        help='Delete contents of the appeer/parse_logs directory')
 def clean_parse_logs():
     """
     Deletes the contents of the ``appeer/parse_logs`` directory
@@ -72,7 +75,8 @@ def clean_parse_logs():
     ad = Datadir()
     ad.clean_parse_logs()
 
-@click.command('db', help='Delete contents of the appeer/db directory')
+@click.command('db',
+        help='Delete contents of the appeer/db directory')
 def clean_db():
     """
     Deletes the contents of the ``appeer/db`` directory
@@ -82,7 +86,8 @@ def clean_db():
     ad = Datadir()
     ad.clean_db()
 
-@click.command('config', help='Delete the appeer config file')
+@click.command('config',
+        help='Delete the appeer config file')
 def clean_config():
     """
     Deletes the ``appeer`` config file
@@ -126,9 +131,7 @@ def clean_sjob(label, bad, everything):
         csj.clean_bad_jobs()
 
     elif everything:
-        proceed = log.ask_yes_no(
-                'You are about to delete all scrape jobs data. Do you want to proceed? [Y/n]\n'
-                )
+        proceed = log.ask_yes_no('You are about to delete all scrape jobs data. Do you want to proceed? [Y/n]\n')
 
         if proceed == 'Y':
             csj.clean_all_jobs()
@@ -175,9 +178,7 @@ def clean_pjob(label, bad, everything):
         cpj.clean_bad_jobs()
 
     elif everything:
-        proceed = log.ask_yes_no(
-                'You are about to delete all parse jobs data. Do you want to proceed? [Y/n]\n'
-                )
+        proceed = log.ask_yes_no('You are about to delete all parse jobs data. Do you want to proceed? [Y/n]\n')
 
         if proceed == 'Y':
             cpj.clean_all_jobs()
@@ -191,7 +192,7 @@ def clean_pjob(label, bad, everything):
         cpj.clean_parse_job(label)
 
 @click.group()
-def clean_cli(name='clean', help='Delete contents of the appeer data directory'):
+def clean_cli(name='clean', help='Delete contents of the appeer data directory'): #pylint:disable=unused-argument, redefined-builtin, line-too-long
     """
     Delete contents of the appeer data directory
 
