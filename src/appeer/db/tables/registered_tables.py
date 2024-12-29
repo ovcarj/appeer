@@ -15,11 +15,11 @@ def get_registered_tables():
 
             'scrape_jobs':
                 ['label',
+                'date',
                 'description',
                 'log',
                 'download_directory',
                 'zip_file',
-                'date',
                 'job_status',
                 'job_step',
                 'job_successes',
@@ -42,16 +42,34 @@ def get_registered_tables():
 
             'parse_jobs':
                 ['label',
+                 'date',
                  'description',
                  'log',
-                 'mode',
                  'parse_directory',
-                 'date',
+                 'mode',
                  'job_status',
+                 'job_step',
                  'job_successes',
                  'job_fails',
                  'no_of_publications',
                  'job_committed'],
+
+            'parses':
+                ['label',
+                 'action_index',
+                 'date',
+                 'input_file',
+                 'parser',
+                 'doi',
+                 'received',
+                 'accepted',
+                 'published',
+                 'duration',
+                 'publisher',
+                 'journal',
+                 'title',
+                 'affiliations',
+                 'committed'],
 
             'pubs':
                 ['doi',

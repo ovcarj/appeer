@@ -39,6 +39,8 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
     Dynamic Properties
     ------------------
+    date : str
+        Job creation date and time
     description : str
         Optional job description
     log : str
@@ -47,8 +49,6 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
         Directory into which to download the data
     zip_file : str
         Path to the output ZIP file
-    date : str
-        Job creation date and time
     job_status : str
         Job status; one of ('I', 'W', 'R', 'E', 'X'); mutable
     job_step : int
@@ -210,13 +210,12 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         Returns
         -------
-        kwargs : dict
+        job_arguments : dict
             The inputted keyword arguments with added defaults
 
         """
 
         datadir = Datadir()
-
 
         default_download_directory = os.path.join(datadir.downloads,
                 self.label)

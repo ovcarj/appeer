@@ -90,12 +90,13 @@ class Job(abc.ABC):
         Connects to the jobs database and sets the job label
 
         If the job already exists, current values in the job entry
-        are read from the database
+            are read from the database
 
         If ``job_mode == 'read'``, the job attributes cannot be modified
 
         If ``job_mode == 'write'``, the job attributes can be modified and
-        the corresponding entry in the jobs database will be modified as well
+            the corresponding entry in the jobs database will be modified
+            as well
 
         Parameters
         ----------

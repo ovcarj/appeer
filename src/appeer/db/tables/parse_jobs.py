@@ -24,6 +24,8 @@ class ParseJobs(Table,
         """
         Establishes a connection with the the jobs database
 
+        Parameters
+        ----------
         connection : sqlite3.Connection
             Connection to the database to which the table belongs to
 
@@ -56,30 +58,32 @@ class ParseJobs(Table,
         -----------------
         label : str
             Label of the parse job
+        date : str
+            Date on which the parse job was initialized
         description : str
             Description of the parse job
         log : str
             Path to the log of the parse job
-        mode : str
-            Parsing mode. Must be in ['A', 'S', 'F', 'E']
         parse_directory : str
-            Path to the directory where (temporary) files for parsing are created
-        date : str
-            Date on which the parse job was initialized
+            Path to the directory where the (temporary) files for
+                parsing are created
+        mode : str
+            Parsing mode. Must be in ('A', 'E', 'S', 'F')
 
         """
 
-        if kwargs['mode'] not in ['A', 'S', 'F', 'E']:
-            raise ValueError('Cannot add entry to the parse jobs database; invalid mode {mode} inputted.')
+        if kwargs['mode'] not in ('A', 'E', 'S', 'F'):
+            raise ValueError(f'Cannot add entry to the parse jobs database; invalid mode {kwargs["mode"]} inputted.')
 
         data = ({
             'label': kwargs['label'],
+            'date': kwargs['date'],
             'description': kwargs['description'],
             'log': kwargs['log_path'],
-            'mode': kwargs['mode'],
             'parse_directory': kwargs['parse_directory'],
-            'date': kwargs['date'],
+            'mode': kwargs['mode'],
             'job_status': 'I',
+            'job_step': 0,
             'job_successes': 0,
             'job_fails': 0,
             'no_of_publications': 0,
@@ -87,7 +91,7 @@ class ParseJobs(Table,
             })
 
         self._cur.execute("""
-        INSERT INTO parse_jobs VALUES(:label, :description, :log, :mode, :parse_directory, :date, :job_status, :job_successes, :job_fails, :no_of_publications, :job_committed)
+        INSERT INTO parse_jobs VALUES(:label, :date, :description, :log, :parse_directory, :mode, :job_status, :job_step, :job_successes, :job_fails, :no_of_publications, :job_committed)
         """, data)
 
         self._con.commit()
@@ -100,13 +104,62 @@ class ParseJobs(Table,
 
     def delete_entry(self, **kwargs):
         """
-        Deletes an entry
+        Deletes the row given by ``label`` from the ``parse_jobs`` table, 
+            along with all corresponding entries in the ``parses`` table
+
+        Keyword Arguments
+        -----------------
+        label : str
+            Label of the parse job whose entry is being removed
+
+        Returns
+        -------
+        success : bool
+            True if the entry was removed, False if it was not
 
         """
+
+        label = kwargs['label']
+
+        click.echo(f'Removing entry {label} from the parse database ...')
+
+        exists = self.job_exists(label)
+
+        if not exists:
+
+            click.echo(f'The entry for parse job {label} does not exist.')
+            success = False
+
+        else:
+
+            self._cur.execute("""
+            DELETE FROM parse_jobs WHERE label = ?
+            """, (label,))
+
+            self._con.commit()
+
+            exists = self.job_exists(label)
+
+            if not exists:
+
+                self._cur.execute("""
+                DELETE FROM parses WHERE label = ?
+                """, (label,))
+
+                self._con.commit()
+
+                click.echo(f'Entry {label} removed.\n')
+                success = True
+
+            else:
+                click.echo(f'Could not delete entry {label}\n')
+                success = False
+
+        return success
 
     def job_exists(self, label):
         """
-        Checks whether the parse job with the given label exists in the database
+        Checks whether the job with the given label exists in the database
 
         Parameters
         ----------

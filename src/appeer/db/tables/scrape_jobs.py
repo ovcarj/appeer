@@ -92,11 +92,11 @@ class ScrapeJobs(Table,
 
         data = ({
             'label': kwargs['label'],
+            'date': kwargs['date'],
             'description': kwargs['description'],
             'log': kwargs['log_path'],
             'download_directory': kwargs['download_directory'],
             'zip_file': kwargs['zip_file'],
-            'date': kwargs['date'],
             'job_status': 'I',
             'job_step': 0,
             'job_successes': 0,
@@ -108,7 +108,7 @@ class ScrapeJobs(Table,
         self._sanity_check()
 
         add_query = """
-        INSERT INTO scrape_jobs VALUES(:label, :description, :log, :download_directory, :zip_file, :date, :job_status, :job_step, :job_successes, :job_fails, :no_of_publications, :job_parsed)
+        INSERT INTO scrape_jobs VALUES(:label, :date, :description, :log, :download_directory, :zip_file, :job_status, :job_step, :job_successes, :job_fails, :no_of_publications, :job_parsed)
         """
 
         self._cur.execute(add_query, data)
@@ -232,7 +232,7 @@ class ScrapeJobs(Table,
     def delete_entry(self, **kwargs):
         """
         Deletes the row given by ``label`` from the ``scrape_jobs`` table, 
-        along with all corresponding entries in the ``scrapes`` table
+            along with all corresponding entries in the ``scrapes`` table
 
         Keyword Arguments
         -----------------
@@ -307,7 +307,7 @@ class ScrapeJobs(Table,
     def get_job(self, label):
         """
         Returns an instance of the ``self._ScrapeJob`` named tuple
-        for a scrape job with the given ``label``
+            for a scrape job with the given ``label``
         
         Parameters
         ----------

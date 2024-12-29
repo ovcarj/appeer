@@ -57,7 +57,7 @@ else:
 
         """)
 @click.option('-u', '--unparsed', is_flag=True, default=False,
-        help='Print all unparsed scrapes')
+        help='List all unparsed scrapes')
 @click.option('-j', '--job_label',
         help='Scrape job label')
 @click.pass_context
