@@ -148,6 +148,26 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         return _successful_actions
 
+    @property
+    def summary(self):
+        """
+        A formatted summary of the scrape job
+
+        Returns
+        -------
+        _summary : str
+            Job summary
+
+        """
+
+        if not self._job_exists:
+            _summary = f'Scrape job {self.label} does not exist.'
+
+        else:
+            _summary = reports.scrape_job_summary(job=self)
+
+        return _summary
+
     def new_job(self, **kwargs):
         """ 
         Create a new scrape job

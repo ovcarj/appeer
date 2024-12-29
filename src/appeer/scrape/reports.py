@@ -38,7 +38,7 @@ def appeer_start(start_datetime=None):
 
     return start_report
 
-def scrape_general_report(job):
+def scrape_general_report(job, add_status_info=False):
     """
     Return a formatted report containing general information of a scrape job
 
@@ -46,6 +46,8 @@ def scrape_general_report(job):
     ----------
     job : appeer.scrape.scrape_job.ScrapeJob
         appeer scrape job
+    add_status_info : bool
+        If True, job status, succ./tot. and parsed status are added
 
     Returns
     -------
@@ -65,6 +67,12 @@ def scrape_general_report(job):
     msg += f'{"Log":19} {job.log}\n'
     msg += f'{"Download directory":19} {job.download_directory}\n'
     msg += f'{"Output ZIP file":19} {job.zip_file}'
+
+    if add_status_info:
+        msg += '\n'
+        msg += f'{"Job status":19} {job.job_status}\n'
+        msg += f'{"Succ./Tot.":19} {job.job_successes}/{job.no_of_publications}\n'
+        msg += f'{"Parsed":19} {job.job_parsed}'
 
     report += _log.boxed_message(msg) + '\n'
 
@@ -436,7 +444,7 @@ def end_logo(job):
     Parameters
     ----------
     job : appeer.scrape.scrape_job.ScrapeJob
-        appeer scrape action
+        appeer scrape job
 
     Returns
     -------
@@ -451,5 +459,120 @@ def end_logo(job):
     report = _log.get_logo(centered=True) + '\n'
     report += _log.boxed_message(f'SCRAPE JOB: {job.label}', centered=True) + '\n'
     report += _log.center(f'Finished on {human_time}') + '\n'
+
+    return report
+
+def scrape_jobs_summary(scrape_table):
+    """
+    Summary of all scrape jobs in the database
+
+    Parameters
+    ----------
+    scrape_table : appeer.db.tables.scrape_jobs.ScrapeJobs
+        Instance of ScrapeJobs table
+
+    Returns
+    -------
+    report : str
+        Summary of all scrape jobs
+
+    """
+
+    _msg = f'{"Label":<30} {"Description":<35} {"S":^4} {"P":^4} {"Succ./Tot.":^10}'
+    header_length = len(_msg)
+    dashes = header_length * '–'
+
+    report = f'{dashes}\n{_msg}\n{dashes}\n'
+
+    for job in scrape_table.entries:
+
+        description = job.description
+
+        if len(description) > 30:
+            description = description[0:30] + '...'
+
+        succ_tot = f'{job.job_successes}/{job.no_of_publications}'
+
+        report += f'{job.label:<30} {description:<35} {job.job_status:^4} {job.job_parsed:^4} {succ_tot:^10}' + '\n'
+
+    report += dashes + '\n'
+
+    report += 'S = Job status: (I) Initialized; (W) Waiting; (R) Running; (X) Executed; (E) Error' + '\n'
+    report += 'P = Job completely parsed: (T) True; (F) False' + '\n'
+    report += 'Succ./Tot. = Ratio of successful scrapes over total inputted URLs' + '\n'
+
+    report += dashes
+
+    return report
+
+def scrape_job_summary(job):
+    """
+    Get a summary of a scrape job
+
+    Parameters
+    ----------
+    job : appeer.scrape.scrape_job.ScrapeJob
+        appeer scrape job
+
+    Returns
+    -------
+    report : str
+        Scrape job summary
+
+    """
+
+    report = scrape_general_report(job=job, add_status_info=True)
+
+
+    if not job.actions:
+        report += '\nNo publications added to the job.'
+
+    else:
+
+        report += '\n'
+        report += action_list_summary(job.actions)
+
+    return report
+
+def unparsed_scrapes(scrapes):
+    """
+    A summary of all unparsed scrape actions
+
+    Parameters
+    ----------
+    scrapes : appeer.db.tables.scrapes.Scrapes
+        Scrapes table
+
+    Returns
+    -------
+    report : str
+        Summary of all unparsed scrape actions
+
+    """
+
+    if scrapes.unparsed:
+
+        labels = [scrape.label
+                for scrape in scrapes.unparsed]
+        action_indices = [str(scrape.action_index)
+                for scrape in scrapes.unparsed]
+        urls = [scrape.url
+                for scrape in scrapes.unparsed]
+
+        max_label_len = max(len(max(labels, key=len)), len('Label'))
+        max_index_len = max(len(max(action_indices, key=len)), len('Index'))
+        max_url_len = max(len(max(urls, key=len)), len('URL'))
+
+        _msg = f'{"Label":<{max_label_len}}    {"Index":<{max_index_len}}    {"URL":<{max_url_len}}'
+
+        report = _log.underlined_message(_msg) + '\n'
+
+        for i in range(len(scrapes.unparsed)):
+            report += f'{labels[i]:<{max_label_len}}    {action_indices[i]:<{max_index_len}}    {urls[i]:<{max_url_len}}\n'
+
+        report = report.rstrip('\n')
+
+    else:
+        report = 'No unparsed scrapes found.'
 
     return report

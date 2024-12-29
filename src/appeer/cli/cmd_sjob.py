@@ -5,6 +5,7 @@ import click
 from appeer.db.jobs_db import JobsDB
 from appeer.general.config import Config
 from appeer.scrape import scrape_scripts
+from appeer.scrape.scrape_job import ScrapeJob
 
 settings = Config().settings
 
@@ -71,13 +72,14 @@ def sjob_cli(ctx, job_label, unparsed):
         jobs_db = JobsDB()
 
         if unparsed:
-            jobs_db.scrapes.print_unparsed()
+            click.echo(jobs_db.scrapes.unparsed_summary)
 
         elif job_label:
-            jobs_db.scrape_jobs.print_job_details(label=job_label)
+            sj = ScrapeJob(job_label)
+            click.echo(sj.summary)
 
         else:
-            jobs_db.scrape_jobs.print_summary()
+            click.echo(jobs_db.scrape_jobs.summary)
 
 @sjob_cli.command('new',
         help="""Initialize an empty scrape job

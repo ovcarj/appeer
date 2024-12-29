@@ -2,7 +2,6 @@
 
 import click
 
-from appeer.general import log
 from appeer.scrape import reports
 
 from appeer.db.tables.table import Table
@@ -28,6 +27,8 @@ class ScrapeJobs(Table,
         """
         Establishes a connection with the the jobs database
 
+        Parameters
+        ----------
         connection : sqlite3.Connection
             Connection to the database to which the table belongs to
 
@@ -38,7 +39,7 @@ class ScrapeJobs(Table,
     @property
     def bad_jobs(self):
         """
-        Returns all scrape jobs whose status is not 'X'.
+        Returns all scrape jobs whose status is not 'X'
 
         Returns
         -------
@@ -51,6 +52,22 @@ class ScrapeJobs(Table,
                                   job_status='X')
 
         return jobs
+
+    @property
+    def summary(self):
+        """
+        Get a formatted summary of all scrape jobs in the table
+
+        Returns
+        -------
+        _summary : str
+            Formatted summary of all scrape jobs in the table
+
+        """
+
+        _summary = reports.scrape_jobs_summary(self)
+
+        return _summary
 
     def add_entry(self, **kwargs):
         """
@@ -322,7 +339,7 @@ class ScrapeJobs(Table,
 
         Returns
         -------
-        scrapes : list
+        scrapes_label : list
             List of Scrape instances for the given label
 
         """
@@ -340,96 +357,3 @@ class ScrapeJobs(Table,
             scrapes_label = scrapes.get_scrapes_by_label(label)
 
         return scrapes_label
-
-    def print_summary(self):
-        """
-        Prints a summary of all entries in the ``scrape_jobs`` table
-
-        """
-
-        header = '{:30s} {:35s} {:^4s} {:^4s} {:^10s}'.format('Label', 'Description', 'S', 'P', 'Succ./Tot.')
-        header_length = len(header)
-        dashes = header_length * '–'
-
-        click.echo(dashes)
-        click.echo(header)
-        click.echo(dashes)
-
-        for job in self.entries:
-
-            description = job.description
-
-            if len(description) > 30:
-                description = description[0:30] + '...'
-
-            succ_tot = f'{job.job_successes}/{job.no_of_publications}'
-
-            report = '{:30s} {:35s} {:^4s} {:^4s} {:^10s}'.format(job.label, description, job.job_status, job.job_parsed, succ_tot)
-
-            click.echo(report)
-
-        click.echo(dashes)
-
-        click.echo('S = Scrape job status: (I) Initialized; (W) Waiting; (R) Running; (X) Executed/Finished; (E) Error')
-        click.echo('P = Scrape job completely parsed: (T) True; (F) False')
-        click.echo('Succ./Tot. = Ratio of successful scrapes over total inputted URLs')
-
-        click.echo(dashes)
-
-    def print_job_details(self, label):
-        """
-        Prints details of the job with the given label.
-
-        Parameters
-        ----------
-        label : str
-            Label of the job for which the details are printed
-
-        """
-
-        exists = self.job_exists(label)
-
-        if not exists:
-
-            click.echo(f'Scrape job {label} does not exist.')
-
-        else:
-
-            dashes = log.get_log_dashes()
-
-            job = self.get_job(label)
-
-            sgr = reports.scrape_general_report(job=job)
-
-            click.echo(sgr)
-
-            click.echo('{:19s} {:s}'.format('Job status', job.job_status))
-            click.echo('{:19s} {:d}/{:d}'.format('Succ./Tot.', job.job_successes, job.no_of_publications))
-            click.echo('{:19s} {:s}'.format('Completely parsed', job.job_parsed))
-            click.echo(dashes)
-
-            scrapes = self.get_scrapes(label)
-
-            if not scrapes:
-                click.echo('No files downloaded')
-
-            else:
-
-                click.echo(log.boxed_message('SCRAPE DETAILS'))
-
-                header = '{:<10s} {:<10s} {:^4s} {:^8s} {:<16s} {:<80s}'.format('Index', 'Strategy', 'S', 'P', 'Output', 'URL')
-                dashes_details = len(header) * '–'
-
-                click.echo(dashes_details)
-                click.echo(header)
-                click.echo(dashes_details)
-
-                for scrape in scrapes:
-
-                    click.echo('{:<10d} {:<10s} {:^4s} {:^8s} {:<16s} {:<80s}'.format(scrape.action_index, scrape.strategy, scrape.status, scrape.parsed, scrape.out_file, scrape.url))
-
-                click.echo(dashes_details)
-
-                click.echo('S = Scrape status: (I) Initialized; (W) Waiting; (R) Running; (X) Executed/Finished; (E) Error')
-                click.echo('P = Scrape parsed: (T) True; (F) False')
-                click.echo(dashes_details)

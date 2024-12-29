@@ -5,6 +5,8 @@ import click
 from appeer.db.tables.table import Table
 from appeer.db.tables.registered_tables import get_registered_tables
 
+from appeer.scrape import reports
+
 class Scrapes(Table,
               name='scrapes',
               columns=get_registered_tables()['scrapes']):
@@ -34,7 +36,7 @@ class Scrapes(Table,
     @property
     def unparsed(self):
         """
-        Returns all unparsed scrapes (status='X', parsed='F').
+        Returns all unparsed scrapes (status='X', parsed='F')
 
         Returns
         -------
@@ -46,6 +48,22 @@ class Scrapes(Table,
         unparsed_scrapes = self._search_table(status='X', parsed='F')
 
         return unparsed_scrapes
+
+    @property
+    def unparsed_summary(self):
+        """
+        Formatted summary of all unparsed scrapes
+
+        Returns
+        -------
+        _summary : str
+            Summary of all unparsed scrapes
+
+        """
+
+        _summary = reports.unparsed_scrapes(scrapes=self)
+
+        return _summary
 
     def add_entry(self, **kwargs):
         """
@@ -350,30 +368,3 @@ class Scrapes(Table,
         scrapes = self._search_table(label=label)
 
         return scrapes
-
-    def print_unparsed(self):
-        """
-        Prints a summary of all unparsed scrapes
-
-        """
-
-        scrapes = self.unparsed
-
-        if scrapes:
-
-            header = '{:<30s} {:<6s} {:<65s}'.format('Label', 'Index', 'URL')
-            dashes_details = len(header) * '–'
-
-            click.echo(dashes_details)
-            click.echo(header)
-            click.echo(dashes_details)
-
-            for scrape in scrapes:
-
-                click.echo('{:<30s} {:<6d} {:<65s}'.format(
-                    scrape.label, scrape.action_index, scrape.url))
-
-            click.echo(dashes_details)
-
-        else:
-            click.echo('No unparsed scrapes found.')
