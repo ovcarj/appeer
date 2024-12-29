@@ -232,7 +232,7 @@ class ScrapeJobs(Table,
     def delete_entry(self, **kwargs):
         """
         Deletes the row given by ``label`` from the ``scrape_jobs`` table, 
-        along with all corresponding entries in the ``scrapes`` table
+            along with all corresponding entries in the ``scrapes`` table
 
         Keyword Arguments
         -----------------
@@ -307,7 +307,7 @@ class ScrapeJobs(Table,
     def get_job(self, label):
         """
         Returns an instance of the ``self._ScrapeJob`` named tuple
-        for a scrape job with the given ``label``
+            for a scrape job with the given ``label``
         
         Parameters
         ----------
