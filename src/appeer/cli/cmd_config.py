@@ -1,6 +1,4 @@
-"""
-Defines the ``appeer config`` CLI
-"""
+"""Defines the ``appeer config`` CLI"""
 
 import click
 
@@ -18,13 +16,15 @@ def show_config():
 
 @click.command('edit', help="""Edit the contents of the config file
 
-        Example usage: appeer config edit data_directory /home/user/appeer_data
+        Example usage: 
+        
+            appeer config edit sleep_time 2.0
 
-        The argument after "edit" should be one of the subsections of the config file.
+        The argument after "edit" should be one of the subsections of the config file
 
         To see the current config file, use:
 
-        appeer config print
+            appeer config print
 
         """)
 @click.argument('option')
@@ -41,7 +41,7 @@ def edit_config(option, value):
     cfg.edit_config_by_subsection(subsection=option, value=value_str)
 
 @click.group()
-def config_cli(name='config', help='Print/edit the appeer config file'):
+def config_cli(name='config', help='Print/edit the appeer config file'): #pylint:disable=unused-argument, redefined-builtin
     """
     Print/edit the appeer config file
 

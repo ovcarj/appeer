@@ -1,34 +1,32 @@
-"""
-Defines the ``appeer pdb`` CLI
-"""
+"""Defines the ``appeer pjob`` CLI"""
 
 import click
 
 from appeer.db.jobs_db import JobsDB
 
-@click.command('pdb', help="""Print parse jobs summary
+@click.command('pjob', help="""Print parse jobs summary
 
-        To view a summary of all parse jobs, use:
+        View a summary of all parse jobs, use:
 
-        appeer pdb
+            appeer pjob
 
-        To see details of a job with a particular label:
+        See details of a job with a particular label:
 
-        appeer pdb <label>
+            appeer pjob <label>
 
-        To print all not yet committed parsed publications:
+        Print all not yet committed parsed publications:
 
-        appeer pdb -u
+            appeer pjob -u
 
         Instructions for cleaning the parse database:
 
-        appeer clean pjob --help
+            appeer clean pjob --help
 
         """)
 @click.option('-u', '--uncommitted', is_flag=True,
         default=False, help='Print not yet committed entries ')
 @click.argument('label', nargs=1, required=False)
-def pdb_cli(label, uncommitted):
+def pjob_cli(label, uncommitted):
     """
     Print parse jobs summary
 

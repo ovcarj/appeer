@@ -1,6 +1,4 @@
-"""
-Defines the ``appeer parse`` CLI
-"""
+"""Defines the ``appeer parse`` CLI"""
 
 import click
 
@@ -15,9 +13,9 @@ Example usage: appeer parse
 @click.option('-s', '--description', 'description',
         default=None, help="Optional description of the parse job")
 @click.option('-l', '--logdir',
-        default=None, help="Directory in which to store the log. If not given, the default appeer data directory is used")
+        default=None, help="Directory in which to store the log")
 @click.option('-d', '--parse_dir',
-        default=None, help="Directory in which to create files for parsing. If not given, the default appeer data directory is used")
+        default=None, help="Directory in which to create temporary files for parsing")
 @click.option('-k', '--keep_tmp', is_flag=True,
         default=False, help="Don't delete the temporary files after parsing")
 @click.option('-c', '--commit', is_flag=True,

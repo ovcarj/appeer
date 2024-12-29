@@ -99,21 +99,21 @@ def clean_config():
 
 @click.command('sjob', help="""Delete scrape job(s) data
 
-        To delete a single job, specify the job label; e.g.:
+        Delete a single job with a given job label:
 
-        appeer clean sjob scrape_20241113-070355_8
+            appeer clean sjob scrape_20241113-070355_8
 
-        To delete all jobs whose status is not 'X', use the --bad flag:
+        Delete all jobs whose status is not 'X'
 
-        appeer clean sjob --bad
+            appeer clean sjob --bad
 
-        To delete all jobs, use the --all flag:
+        Delete all jobs
         
-        appeer clean sjob --all
+            appeer clean sjob --all
 
-        To view a summary of all scrape jobs, type:
+        View a summary of all scrape jobs, type:
 
-        appeer sdb
+            appeer sjob
 
         """)
 @click.argument('label', nargs=1, required=False)
@@ -123,7 +123,7 @@ def clean_config():
         default=False, help='Delete all scrape jobs')
 def clean_sjob(label, bad, everything):
     """
-    Delete data associated with a scrape job with a given ``label``.
+    Delete data associated with a scrape job with a given ``label``
 
     """
 
@@ -146,21 +146,21 @@ def clean_sjob(label, bad, everything):
 
 @click.command('pjob', help="""Delete parse job(s) data
 
-        To delete a single job, specify the job label; e.g.:
+        Delete a single job with a given label:
 
-        appeer clean sjob parse_20241113-070355_8
+            appeer clean sjob parse_20241113-070355_8
 
-        To delete all jobs whose status is not 'X', use the --bad flag:
+        Delete all jobs whose status is not 'X':
 
-        appeer clean pjob --bad
+            appeer clean pjob --bad
 
-        To delete all jobs, use the --all flag:
+        Delete all jobs:
         
-        appeer clean pjob --all
+            appeer clean pjob --all
 
-        To view a summary of all parse jobs, type:
+        View a summary of all parse jobs:
 
-        appeer pdb
+            appeer pjob
 
         """)
 @click.argument('label', nargs=1, required=False)
@@ -170,7 +170,7 @@ def clean_sjob(label, bad, everything):
         default=False, help='Delete all parse jobs')
 def clean_pjob(label, bad, everything):
     """
-    Delete data associated with a parse job with a given ``label``.
+    Delete data associated with a parse job with a given ``label``
 
     """
 
@@ -198,7 +198,9 @@ def clean_cli(name='clean', help='Delete contents of the appeer data directory')
 
     Example usage:
 
-    appeer clean downloads
+        appeer clean downloads
+
+        appeer clean sjob my_scrape_label
 
     """
 

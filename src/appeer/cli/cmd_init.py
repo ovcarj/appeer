@@ -1,15 +1,13 @@
-"""
-Defines the ``appeer init`` CLI
-"""
+"""Defines the ``appeer init`` CLI"""
 
 import click
 
 from appeer.general.initialize import initialize_appeer
 
-@click.command('init', help='Create appeer data directories and databases')
+@click.command('init', help='Initialize appeer data directories and databases')
 def init_cli():
     """
-    Create data directories and databases
+    Initialize data directories and databases
     
     """
 
