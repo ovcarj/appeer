@@ -402,7 +402,7 @@ def scrape_end(job):
 
     return report
 
-def action_list_summary(action_list):
+def action_list_summary(action_list, add_parsed_info=False): #pylint:disable='too-many-locals'
     """
     Return a summary of a list of scrape actions
 
@@ -410,6 +410,8 @@ def action_list_summary(action_list):
     ----------
     action_list : list of appeer.scrape.scrape_job.ScrapeAction
         List of appeer scrape actions
+    add_parsed_info : bool
+        If True, write action.parsed values to summary
 
     Returns
     -------
@@ -424,16 +426,32 @@ def action_list_summary(action_list):
     strategies = [action.strategy for action in action_list]
     statuses = [action.status for action in action_list]
 
+    if add_parsed_info:
+        parsed = [action.parsed for action in action_list]
+
     max_index_len = max(len(max(action_indices, key=len)), len('Index'))
     max_url_len = max(len(max(urls, key=len)), len('URL'))
     max_journal_len = max(len(max(journals, key=len)), len('Journal'))
     max_strategy_len = max(len(max(strategies, key=len)), len('Strategy'))
     max_status_len = max(len(max(statuses, key=len)), len('Status'))
 
-    report = _log.underlined_message(f'{"Index":<{max_index_len}}  {"URL":<{max_url_len}}  {"Journal":<{max_journal_len}}  {"Strategy":<{max_strategy_len}}  {"Status":<{max_status_len}}') + '\n'
+    if add_parsed_info:
+        max_parsed_len = max(len(max(parsed, key=len)), len('Parsed'))
+
+    _msg = f'{"Index":<{max_index_len}}  {"URL":<{max_url_len}}  {"Journal":<{max_journal_len}}  {"Strategy":<{max_strategy_len}}  {"Status":<{max_status_len}}'
+
+    if add_parsed_info:
+        _msg += f'  {"Parsed":<{max_parsed_len}}'
+
+    report = _log.underlined_message(_msg) + '\n'
 
     for i in range(len(action_list)):
-        report += f'{action_indices[i]:<{max_index_len}}  {urls[i]:<{max_url_len}}  {journals[i]:<{max_journal_len}}  {strategies[i]:<{max_strategy_len}}    {statuses[i]:<{max_status_len}}\n'
+        report += f'{action_indices[i]:<{max_index_len}}  {urls[i]:<{max_url_len}}  {journals[i]:<{max_journal_len}}  {strategies[i]:<{max_strategy_len}}    {statuses[i]:<{max_status_len}}'
+
+        if add_parsed_info:
+            report += f'  {parsed[i]:<{max_parsed_len}}'
+
+        report += '\n'
 
     return report
 
@@ -523,14 +541,13 @@ def scrape_job_summary(job):
 
     report = scrape_general_report(job=job, add_status_info=True)
 
-
     if not job.actions:
         report += '\nNo publications added to the job.'
 
     else:
 
         report += '\n'
-        report += action_list_summary(job.actions)
+        report += action_list_summary(job.actions, add_parsed_info=True)
 
     return report
 
