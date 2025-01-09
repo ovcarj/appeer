@@ -123,6 +123,8 @@ class Job(abc.ABC):
         self.__date = None
         self._logger = None
 
+        self._queue = None
+
     @property
     def _db(self):
         """
@@ -479,3 +481,18 @@ class Job(abc.ABC):
 
         _logger = _log.init_logger(log_path=self.log, log_name=self.label)
         _logger.info(text)
+
+    def _log_server(self):
+        """
+        Log messages received from actions through self._queue
+
+        """
+
+        if not self._queue:
+            raise ValueError('Cannot log action message; self._queue has not been initialized.')
+
+        while True:
+
+            message = self._queue.get()
+            self._wlog(message)
+            self._queue.task_done()

@@ -81,7 +81,7 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         super().__init__(label=label, job_mode=job_mode)
 
-        self.__queue = None
+#        self._queue = None
 
     @property
     def summary(self):
@@ -298,8 +298,8 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
         self._wlog(reports.scrape_start_report(job=self,
             run_parameters=run_parameters))
 
-        self.__queue = queue.Queue()
-        threading.Thread(target=self.__log_server, daemon=True).start()
+        self._queue = queue.Queue()
+        threading.Thread(target=self._log_server, daemon=True).start()
 
         action_parameters = {
                 'max_tries': run_parameters['max_tries'],
@@ -309,7 +309,7 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         while self.job_step < self.no_of_publications:
 
-            self.run_action(queue=self.__queue,
+            self.run_action(queue=self._queue,
                     action_index=self.job_step,
                     **action_parameters)
 
@@ -317,7 +317,7 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
             time.sleep(run_parameters['sleep_time'])
 
-        self.__queue.join()
+        self._queue.join()
 
         if all(status == 'X' for status in
                 (getattr(action, 'status') for action in self.actions)):
@@ -422,7 +422,7 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         self.actions[action_index].run(
                 download_directory=self.download_directory,
-                _queue=self.__queue,
+                _queue=self._queue,
                 **action_parameters)
 
         if self.actions[action_index].success == 'F':
@@ -444,17 +444,17 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         self._wlog(f'Archived {len(self.successful_actions)} publications to {self.zip_file}')
 
-    def __log_server(self):
-        """
-        Log messages received from actions through self.__queue
-
-        """
-
-        if not self.__queue:
-            raise ValueError('Cannot log action message; self.__queue has not been initialized.')
-
-        while True:
-
-            message = self.__queue.get()
-            self._wlog(message)
-            self.__queue.task_done()
+#    def __log_server(self):
+#        """
+#        Log messages received from actions through self._queue
+#
+#        """
+#
+#        if not self._queue:
+#            raise ValueError('Cannot log action message; self._queue has not been initialized.')
+#
+#        while True:
+#
+#            message = self._queue.get()
+#            self._wlog(message)
+#            self._queue.task_done()

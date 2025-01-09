@@ -28,7 +28,7 @@ class Request:
    
         """
 
-        self.__queue = _queue
+        self._queue = _queue
 
         self.url = url
 
@@ -148,8 +148,8 @@ class Request:
 
         """
 
-        if self.__queue:
-            self.__queue.put(message)
+        if self._queue:
+            self._queue.put(message)
 
         else:
             click.echo(message)

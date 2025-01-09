@@ -136,7 +136,7 @@ class Action(abc.ABC):
 
         Action._define_db_properties(action_fields=action_fields)
 
-        self.__queue = None
+        self._queue = None
 
     @property
     def _db(self):

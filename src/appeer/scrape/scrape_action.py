@@ -128,7 +128,7 @@ class ScrapeAction(Action, action_type='scrape'): #pylint:disable=too-many-insta
 
         start_datetime = _utils.get_current_datetime()
 
-        self.__queue = _queue
+        self._queue = _queue
         self.__download_directory = download_directory
         os.makedirs(self.__download_directory, exist_ok=True)
 
@@ -172,7 +172,7 @@ class ScrapeAction(Action, action_type='scrape'): #pylint:disable=too-many-insta
 
         kwargs.setdefault('url', self.url)
 
-        request = Request(url=kwargs['url'], _queue=self.__queue)
+        request = Request(url=kwargs['url'], _queue=self._queue)
 
         del kwargs['url']
 
@@ -208,7 +208,7 @@ class ScrapeAction(Action, action_type='scrape'): #pylint:disable=too-many-insta
 
         """
 
-        request = Request(url=self.url, _queue=self.__queue)
+        request = Request(url=self.url, _queue=self._queue)
         request.send(**kwargs)
 
         if request.success:
@@ -256,8 +256,8 @@ class ScrapeAction(Action, action_type='scrape'): #pylint:disable=too-many-insta
 
         """
 
-        if self.__queue:
-            self.__queue.put(message)
+        if self._queue:
+            self._queue.put(message)
 
         else:
             click.echo(message)
