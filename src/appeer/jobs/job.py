@@ -13,6 +13,8 @@ from appeer.db.tables.registered_tables import get_registered_tables
 
 from appeer.jobs.db_properties import JobProperty
 
+from appeer.scrape.scrape_action import ScrapeAction
+
 from appeer.scrape import reports as scrape_reports
 from appeer.parse import reports as parse_reports
 
@@ -200,6 +202,84 @@ class Job(abc.ABC):
         """
 
         raise PermissionError('Cannot directly set the "_job_entry"` attribute')
+
+    @property
+    def actions(self):
+        """
+        Get actions for the current job label
+
+        Returns
+        -------
+        _actions : list
+            List of ScrapeActions corresponding to the current job label
+
+        """
+
+        _actions = []
+
+        if not self._job_exists:
+            _actions = []
+
+        else:
+
+            match self._job_type:
+
+                case 'scrape_job':
+
+                    __scrape_entries = self._db.scrape_jobs.get_scrapes(
+                            label=self.label)
+
+                    _actions = [ScrapeAction(label=entry.label,
+                        action_index=entry.action_index)
+                        for entry in __scrape_entries]
+
+#TODO: uncomment when ParseAction is implemented
+#                case 'parse_job':
+#
+#                    __parse_entries = self._db.parse_jobs.get_parses(
+#                            label=self.label)
+#
+#                    _actions = [ParseAction(label=entry.label,
+#                        action_index=entry.action_index)
+#                        for entry in __parse_entries]
+
+            _actions.sort(key=lambda x: x.action_index)
+
+        return _actions
+
+    @property
+    def failed_actions(self):
+        """
+        Get actions with for which ``action.success == 'F'``
+
+        Returns
+        -------
+        _failed_actions : list
+            List of failed ScrapeActions
+
+        """
+
+        _failed_actions = [action for action in self.actions
+                if action.success == 'F']
+
+        return _failed_actions
+
+    @property
+    def successful_actions(self):
+        """
+        Get actions with for which ``action.success == 'T'``
+
+        Returns
+        -------
+        _successful_actions : list
+            List of successful ScrapeActions
+
+        """
+
+        _successful_actions = [action for action in self.actions
+                if action.success == 'T']
+
+        return _successful_actions
 
     def _qualify_job_label(self, label=None):
         """
