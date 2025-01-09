@@ -8,7 +8,6 @@ import queue
 
 from appeer.general.datadir import Datadir
 from appeer.general.config import Config
-from appeer.general.log import get_logo
 from appeer.general.utils import archive_list_of_files, delete_directory
 
 from appeer.jobs.job import Job
@@ -168,17 +167,12 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         return _summary
 
-    def new_job(self, **kwargs):
-        """ 
-        Create a new scrape job
-
-        A number of options may be provided through keyword arguments (see
-            below). If not provided, defaults are generated
+    def _prepare_new_job_parameters(self, **kwargs):
+        """
+        Helper method to prepare parameters given to ``self.new_job()``
 
         Keyword Arguments
         -----------------
-        label : str
-            Unique job label
         description : str
             Optional job description
         log_directory : str
@@ -187,26 +181,6 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
             Directory into which to download the data
         zip_file : str
             Path to the output ZIP file
-
-        """
-
-        self._job_mode = 'write'
-
-        kwargs.setdefault('label', None)
-        self._qualify_job_label(kwargs['label'])
-
-        job_parameters = self.__prepare_new_job_parameters(**kwargs)
-
-        self._initialize_job_common(**job_parameters)
-
-        self._wlog(get_logo())
-        self._wlog(reports.scrape_general_report(job=self))
-
-    def __prepare_new_job_parameters(self, **kwargs):
-        """
-        Helper method to prepare scrape parameters given to ``self.new_job()``
-
-        Keyword arguments are the same as the ones in ``self.new_job()``
 
         Returns
         -------

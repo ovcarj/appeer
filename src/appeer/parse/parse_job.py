@@ -3,7 +3,6 @@
 import os
 
 from appeer.general.datadir import Datadir
-from appeer.general.log import get_logo
 
 from appeer.jobs.job import Job
 from appeer.parse import reports
@@ -72,17 +71,15 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         self.__queue = None
 
-    def new_job(self, **kwargs):
+    def _prepare_new_job_parameters(self, **kwargs):
         """
-        Create a new parse job
+        Helper method to prepare scrape parameters given to ``self.new_job()``
 
-        A number of options may be provided through keyword arguments (see
-            below). If not provided, defaults are generated
+        Keyword arguments are the same as the ones in ``self.new_job()``,
+            excluding ``label``
 
         Keyword Arguments
         -----------------
-        label : str
-            Unique job label
         description : str
             Optional job description
         log_directory : str
@@ -91,26 +88,6 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
             Directory into which to (temporarily) create files for parsing
         mode : str
             Parsing mode; one of ('E', 'A', 'S', F); 'A' is default; mutable
-
-        """
-
-        self._job_mode = 'write'
-
-        kwargs.setdefault('label', None)
-        self._qualify_job_label(kwargs['label'])
-
-        job_parameters = self.__prepare_new_job_parameters(**kwargs)
-
-        self._initialize_job_common(**job_parameters)
-
-        self._wlog(get_logo())
-        self._wlog(reports.parse_general_report(job=self))
-
-    def __prepare_new_job_parameters(self, **kwargs):
-        """
-        Helper method to prepare scrape parameters given to ``self.new_job()``
-
-        Keyword arguments are the same as the ones in ``self.new_job()``
 
         Returns
         -------
