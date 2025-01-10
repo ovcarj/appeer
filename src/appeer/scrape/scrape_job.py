@@ -81,8 +81,6 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         super().__init__(label=label, job_mode=job_mode)
 
-#        self._queue = None
-
     @property
     def summary(self):
         """
@@ -443,18 +441,3 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
                 file_list=file_list)
 
         self._wlog(f'Archived {len(self.successful_actions)} publications to {self.zip_file}')
-
-#    def __log_server(self):
-#        """
-#        Log messages received from actions through self._queue
-#
-#        """
-#
-#        if not self._queue:
-#            raise ValueError('Cannot log action message; self._queue has not been initialized.')
-#
-#        while True:
-#
-#            message = self._queue.get()
-#            self._wlog(message)
-#            self._queue.task_done()

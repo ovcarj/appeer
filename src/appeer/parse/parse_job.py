@@ -69,8 +69,6 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         super().__init__(label=label, job_mode=job_mode)
 
-        self._queue = None
-
     def _prepare_new_job_parameters(self, **kwargs):
         """
         Helper method to prepare scrape parameters given to ``self.new_job()``
