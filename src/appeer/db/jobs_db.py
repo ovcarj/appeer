@@ -2,7 +2,12 @@
 
 from appeer.db.db import DB
 
-class JobsDB(DB, tables=['scrape_jobs', 'scrapes', 'parse_jobs']):
+class JobsDB(DB, tables=[
+        'scrape_jobs',
+        'scrapes',
+        'parse_jobs',
+        'parses'
+    ]):
     """
     Handles the ``jobs.db`` database
 

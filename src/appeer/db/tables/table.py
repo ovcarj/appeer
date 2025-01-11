@@ -107,7 +107,6 @@ class Table(abc.ABC):
         self._cur.execute(entries_query)
 
         all_entries = self._cur.fetchall()
-#        self._con.close()
 
         return all_entries
 
@@ -152,7 +151,7 @@ class Table(abc.ABC):
             if False, search for rows NOT containing
                 (column, value) pairs
             
-        kwargs
+        kwargs : dict
             The table is searched for rows (not) containing
                 (column, value) pairs defined by (key, value) in kwargs
 

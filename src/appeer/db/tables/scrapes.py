@@ -8,8 +8,8 @@ from appeer.db.tables.registered_tables import get_registered_tables
 from appeer.scrape import reports
 
 class Scrapes(Table,
-              name='scrapes',
-              columns=get_registered_tables()['scrapes']):
+        name='scrapes',
+        columns=get_registered_tables()['scrapes']):
     """
     Handles the ``scrapes`` table
 
@@ -117,8 +117,8 @@ class Scrapes(Table,
         Given a ``label`` and ``action_index``, updates the corresponding 
             ``column_name`` value with ``new_value`` in the ``scrape`` table
 
-        ``column_name`` must be in ['date', 'journal', 'strategy', 'status',
-            'success', 'out_file', 'parsed']
+        ``column_name`` must be in ('date', 'journal', 'strategy', 'status',
+            'success', 'out_file', 'parsed')
 
         Keyword Arguments
         -----------------
@@ -231,7 +231,7 @@ class Scrapes(Table,
 
             case 'parsed':
 
-                if new_value not in ['T', 'F']:
+                if new_value not in ('T', 'F'):
                     raise ValueError(f'Cannot update the scrape database. Invalid parsed={new_value} given; must be "T" or "F".')
 
                 self._cur.execute("""
@@ -250,7 +250,7 @@ class Scrapes(Table,
     def delete_entry(self, **kwargs):
         """
         Deletes an entry from the ``scrapes`` table with a
-        given label and action_index
+            given label and action_index
 
         Keyword Arguments
         -----------------
@@ -300,7 +300,7 @@ class Scrapes(Table,
     def scrape_exists(self, label, action_index):
         """
         Checks whether the scrape with ``label`` and ``action_index``
-        exists in the table
+            exists in the table
 
         Parameters
         ----------
@@ -351,7 +351,7 @@ class Scrapes(Table,
     def get_scrapes_by_label(self, label):
         """
         Returns a list of ``self._Scrape`` named tuples
-        for a scrape job with the given ``label``
+            for a scrape job with the given ``label``
         
         Parameters
         ----------

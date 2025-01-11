@@ -3,6 +3,7 @@
 import click
 
 from appeer.db.tables.table import Table
+from appeer.db.tables.parses import Parses
 from appeer.db.tables.registered_tables import get_registered_tables
 
 class ParseJobs(Table,
@@ -52,7 +53,7 @@ class ParseJobs(Table,
 
     def add_entry(self, **kwargs):
         """
-        Initializes an entry for a parse job.
+        Initializes an entry for a parse job
 
         Keyword Arguments
         -----------------
@@ -98,9 +99,116 @@ class ParseJobs(Table,
 
     def update_entry(self, **kwargs):
         """
-        Updates an entry
+        Updates an entry in the ``parse_jobs`` table
+
+        Given a ``label``, updates the corresponding ``column_name``
+            with ``new_value`` in the ``parse_jobs`` table
+
+        ``column_name`` must be in
+            ('job_status', 'job_step', 'job_successes', 'job_fails',
+            'no_of_publications', 'job_parsed')
+
+        Keyword Arguments
+        -----------------
+        label : str
+            Label of the parse job that is being updated
+        column_name : str
+            Name of the column whose value is being updated
+        new_value : str : int
+            New value of the given column
 
         """
+
+        self._sanity_check()
+
+        label = kwargs['label']
+        column_name = kwargs['column_name']
+        new_value = kwargs['new_value']
+
+        match column_name:
+
+            case 'job_status':
+
+                if new_value not in ('I', 'W', 'R', 'X', 'E'):
+                    raise ValueError(f'Cannot update the parse database. Invalid job_status={new_value} given; must be "I", "R", "X" or "E".')
+
+                self._cur.execute("""
+                UPDATE parse_jobs SET job_status = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
+
+            case 'no_of_publications':
+
+                if not isinstance(new_value, int):
+                    raise ValueError(f'Cannot update the parse database. Invalid no_of_publications={new_value} given; must be a positive integer.')
+
+                if not new_value > 0:
+                    raise ValueError(f'Cannot update the parse database. Invalid no_of_publications={new_value} given; must be a positive integer.')
+
+                self._cur.execute("""
+                UPDATE parse_jobs SET no_of_publications = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
+
+            case 'job_step':
+
+                if not isinstance(new_value, int):
+                    raise ValueError(f'Cannot update the parse database. Invalid job_step={new_value} given; must be an integer.')
+
+                if not new_value >= 0:
+                    raise ValueError(f'Cannot update the parse database. Invalid job_step={new_value} given; must be a non-negative integer.')
+
+                self._cur.execute("""
+                UPDATE parse_jobs SET job_step = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
+
+            case 'job_successes':
+
+                if not isinstance(new_value, int):
+                    raise ValueError(f'Cannot update the parse database. Invalid no_of_success={new_value} given; must be an integer.')
+
+                if not new_value >= 0:
+                    raise ValueError(f'Cannot update the parse database. Invalid no_of_success={new_value} given; must be a non-negative integer.')
+
+                self._cur.execute("""
+                UPDATE parse_jobs SET job_successes = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
+
+            case 'job_fails':
+
+                if not isinstance(new_value, int):
+                    raise ValueError(f'Cannot update the parse database. Invalid no_of_fails={new_value} given; must be an integer.')
+
+                if not new_value >= 0:
+                    raise ValueError(f'Cannot update the parse database. Invalid no_of_fails={new_value} given; must be a non-negative integer.')
+
+                self._cur.execute("""
+                UPDATE parse_jobs SET job_fails = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
+
+            case 'job_committed':
+
+                if new_value not in ('T', 'F'):
+                    raise ValueError(f'Cannot update the parse database. Invalid job_committed={new_value} given; must be "T" or "F".')
+
+                self._cur.execute("""
+                UPDATE parse_jobs SET job_committed = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
+
+            case _:
+
+                self._con.close()
+                raise ValueError(f'Cannot update the parse database. Invalid column name "{column_name}" given.')
 
     def delete_entry(self, **kwargs):
         """
@@ -201,6 +309,36 @@ class ParseJobs(Table,
 
         return job
 
+    def get_parses(self, label):
+        """
+        Returns all parses for a given job label
+
+        Parameters
+        ----------
+        label : str
+            Label of the job for which the parses are returned
+
+        Returns
+        -------
+        parses_label : list
+            List of Parse instances for the given label
+
+        """
+
+        exists = self.job_exists(label)
+
+        if not exists:
+
+            click.echo(f'Parse job {label} does not exist.')
+            parses_label = []
+
+        else:
+
+            parses = Parses(connection=self._con)
+            parses_label = parses.get_parses_by_label(label)
+
+        return parses_label
+
     def print_summary(self):
         """
         Prints a summary of the entries in the ``parse_jobs`` table
@@ -230,7 +368,7 @@ class ParseJobs(Table,
 
         click.echo(dashes)
 
-        click.echo('M = Parse job mode: (A) Auto; (E) Everything; (S) Scrape job; (F) File list')
+        click.echo('M = Parse job mode: (A) Auto; (E) Everything; (S) Parse job; (F) File list')
         click.echo('S = Parse job status: (I) Initialized; (R) Running; (X) Executed/Finished; (E) Error')
         click.echo('C = Parse job committed: (T) True; (F) False')
         click.echo('Succ./Tot. = Ratio of successful parsed publications over total inputted publications')

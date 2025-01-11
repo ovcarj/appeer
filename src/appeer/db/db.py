@@ -52,8 +52,11 @@ class DB(abc.ABC):
 
         for table in tables:
 
-            _table_module = importlib.import_module(f'appeer.db.tables.{table}')
-            _table_class_name = "".join([word.capitalize() for word in table.split('_')])
+            _table_module = importlib.import_module(
+                    f'appeer.db.tables.{table}')
+            _table_class_name = "".join([word.capitalize()
+                for word in table.split('_')])
+
             _table_class = getattr(_table_module, _table_class_name)
 
             cls._table_classes[f'{table}'] = _table_class
@@ -90,7 +93,7 @@ class DB(abc.ABC):
             self._con = sqlite3.connect(self._db_path)
             self._cur = self._con.cursor()
 
-            def _get_table_instance(self, connection, tab_class):
+            def _get_table_instance(self, connection, tab_class): #pylint:disable=unused-argument
                 return tab_class(connection)
 
             for table_name, table_class in self._table_classes.items():
@@ -152,7 +155,7 @@ class DB(abc.ABC):
 
             if self._db_exists:
 
-                self.__init__()
+                self.__init__() #pylint:disable=unnecessary-dunder-call
 
                 self._initialize_database()
 

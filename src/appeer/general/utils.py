@@ -157,7 +157,6 @@ def check_doi_format(entry):
 
     Returns
     ----------
-
     is_doi_format : bool
         True if ``entry`` is in DOI format, False if it is not
 

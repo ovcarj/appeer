@@ -123,7 +123,7 @@ class ScrapeJobs(Table,
             with ``new_value`` in the ``scrape_jobs`` table
 
         ``column_name`` must be in
-            ('job_status', 'job_successes', 'job_fails',
+            ('job_status', 'job_step', 'job_successes', 'job_fails',
             'no_of publications', 'job_parsed')
 
         Keyword Arguments
@@ -227,7 +227,6 @@ class ScrapeJobs(Table,
 
                 self._con.close()
                 raise ValueError(f'Cannot update the scrape database. Invalid column name "{column_name}" given.')
-
 
     def delete_entry(self, **kwargs):
         """
