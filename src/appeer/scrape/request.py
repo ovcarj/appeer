@@ -7,7 +7,7 @@ import click
 
 from appeer.general import log as _log
 from appeer.general.config import Config
-from appeer.scrape import reports
+from appeer.scrape import scrape_reports as reports
 
 class Request:
     """

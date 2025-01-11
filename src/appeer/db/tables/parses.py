@@ -5,7 +5,7 @@ import click
 from appeer.db.tables.table import Table
 from appeer.db.tables.registered_tables import get_registered_tables
 
-from appeer.parse import reports
+from appeer.parse import parse_reports as reports
 
 from appeer.general.utils import check_doi_format
 

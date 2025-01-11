@@ -11,7 +11,7 @@ from appeer.general.config import Config
 from appeer.general.utils import archive_list_of_files, delete_directory
 
 from appeer.jobs.job import Job
-from appeer.scrape import reports
+from appeer.scrape import scrape_reports as reports
 
 from appeer.scrape.input_handling import\
         parse_data_source, handle_input_reading

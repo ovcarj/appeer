@@ -2,11 +2,11 @@
 
 import click
 
-from appeer.scrape import reports
-
 from appeer.db.tables.table import Table
 from appeer.db.tables.scrapes import Scrapes
 from appeer.db.tables.registered_tables import get_registered_tables
+
+from appeer.scrape import scrape_reports as reports
 
 class ScrapeJobs(Table,
                  name='scrape_jobs',

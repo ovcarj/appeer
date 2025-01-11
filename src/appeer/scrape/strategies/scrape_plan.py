@@ -7,7 +7,7 @@ from collections import Counter
 
 import click
 
-from appeer.scrape.reports import scrape_strategy_report
+from appeer.scrape.scrape_reports import scrape_strategy_report
 
 from appeer.scrape.strategies.mapping import JournalScrapeMap
 from appeer.scrape.input_handling import\

@@ -15,8 +15,8 @@ from appeer.jobs.db_properties import JobProperty
 
 from appeer.scrape.scrape_action import ScrapeAction
 
-from appeer.scrape import reports as scrape_reports
-from appeer.parse import reports as parse_reports
+from appeer.scrape import scrape_reports
+from appeer.parse import parse_reports
 
 def _validate_job_label(label):
     """

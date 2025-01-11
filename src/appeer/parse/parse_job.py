@@ -5,7 +5,7 @@ import os
 from appeer.general.datadir import Datadir
 
 from appeer.jobs.job import Job
-from appeer.parse import reports
+from appeer.parse import parse_reports as reports
 
 
 class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-attributes

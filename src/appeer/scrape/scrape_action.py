@@ -6,7 +6,7 @@ import click
 from appeer.general import utils as _utils
 
 from appeer.jobs.action import Action
-from appeer.scrape import reports
+from appeer.scrape import scrape_reports as reports
 
 from appeer.scrape.request import Request
 from appeer.scrape.strategies.scrape_plan import ScrapePlan
