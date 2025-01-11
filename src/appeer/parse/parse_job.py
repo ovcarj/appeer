@@ -119,18 +119,3 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
                 }
 
         return job_parameters
-
-    def __log_server(self):
-        """
-        Log messages received from actions through self._queue
-
-        """
-
-        if not self._queue:
-            raise ValueError('Cannot log action message; self._queue has not been initialized.')
-
-        while True:
-
-            message = self._queue.get()
-            self._wlog(message)
-            self._queue.task_done()
