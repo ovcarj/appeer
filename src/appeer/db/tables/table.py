@@ -1,6 +1,7 @@
 """Base abstract class for handling tables in sqlite3 databases"""
 
 import abc
+import inspect
 
 from collections import namedtuple
 
@@ -12,9 +13,11 @@ class Table(abc.ABC):
 
     """
 
-    def __init_subclass__(cls, name, columns):
+    def __init_subclass__(cls, name=None, columns=None):
         """
         Ensures that every Table subclass defines ``name`` and ``columns``
+
+        Abstract subclasses do not have to define ``name and columns``
 
         Parameters
         ----------
@@ -25,20 +28,29 @@ class Table(abc.ABC):
 
         """
 
-        if not isinstance(name, str):
-            raise TypeError('Table name must be a string.')
+        if inspect.isabstract(cls):
+            return
 
-        if not isinstance(columns, list):
-            raise TypeError(f'Columns of table {name} must be given as a list of strings.')
+        if name and columns:
 
-        for column in columns:
-            if not isinstance(column, str):
-                raise TypeError(f'Non-string value given for a column in {columns} in table {name}.')
+            if not isinstance(name, str):
+                raise TypeError('Table name must be a string.')
 
-        sanity_check(name=name, columns=columns)
+            if not isinstance(columns, list):
+                raise TypeError(f'Columns of table {name} must be given as a list of strings.')
 
-        cls._name = name
-        cls._columns = columns
+            for column in columns:
+                if not isinstance(column, str):
+                    raise TypeError(f'Non-string value given for a column in {columns} in table {name}.')
+
+            sanity_check(name=name, columns=columns)
+
+            cls._name = name
+            cls._columns = columns
+
+            return
+
+        raise TypeError('"name" and "columns" must be supplied as class named arguments')
 
     def __init__(self, connection):
         """

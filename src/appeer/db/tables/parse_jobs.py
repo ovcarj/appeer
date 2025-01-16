@@ -2,11 +2,10 @@
 
 import click
 
-from appeer.db.tables.table import Table
-from appeer.db.tables.parses import Parses
+from appeer.db.tables.job_table import JobTable
 from appeer.db.tables.registered_tables import get_registered_tables
 
-class ParseJobs(Table,
+class ParseJobs(JobTable,
               name='parse_jobs',
               columns=get_registered_tables()['parse_jobs']):
     """
@@ -33,23 +32,6 @@ class ParseJobs(Table,
         """
 
         super().__init__(connection=connection)
-
-    @property
-    def bad_jobs(self):
-        """
-        Returns all parse jobs whose status is not 'X'.
-
-        Returns
-        -------
-        jobs : list
-            List of ParseJob instances for which the job status is not 'X'
-
-        """
-
-        jobs = self._search_table(contains=[False],
-                                  job_status='X')
-
-        return jobs
 
     def add_entry(self, **kwargs):
         """
@@ -209,135 +191,6 @@ class ParseJobs(Table,
 
                 self._con.close()
                 raise ValueError(f'Cannot update the parse database. Invalid column name "{column_name}" given.')
-
-    def delete_entry(self, **kwargs):
-        """
-        Deletes the row given by ``label`` from the ``parse_jobs`` table, 
-            along with all corresponding entries in the ``parses`` table
-
-        Keyword Arguments
-        -----------------
-        label : str
-            Label of the parse job whose entry is being removed
-
-        Returns
-        -------
-        success : bool
-            True if the entry was removed, False if it was not
-
-        """
-
-        label = kwargs['label']
-
-        click.echo(f'Removing entry {label} from the parse database ...')
-
-        exists = self.job_exists(label)
-
-        if not exists:
-
-            click.echo(f'The entry for parse job {label} does not exist.')
-            success = False
-
-        else:
-
-            self._cur.execute("""
-            DELETE FROM parse_jobs WHERE label = ?
-            """, (label,))
-
-            self._con.commit()
-
-            exists = self.job_exists(label)
-
-            if not exists:
-
-                self._cur.execute("""
-                DELETE FROM parses WHERE label = ?
-                """, (label,))
-
-                self._con.commit()
-
-                click.echo(f'Entry {label} removed.\n')
-                success = True
-
-            else:
-                click.echo(f'Could not delete entry {label}\n')
-                success = False
-
-        return success
-
-    def job_exists(self, label):
-        """
-        Checks whether the job with the given label exists in the database
-
-        Parameters
-        ----------
-        label : str
-            Label of the parse job whose existence is being checked
-
-        Returns
-        -------
-        exists : bool
-            True if parse job exists, False if it does not
-
-        """
-
-        exists = bool(self.get_job(label=label))
-
-        return exists
-
-    def get_job(self, label):
-        """
-        Returns an instance of the ``self._ParseJob`` named tuple
-        for a parse job with the given ``label``
-        
-        Parameters
-        ----------
-        label : str
-            Label of the sought parse job
-
-        Returns
-        -------
-        job : appeer.db.tables.parse_jobs._ParseJobs
-            The sought parse job
-
-        """
-
-        job = self._search_table(label=label)
-
-        if job:
-            job = job[0]
-
-        return job
-
-    def get_parses(self, label):
-        """
-        Returns all parses for a given job label
-
-        Parameters
-        ----------
-        label : str
-            Label of the job for which the parses are returned
-
-        Returns
-        -------
-        parses_label : list
-            List of Parse instances for the given label
-
-        """
-
-        exists = self.job_exists(label)
-
-        if not exists:
-
-            click.echo(f'Parse job {label} does not exist.')
-            parses_label = []
-
-        else:
-
-            parses = Parses(connection=self._con)
-            parses_label = parses.get_parses_by_label(label)
-
-        return parses_label
 
     def print_summary(self):
         """

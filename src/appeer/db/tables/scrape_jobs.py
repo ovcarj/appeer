@@ -1,16 +1,13 @@
 """Handles the ``scrape_jobs`` table in ``jobs.db``"""
 
-import click
-
-from appeer.db.tables.table import Table
-from appeer.db.tables.scrapes import Scrapes
+from appeer.db.tables.job_table import JobTable
 from appeer.db.tables.registered_tables import get_registered_tables
 
 from appeer.scrape import scrape_reports as reports
 
-class ScrapeJobs(Table,
-                 name='scrape_jobs',
-                 columns=get_registered_tables()['scrape_jobs']):
+class ScrapeJobs(JobTable,
+        name='scrape_jobs',
+        columns=get_registered_tables()['scrape_jobs']):
     """
     Handles the ``scrape_jobs`` table
 
@@ -35,23 +32,6 @@ class ScrapeJobs(Table,
         """
 
         super().__init__(connection=connection)
-
-    @property
-    def bad_jobs(self):
-        """
-        Returns all scrape jobs whose status is not 'X'
-
-        Returns
-        -------
-        jobs : list
-            List of ScrapeJob instances for which the job status is not 'X'
-
-        """
-
-        jobs = self._search_table(contains=[False],
-                                  job_status='X')
-
-        return jobs
 
     @property
     def summary(self):
@@ -227,132 +207,3 @@ class ScrapeJobs(Table,
 
                 self._con.close()
                 raise ValueError(f'Cannot update the scrape database. Invalid column name "{column_name}" given.')
-
-    def delete_entry(self, **kwargs):
-        """
-        Deletes the row given by ``label`` from the ``scrape_jobs`` table, 
-            along with all corresponding entries in the ``scrapes`` table
-
-        Keyword Arguments
-        -----------------
-        label : str
-            Label of the scrape job whose entry is being removed
-
-        Returns
-        -------
-        success : bool
-            True if the entry was removed, False if it was not
-
-        """
-
-        label = kwargs['label']
-
-        click.echo(f'Removing entry {label} from the scrape database ...')
-
-        exists = self.job_exists(label)
-
-        if not exists:
-
-            click.echo(f'The entry for scrape job {label} does not exist.')
-            success = False
-
-        else:
-
-            self._cur.execute("""
-            DELETE FROM scrape_jobs WHERE label = ?
-            """, (label,))
-
-            self._con.commit()
-
-            exists = self.job_exists(label)
-
-            if not exists:
-
-                self._cur.execute("""
-                DELETE FROM scrapes WHERE label = ?
-                """, (label,))
-
-                self._con.commit()
-
-                click.echo(f'Entry {label} removed.\n')
-                success = True
-
-            else:
-                click.echo(f'Could not delete entry {label}\n')
-                success = False
-
-        return success
-
-    def job_exists(self, label):
-        """
-        Checks whether the scrape job with ``label`` exists in the table
-
-        Parameters
-        ----------
-        label : str
-            Label of the scrape job whose existence is being checked
-
-        Returns
-        -------
-        exists : bool
-            True if scrape job exists, False if it does not
-
-        """
-
-        exists = bool(self.get_job(label=label))
-
-        return exists
-
-    def get_job(self, label):
-        """
-        Returns an instance of the ``self._ScrapeJob`` named tuple
-            for a scrape job with the given ``label``
-        
-        Parameters
-        ----------
-        label : str
-            Label of the sought scrape job
-
-        Returns
-        -------
-        job : appeer.db.tables.scrape_jobs._ScrapeJobs
-            The sought scrape job
-
-        """
-
-        job = self._search_table(label=label)
-
-        if job:
-            job = job[0]
-
-        return job
-
-    def get_scrapes(self, label):
-        """
-        Returns all scrapes for a given job label
-
-        Parameters
-        ----------
-        label : str
-            Label of the job for which the scrapes are returned
-
-        Returns
-        -------
-        scrapes_label : list
-            List of Scrape instances for the given label
-
-        """
-
-        exists = self.job_exists(label)
-
-        if not exists:
-
-            click.echo(f'Scrape job {label} does not exist.')
-            scrapes_label = []
-
-        else:
-
-            scrapes = Scrapes(connection=self._con)
-            scrapes_label = scrapes.get_scrapes_by_label(label)
-
-        return scrapes_label

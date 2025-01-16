@@ -228,7 +228,7 @@ class Job(abc.ABC):
 
                 case 'scrape_job':
 
-                    __scrape_entries = self._db.scrape_jobs.get_scrapes(
+                    __scrape_entries = self._db.scrape_jobs.get_actions(
                             label=self.label)
 
                     _actions = [ScrapeAction(label=entry.label,
@@ -238,7 +238,7 @@ class Job(abc.ABC):
 #TODO: uncomment when ParseAction is implemented
 #                case 'parse_job':
 #
-#                    __parse_entries = self._db.parse_jobs.get_parses(
+#                    __parse_entries = self._db.parse_jobs.get_actions(
 #                            label=self.label)
 #
 #                    _actions = [ParseAction(label=entry.label,
