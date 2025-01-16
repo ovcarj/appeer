@@ -174,15 +174,15 @@ class Action(abc.ABC):
             match self._action_type:
 
                 case 'scrape':
-                    exists = self._db.scrapes.scrape_exists(self.label,
+                    exists = self._db.scrapes.action_exists(self.label,
                             self.action_index)
 
                 case 'parse':
-                    exists = self._db.parses.parse_exists(self.label,
+                    exists = self._db.parses.action_exists(self.label,
                             self.action_index)
 
                 case 'commit':
-                    exists = self._db.commits.commit_exists(self.label,
+                    exists = self._db.commits.action_exists(self.label,
                             self.action_index)
 
         return exists
@@ -206,15 +206,15 @@ class Action(abc.ABC):
             match self._action_type:
 
                 case 'scrape':
-                    _action = self._db.scrapes.get_scrape(self.label,
+                    _action = self._db.scrapes.get_action(self.label,
                             self.action_index)
 
                 case 'parse':
-                    _action = self._db.parses.get_parse(self.label,
+                    _action = self._db.parses.get_action(self.label,
                             self.action_index)
 
                 case 'commit':
-                    _action = self._db.commits.get_commit(self.label,
+                    _action = self._db.commits.get_action(self.label,
                             self.action_index)
 
         return _action

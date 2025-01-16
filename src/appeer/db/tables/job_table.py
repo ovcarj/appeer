@@ -168,7 +168,6 @@ class JobTable(Table, name=None, columns=None):
         exists = self.job_exists(label)
 
         if not exists:
-
             click.echo(f'Job {label} does not exist.')
 
         else:
@@ -176,13 +175,11 @@ class JobTable(Table, name=None, columns=None):
             match self._name:
 
                 case 'scrape_jobs':
-
-                    scrapes = Scrapes(connection=self._con)
-                    actions_label = scrapes.get_scrapes_by_label(label)
+                    actions = Scrapes(connection=self._con)
 
                 case 'parse_jobs':
+                    actions = Parses(connection=self._con)
 
-                    parses = Parses(connection=self._con)
-                    actions_label = parses.get_parses_by_label(label)
+            actions_label = actions.get_actions_by_label(label)
 
         return actions_label
