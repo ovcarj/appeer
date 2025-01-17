@@ -61,8 +61,7 @@ def pjob_cli(ctx, job_label, uncommitted):
 #            click.echo(pj.summary)
 
         else:
-            jobs_db.parse_jobs.print_summary()
-#            click.echo(jobs_db.parse_jobs.summary)
+            click.echo(jobs_db.parse_jobs.summary)
 
 @pjob_cli.command('new',
         help="""Initialize an empty parse job

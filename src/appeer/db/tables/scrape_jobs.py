@@ -5,6 +5,7 @@ from appeer.db.tables.registered_tables import get_registered_tables
 
 from appeer.scrape import scrape_reports as reports
 
+
 class ScrapeJobs(JobTable,
         name='scrape_jobs',
         columns=get_registered_tables()['scrape_jobs']):
