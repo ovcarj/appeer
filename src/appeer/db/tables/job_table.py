@@ -87,7 +87,7 @@ class JobTable(Table, name=None, columns=None):
 
             if not exists:
 
-                actions_table = self._name.split()[0] + 's'
+                actions_table = self._name.split('_')[0] + 's'
 
                 delete_actions = f'DELETE FROM {actions_table} WHERE label = ?'
 
