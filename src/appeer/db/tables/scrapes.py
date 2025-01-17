@@ -1,7 +1,5 @@
 """Handles the ``scrapes`` table in ``jobs.db``"""
 
-import click
-
 from appeer.db.tables.action_table import ActionTable
 from appeer.db.tables.registered_tables import get_registered_tables
 
@@ -36,7 +34,7 @@ class Scrapes(ActionTable,
     @property
     def unparsed(self):
         """
-        Returns all unparsed scrapes (status='X', parsed='F')
+        Returns all unparsed scrapes (status='X', parsed='F', success='T')
 
         Returns
         -------
@@ -45,7 +43,8 @@ class Scrapes(ActionTable,
 
         """
 
-        unparsed_scrapes = self._search_table(status='X', parsed='F')
+        unparsed_scrapes = self._search_table(
+                status='X', parsed='F', success='T')
 
         return unparsed_scrapes
 
