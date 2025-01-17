@@ -47,9 +47,10 @@ class Parses(Table,
 
         """
 
-        unparsed_parses = self._search_table(status='X', parsed='F')
+        uncommitted_parses = self._search_table(
+                status='X', parsed='F', success='T')
 
-        return unparsed_parses
+        return uncommitted_parses
 
     @property
     def uncommitted_summary(self):
