@@ -93,12 +93,15 @@ def sjob_cli(ctx, job_label, unparsed):
         """)
 @click.option('-j', '--job_label', help='Scrape job label')
 @click.option('-o', '--output', 'zip_file',
-        help="Name of the ZIP archive containing the downloaded data")
+        type=click.Path(dir_okay=False, writable=True),
+        help="Path to the output ZIP archive")
 @click.option('-s', '--description', 'description',
         help="Optional description of the scrape job")
 @click.option('-l', '--log_directory',
+        type=click.Path(file_okay=False, writable=True),
         help="Directory in which to store the log")
 @click.option('-d', '--download_directory',
+        type=click.Path(file_okay=False, writable=True),
         help="Directory into which to download the files")
 def new(**kwargs):
     """
@@ -129,7 +132,7 @@ def new(**kwargs):
 
 
         """)
-@click.argument('filename')
+@click.argument('filename', type=click.Path(dir_okay=False))
 @click.option('-j', '--job_label', help='Scrape job label', required=True)
 def add(filename, job_label):
     """

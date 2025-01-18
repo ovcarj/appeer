@@ -41,9 +41,10 @@ else:
 
     If the entry format is invalid, the invalid URL is not scraped.
 """)
-@click.argument('filename')
+@click.argument('filename', type=click.Path(dir_okay=False))
 @click.option('-o', '--output', 'zip_file',
-        help="Name of the ZIP archive containing the downloaded data")
+        type=click.Path(dir_okay=False, writable=True),
+        help="Path to the output ZIP archive")
 @click.option('-s', '--description', 'description',
         help="Optional description of the scrape job")
 @click.option('-t', '--sleep_time',
@@ -56,8 +57,10 @@ else:
         default=default_retry_sleep_time, show_default=True,
         help="Time (in seconds) between retrying a URL")
 @click.option('-l', '--log_directory',
+        type=click.Path(file_okay=False, writable=True),
         help="Directory in which to store the log")
 @click.option('-d', '--download_directory',
+        type=click.Path(file_okay=False, writable=True),
         help="Directory into which to download the files")
 @click.option('-c', '--cleanup',
         is_flag=True, default=False,
