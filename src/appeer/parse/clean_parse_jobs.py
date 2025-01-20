@@ -1,3 +1,5 @@
+"""Deletes parse jobs"""
+
 import click
 
 from appeer.general import log
@@ -7,7 +9,7 @@ from appeer.db.jobs_db import JobsDB
 
 def clean_parse_job(parse_label):
     """
-    Deletes all data associated with the parse job with the label ``parse_label``.
+    Deletes all data associated with the parse job with the given label
 
     Parameters
     ----------
