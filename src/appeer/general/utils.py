@@ -399,7 +399,7 @@ def file_exists(file_path):
         Path to the file whose existence is checked
  
     Returns
-    ----------
+    -------
     exists : bool
         True if file exists, False if it does not
 
@@ -408,6 +408,36 @@ def file_exists(file_path):
     exists = os.path.isfile(file_path)
 
     return exists
+
+def file_list_readable(file_list):
+    """
+    Check if a list of files exist and are readable
+
+    The function also accepts a single path given as a string
+
+    Parameters
+    ----------
+    file_list : list of str | str
+        List of file paths to check for existence and readability
+
+    Returns
+    -------
+    files_readability : dict
+        Dictionary of form {path1: True, path2: False, ...},
+            where the keys are the absolute file paths and the values are
+            True/False for readable/unreadable
+
+    """
+
+    if isinstance(file_list, str):
+        file_list = [file_list]
+
+    files_readability = {
+            os.path.abspath(f): os.access(os.path.abspath(f), os.R_OK)
+                for f in file_list
+            }
+
+    return files_readability
 
 def is_directory_empty(directory_path):
     """
