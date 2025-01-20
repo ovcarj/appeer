@@ -57,6 +57,8 @@ def get_registered_tables():
             'parses':
                 ['label',
                  'action_index',
+                 'scrape_label',
+                 'scrape_action_index',
                  'date',
                  'input_file',
                  'doi',

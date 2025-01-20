@@ -1,15 +1,13 @@
 """Handles the ``parses`` table in ``jobs.db``"""
 
-import click
-
-from appeer.db.tables.table import Table
+from appeer.db.tables.action_table import ActionTable
 from appeer.db.tables.registered_tables import get_registered_tables
 
 from appeer.parse import parse_reports as reports
 
 from appeer.general.utils import check_doi_format
 
-class Parses(Table,
+class Parses(ActionTable,
         name='parses',
         columns=get_registered_tables()['parses']):
     """
@@ -89,6 +87,8 @@ class Parses(Table,
         data = ({
             'label': kwargs['label'],
             'action_index': kwargs['action_index'],
+            'scrape_label': (None,),
+            'scrape_action_index': (None,),
             'date': kwargs['date'],
             'input_file': kwargs['input_file'],
             'doi': '?',
@@ -108,7 +108,7 @@ class Parses(Table,
         self._sanity_check()
 
         add_query = """
-        INSERT INTO parses VALUES(:label, :action_index, :date, :input_file, :doi, :publisher, :journal, :title, :affiliations, :received, :accepted, :published, :parser, :success, :status, :committed)
+        INSERT INTO parses VALUES(:label, :action_index, :scrape_label, :scrape_action_index, :date, :input_file, :doi, :publisher, :journal, :title, :affiliations, :received, :accepted, :published, :parser, :success, :status, :committed)
         """
 
         self._cur.execute(add_query, data)
@@ -120,7 +120,9 @@ class Parses(Table,
         Given a ``label`` and ``action_index``, updates the corresponding 
             ``column_name`` value with ``new_value`` in the ``parse`` table
 
-        ``column_name`` must be in ('date',
+        ``column_name`` must be in 
+
+            ('scrape_label', 'scrape_action_index', 'date',
             'doi', 'publisher', 'journal', 'title', 'affiliations',
             'received', 'accepted', 'published',
             'parser', 'success', 'status', 'committed'
@@ -147,6 +149,31 @@ class Parses(Table,
         new_value = kwargs['new_value']
 
         match column_name:
+
+            case 'scrape_label':
+
+                if not isinstance(new_value, str):
+                    raise ValueError(f'Cannot update the parse database. Invalid scrape_label={new_value} given; must be a string')
+
+                self._cur.execute("""
+                UPDATE parses SET scrape_label = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
+
+            case 'scrape_action_index':
+
+                if not isinstance(new_value, int):
+                    raise ValueError(f'Cannot update the parse database. Invalid scrape_action_index={new_value} given; must be an integer')
+
+                if not new_value >= 0:
+                    raise ValueError(f'Cannot update the parse database. Invalid scrape_action_index={new_value} given; must be a non-negative integer')
+
+                self._cur.execute("""
+                UPDATE parses SET scrape_action_index = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
 
             case 'date':
 
