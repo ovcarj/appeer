@@ -1,5 +1,6 @@
 """Basic scrape job scripts"""
 
+from appeer.general import utils as _utils
 from appeer.scrape.scrape_job import ScrapeJob
 
 def create_new_job(**kwargs):
@@ -139,3 +140,60 @@ def create_and_run(publications,
     sj.run_job(cleanup=cleanup,
                scrape_mode='from_scratch',
                **kwargs)
+
+def get_execution_dict(job_labels):
+    """
+    Get a dictionary describing the status of a list of scrape jobs
+
+    Parameters
+    ----------
+    job_labels : list of str
+        List of scrape job labels
+
+    Returns
+    -------
+    scrape_jobs_executed_dict : dict
+        Dictionary of form {label1: status1, label2: status2, ...},
+            where the keys are scrape job labels and the values are
+            the job statuses
+
+    """
+
+
+    if not _utils.is_list_of_str(job_labels):
+        raise TypeError('Scrape job labels must be provided as a list of strings or a single string.')
+
+    if isinstance(job_labels, str):
+        job_labels = [job_labels]
+
+    try:
+
+        sjs = [ScrapeJob(label=label) for label in job_labels]
+        statuses = [sj.job_status if sj.job_status else 'N/A' for sj in sjs]
+
+    # This means that an invalid job label was passed, so iterate the labels
+    # one-by-one to find the error. This edge case is written as a seperate
+    # block because it's slower to iterate instead of using list comprehension.
+    except ValueError:
+
+        statuses = []
+
+        for label in job_labels:
+
+            try:
+
+                sj = ScrapeJob(label=label)
+
+                if sj.job_status:
+                    statuses.append(sj.job_status)
+
+                else:
+                    statuses.append('N/A')
+
+            except ValueError:
+                print('HERE')
+                statuses.append('N/A')
+
+    scrape_jobs_executed_dict = dict(zip(job_labels, statuses))
+
+    return scrape_jobs_executed_dict
