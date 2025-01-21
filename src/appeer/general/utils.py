@@ -409,6 +409,34 @@ def file_exists(file_path):
 
     return exists
 
+def is_list_of_str(obj):
+    """
+    Check whether an object is a (nonempty) list of strings or a single string
+
+    Parameters
+    ----------
+    obj : Any
+        Object to be checked
+
+    Returns
+    -------
+    check_list_of_str : bool
+        True if the passed object is a nonempty list of strings
+            or a single nonempty string
+
+    """
+
+    check_list_of_str = True
+
+    if not (obj and isinstance(obj, (list, str))):
+        check_list_of_str = False
+
+    if isinstance(obj, list):
+        if not all(s and isinstance(s, str) for s in obj):
+            check_list_of_str = False
+
+    return check_list_of_str
+
 def file_list_readable(file_list):
     """
     Check if a list of files exist and are readable
@@ -428,6 +456,9 @@ def file_list_readable(file_list):
             True/False for readable/unreadable
 
     """
+
+    if not is_list_of_str(file_list):
+        raise TypeError('The file list must be provided as a list of strings or a single string.')
 
     if isinstance(file_list, str):
         file_list = [file_list]
