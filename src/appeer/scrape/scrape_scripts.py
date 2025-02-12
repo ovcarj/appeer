@@ -191,7 +191,6 @@ def get_execution_dict(job_labels):
                     statuses.append('N/A')
 
             except ValueError:
-                print('HERE')
                 statuses.append('N/A')
 
     scrape_jobs_executed_dict = dict(zip(job_labels, statuses))
