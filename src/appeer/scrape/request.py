@@ -109,14 +109,20 @@ class Request:
                 except requests.exceptions.HTTPError as err:
 
                     self.success = False
-                    self.error = None
                     self.status = err.response.status_code
+                    self.error = None
 
                 self.success = True
-                self.error = None
                 self.status = self.response.status_code
+                self.error = None
 
             except requests.exceptions.ConnectionError as err:
+
+                self.success = False
+                self.status = None
+                self.error = type(err).__name__
+
+            except requests.exceptions.Timeout as err:
 
                 self.success = False
                 self.status = None
