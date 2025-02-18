@@ -1,7 +1,12 @@
 """Basic scrape job scripts"""
 
+import os
+from collections import namedtuple
+
 from appeer.general import utils as _utils
+
 from appeer.scrape.scrape_job import ScrapeJob
+from appeer.scrape.scrape_action import ScrapeAction
 
 def create_new_job(**kwargs):
     """
@@ -196,3 +201,67 @@ def get_execution_dict(job_labels):
     scrape_jobs_executed_dict = dict(zip(job_labels, statuses))
 
     return scrape_jobs_executed_dict
+
+def check_action_outputs(actions):
+    """
+    Get a named tuple describing whether scraped files are readable and exist
+
+    Used by ParsePacker to determine which files can be read directly. If the
+        files are not directly accessible, the corresponding scrape job ZIP
+        files will be marked for extraction.
+
+    If a nonexistent action is passed, a ValueError is raised.
+
+    Parameters
+    ----------
+    actions : list of appeer.scrape.scrape_action.ScrapeAction
+        List of scrape actions
+
+    Returns
+    -------
+    actions_files : list of _ScrapeActionFile
+        List of named tuples with the information necessary for ParsePacker
+
+    """
+
+    _ScrapeActionFile = namedtuple('_ScrapeActionFile',
+        ['label',
+        'action_index',
+        'out_file',
+        'file_ok'])
+
+    check_list_of_actions = True
+
+    if not (actions and isinstance(actions, (list, ScrapeAction))):
+        check_list_of_actions = False
+
+    if isinstance(actions, list):
+        if not all(s and isinstance(s, ScrapeAction) for s in actions):
+            check_list_of_actions = False
+
+    if not check_list_of_actions:
+        raise ValueError('Actions must be provided as a list of ScrapeAction instances.')
+
+    if isinstance(actions, ScrapeAction):
+        actions = [actions]
+
+    actions_files = []
+
+    # Probably faster with comprehension,
+    # but iterate explicitly for readability
+    for action in actions:
+
+        if not action._action_exists: #pylint:disable=protected-access
+            raise ValueError('Nonexistent action passed to check_action_outputs.')
+
+        f = os.path.abspath(action.out_file)
+
+        file_readable = os.access(f, os.R_OK)
+
+        actions_files.append(_ScrapeActionFile(
+            label=action.label,
+            action_index=action.action_index,
+            out_file=f,
+            file_ok=file_readable))
+
+    return actions_files
