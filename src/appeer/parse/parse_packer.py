@@ -84,7 +84,7 @@ class ParsePacker:
         match self._parse_mode:
 
             case 'A':
-                raise NotImplementedError('Parse mode "A" not yet implemented')
+                self._pack_mode_A()
 
             case 'E':
                 raise NotImplementedError('Parse mode "E" not yet implemented')
@@ -138,6 +138,33 @@ class ParsePacker:
         else:
             self._pprint('None of the inputted files are readable.')
 
+    def _pack_mode_A(self):
+        """
+        Prepares a parse packet automatically from unparsed scrape jobs
+
+        ``self._data_source`` will be automatically set.
+
+        The packet is prepared only for jobs in the executed ('X') status.
+
+        In mode 'A', only previously unparsed actions are taken into account.
+
+        """
+
+        self._pprint('Searching for unparsed scrape jobs...')
+
+        unparsed_job_labels = scrape_scripts.get_unparsed_job_labels()
+
+        if unparsed_job_labels:
+
+            self._pprint(f'Found {len(unparsed_job_labels)} jobs.')
+            self._pprint('Preparing the data for parsing...')
+            self._data_source = unparsed_job_labels
+
+            self._pack_mode_S()
+
+        else:
+            self._pprint('No unparsed jobs found.')
+
     def _pack_mode_S(self):
         """
         Prepares a parse packet from a list of scrape job labels
@@ -147,8 +174,7 @@ class ParsePacker:
         The packet is prepared only for jobs in the executed ('X') status.
 
             For those jobs, ``self._prepare_scrape_actions`` is invoked
-            to search for successful actions. In mode 'A', only previously
-            unparsed actions are taken into account.
+            to search for successful actions.
 
             If needed, the scrape job output ZIP files are extracted to the 
             temporary parsing directory
