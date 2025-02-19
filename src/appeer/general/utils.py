@@ -281,6 +281,31 @@ def write_text_to_file(path_to_file, text_data):
     with open(path_to_file, 'w+', encoding='utf-8') as f:
         f.write(text_data)
 
+def abspath(path):
+    """
+    Get the absolute path
+
+    This function combines ``os.path.realpath`` and ``os.path.expanduser``,
+        so the final absolute path contains resolved symbolic links
+        and the expanded ``~`` user directory
+
+    Parameters
+    ----------
+    path : str
+        Any path
+
+    Returns
+    -------
+    absolute_path : str
+        Absolute path with resolved symbolic links
+            and expanded home directory (~)
+
+    """
+
+    absolute_path = os.path.realpath(os.path.expanduser(path))
+
+    return absolute_path
+
 def archive_directory(output_filename, directory_name):
     """
     Create a ZIP archive from a directory called ``directory_name``
