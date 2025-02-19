@@ -167,6 +167,25 @@ def get_unparsed_job_labels():
 
     return unparsed_job_labels
 
+def get_executed_job_labels():
+    """
+    Returns a list of scrape job labels which are executed
+
+    Returns
+    -------
+    executed_job_labels : list of str
+        List of scrape job labels which are executed
+
+    """
+
+    db = JobsDB()
+
+    executed_jobs = db.scrape_jobs.executed
+
+    executed_job_labels = [job.label for job in executed_jobs]
+
+    return executed_job_labels
+
 def get_execution_dict(job_labels):
     """
     Get a dictionary describing the status of a list of scrape jobs
