@@ -8,7 +8,8 @@ import queue
 
 from appeer.general.datadir import Datadir
 from appeer.general.config import Config
-from appeer.general.utils import archive_list_of_files, delete_directory
+from appeer.general.utils import\
+    archive_list_of_files, delete_directory, abspath
 
 from appeer.jobs.job import Job
 from appeer.scrape import scrape_reports as reports
@@ -132,7 +133,7 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
         if kwargs['download_directory'] is None:
             kwargs['download_directory'] = default_download_directory
 
-        kwargs['download_directory'] = os.path.abspath(
+        kwargs['download_directory'] = abspath(
                 kwargs['download_directory'])
 
         default_zip_file = os.path.join(datadir.scrape_archives,
@@ -146,7 +147,7 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
         if not kwargs['zip_file'].endswith('.zip'):
             kwargs['zip_file'] += '.zip'
 
-        kwargs['zip_file'] = os.path.abspath(
+        kwargs['zip_file'] = abspath(
                 kwargs['zip_file'])
 
         kwargs.setdefault('description', None)

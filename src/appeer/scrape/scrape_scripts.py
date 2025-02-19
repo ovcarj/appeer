@@ -254,7 +254,7 @@ def check_action_outputs(actions):
         if not action._action_exists: #pylint:disable=protected-access
             raise ValueError('Nonexistent action passed to check_action_outputs.')
 
-        f = os.path.abspath(action.out_file)
+        f = _utils.abspath(action.out_file)
 
         file_readable = os.access(f, os.R_OK)
 
