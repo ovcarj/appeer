@@ -90,12 +90,12 @@ class ParsePacker:
                 raise NotImplementedError('Parse mode "E" not yet implemented')
 
             case 'S':
-                self._pack_scrape_jobs()
+                self._pack_mode_S()
 
             case 'F':
-                self._pack_file_list()
+                self._pack_mode_F()
 
-    def _pack_file_list(self):
+    def _pack_mode_F(self):
         """
         Prepares a parse packet from a list of filepaths
 
@@ -138,7 +138,7 @@ class ParsePacker:
         else:
             self._pprint('None of the inputted files are readable.')
 
-    def _pack_scrape_jobs(self):
+    def _pack_mode_S(self):
         """
         Prepares a parse packet from a list of scrape job labels
 
