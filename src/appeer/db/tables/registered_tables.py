@@ -130,4 +130,4 @@ def check_column(name, column):
     allowed_columns = registered_tables[name]
 
     if not column in allowed_columns:
-        raise PermissionError(f'Incorrect table column {column} given. Expected one of the following columns: {allowed_columns}')
+        raise PermissionError(f'Incorrect table column "{column}" given. Expected one of the following columns: {allowed_columns}')
