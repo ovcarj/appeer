@@ -418,7 +418,7 @@ class Job(abc.ABC):
             log_directory = getattr(data_dir, f'{self.__job_lab}_logs')
 
         log_name = f'{self.label}.log'
-        log_path = os.path.abspath(os.path.join(log_directory, log_name))
+        log_path = utils.abspath(os.path.join(log_directory, log_name))
 
         self._initialize_db_entry(description=description,
                 date=self.__date,
