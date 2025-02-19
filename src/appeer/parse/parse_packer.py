@@ -87,7 +87,7 @@ class ParsePacker:
                 self._pack_mode_A()
 
             case 'E':
-                raise NotImplementedError('Parse mode "E" not yet implemented')
+                self._pack_mode_E()
 
             case 'S':
                 self._pack_mode_S()
@@ -164,6 +164,34 @@ class ParsePacker:
 
         else:
             self._pprint('No unparsed jobs found.')
+
+    def _pack_mode_E(self):
+        """
+        Prepares a parse packet automatically from executed scrape jobs
+
+        ``self._data_source`` will be automatically set.
+
+        The packet is prepared only for jobs in the executed ('X') status.
+
+        In mode 'E', all succesful actions are taken into account,
+            regardless of whether they were previously parsed.
+
+        """
+
+        self._pprint('Searching for executed scrape jobs...')
+
+        executed_job_labels = scrape_scripts.get_executed_job_labels()
+
+        if executed_job_labels:
+
+            self._pprint(f'Found {len(executed_job_labels)} jobs.')
+            self._pprint('Preparing the data for parsing...')
+            self._data_source = executed_job_labels
+
+            self._pack_mode_S()
+
+        else:
+            self._pprint('No executed jobs found.')
 
     def _pack_mode_S(self):
         """
