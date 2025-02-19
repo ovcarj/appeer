@@ -50,6 +50,23 @@ class ScrapeJobs(JobTable,
 
         return _summary
 
+    @property
+    def unparsed(self):
+        """
+        Returns all unparsed scrape jobs (status='X', job_parsed='F')
+
+        Returns
+        -------
+        unparsed_scrape_jobs : list of appeer.db.tables.scrape_jobs._ScrapeJobs
+            Unparsed scrape jobs
+
+        """
+
+        unparsed_scrape_jobs = self._search_table(
+                job_status='X', job_parsed='F')
+
+        return unparsed_scrape_jobs
+
     def add_entry(self, **kwargs):
         """
         Initializes an entry in the scrape_jobs table
