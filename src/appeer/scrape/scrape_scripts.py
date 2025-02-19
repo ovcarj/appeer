@@ -5,6 +5,8 @@ from collections import namedtuple
 
 from appeer.general import utils as _utils
 
+from appeer.db.jobs_db import JobsDB
+
 from appeer.scrape.scrape_job import ScrapeJob
 from appeer.scrape.scrape_action import ScrapeAction
 
@@ -145,6 +147,25 @@ def create_and_run(publications,
     sj.run_job(cleanup=cleanup,
                scrape_mode='from_scratch',
                **kwargs)
+
+def get_unparsed_job_labels():
+    """
+    Returns a list of scrape job labels which are executed and unparsed
+
+    Returns
+    -------
+    unparsed_job_labels : list of str
+        List of scrape job labels which are executed and unparsed
+
+    """
+
+    db = JobsDB()
+
+    unparsed_jobs = db.scrape_jobs.unparsed
+
+    unparsed_job_labels = [job.label for job in unparsed_jobs]
+
+    return unparsed_job_labels
 
 def get_execution_dict(job_labels):
     """
