@@ -317,6 +317,52 @@ def archive_list_of_files(output_filename, file_list):
             zipper.write(f, os.path.basename(f),
                     compress_type=zipfile.ZIP_DEFLATED)
 
+def extract_archive(zip_filename, target_directory):
+    """
+    Extract a ZIP archive to ``target_directory``
+
+    If the ``target_directory`` does not exist, it will be created
+
+    Parameters
+    ----------
+    zip_filename : str
+        Path to the ZIP archive to be extracted
+    target_directory : str
+        Path to the directory in which the ZIP archive will be extracted
+
+    Returns
+    -------
+    success : bool
+        True if extraction succeeded, False if it did not
+
+    """
+
+    success = False
+
+    zip_filename = os.path.abspath(zip_filename)
+    target_directory = os.path.abspath(target_directory)
+
+    if not file_exists(zip_filename):
+        return success
+
+    if not zipfile.is_zipfile(zip_filename):
+        return success
+
+    if not directory_exists(target_directory):
+
+        try:
+            os.makedirs(target_directory)
+
+        except PermissionError:
+            return success
+
+    with zipfile.ZipFile(zip_filename, 'r') as unzipper:
+        unzipper.extractall(path=target_directory)
+
+    success = True
+
+    return success
+
 def delete_directory(directory_name, verbose=True):
     """
     Delete directory called ``directory_name``
