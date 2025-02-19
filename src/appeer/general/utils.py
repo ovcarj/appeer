@@ -364,8 +364,8 @@ def extract_archive(zip_filename, target_directory):
 
     success = False
 
-    zip_filename = os.path.abspath(zip_filename)
-    target_directory = os.path.abspath(target_directory)
+    zip_filename = abspath(zip_filename)
+    target_directory = abspath(target_directory)
 
     if not file_exists(zip_filename):
         return success
@@ -535,7 +535,7 @@ def file_list_readable(file_list):
         file_list = [file_list]
 
     files_readability = {
-            os.path.abspath(f): os.access(os.path.abspath(f), os.R_OK)
+            abspath(f): os.access(abspath(f), os.R_OK)
                 for f in file_list
             }
 
