@@ -14,6 +14,7 @@ from appeer.db.tables.registered_tables import get_registered_tables
 from appeer.jobs.db_properties import JobProperty
 
 from appeer.scrape.scrape_action import ScrapeAction
+from appeer.parse.parse_action import ParseAction
 
 from appeer.scrape import scrape_reports
 from appeer.parse import parse_reports
@@ -235,15 +236,14 @@ class Job(abc.ABC):
                         action_index=entry.action_index)
                         for entry in __scrape_entries]
 
-#TODO: uncomment when ParseAction is implemented
-#                case 'parse_job':
-#
-#                    __parse_entries = self._db.parse_jobs.get_actions(
-#                            label=self.label)
-#
-#                    _actions = [ParseAction(label=entry.label,
-#                        action_index=entry.action_index)
-#                        for entry in __parse_entries]
+                case 'parse_job':
+
+                    __parse_entries = self._db.parse_jobs.get_actions(
+                            label=self.label)
+
+                    _actions = [ParseAction(label=entry.label,
+                        action_index=entry.action_index)
+                        for entry in __parse_entries]
 
             _actions.sort(key=lambda x: x.action_index)
 
