@@ -10,7 +10,7 @@ authors = [
 ]
 description = 'appeer: statistics of the length of peer review'
 readme = 'README.rst'
-requires-python = '>=3.11'
+requires-python = '>=3.13'
 keywords = ['appeer', 'peer', 'review', 'length']
 license = {text = 'GPL-3.0-only'}
 classifiers = [
@@ -18,7 +18,7 @@ classifiers = [
     'License :: OSI Approved :: GNU General Public License version 3',
 ]
 dependencies = [
-    'importlib-metadata; python_version>="3.11"',
+    'importlib-metadata; python_version>="3.13"',
     'requests',
     'platformdirs',
     'click'
