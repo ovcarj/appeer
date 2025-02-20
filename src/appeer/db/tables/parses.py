@@ -77,6 +77,12 @@ class Parses(ActionTable,
             Label of the parse job
         action_index : int
             Index of the URL in the input
+        scrape_label : str
+            Label of the scrape job that the input file corresponds to
+                (can be None if the input file does not come from a scrape job)
+        scrape_action_index : int
+            Index of the scrape action that the input file corresponds to
+                (can be None if the input file does not come from a scrape job)
         date : str
             Date and time of the parse
         input_file : str
@@ -84,11 +90,17 @@ class Parses(ActionTable,
 
         """
 
+        if kwargs['scrape_label'] is None:
+            kwargs['scrape_label'] = (None,)
+
+        if kwargs['scrape_action_index'] is None:
+            kwargs['scrape_action_index'] = (None,)
+
         data = ({
             'label': kwargs['label'],
             'action_index': kwargs['action_index'],
-            'scrape_label': (None,),
-            'scrape_action_index': (None,),
+            'scrape_label': kwargs['scrape_label'],
+            'scrape_action_index': kwargs['scrape_action_index'],
             'date': kwargs['date'],
             'input_file': kwargs['input_file'],
             'doi': '?',
@@ -122,7 +134,7 @@ class Parses(ActionTable,
 
         ``column_name`` must be in 
 
-            ('scrape_label', 'scrape_action_index', 'date',
+            ('date',
             'doi', 'publisher', 'journal', 'title', 'affiliations',
             'received', 'accepted', 'published',
             'parser', 'success', 'status', 'committed'
@@ -149,31 +161,6 @@ class Parses(ActionTable,
         new_value = kwargs['new_value']
 
         match column_name:
-
-            case 'scrape_label':
-
-                if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid scrape_label={new_value} given; must be a string')
-
-                self._cur.execute("""
-                UPDATE parses SET scrape_label = ? WHERE label = ? AND action_index = ?
-                """, (new_value, label, action_index))
-
-                self._con.commit()
-
-            case 'scrape_action_index':
-
-                if not isinstance(new_value, int):
-                    raise ValueError(f'Cannot update the parse database. Invalid scrape_action_index={new_value} given; must be an integer')
-
-                if not new_value >= 0:
-                    raise ValueError(f'Cannot update the parse database. Invalid scrape_action_index={new_value} given; must be a non-negative integer')
-
-                self._cur.execute("""
-                UPDATE parses SET scrape_action_index = ? WHERE label = ? AND action_index = ?
-                """, (new_value, label, action_index))
-
-                self._con.commit()
 
             case 'date':
 
