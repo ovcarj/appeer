@@ -21,7 +21,9 @@ dependencies = [
     'importlib-metadata; python_version>="3.13"',
     'requests',
     'platformdirs',
-    'click'
+    'click',
+    'beautifulsoup4',
+    'lxml'
 ]
 
 [project.scripts]
