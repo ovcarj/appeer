@@ -163,9 +163,9 @@ def check_doi_format(entry):
     """
 
     starts_w_10 = entry.startswith('10')
-    has_prefix_suffix = len(re.split(r'\.|/', entry)) == 3
+    has_prefix_suffix = len(re.split(r'^10\.|/', entry)) == 3
 
-    is_doi_format = bool(starts_w_10 and has_prefix_suffix)
+    is_doi_format = starts_w_10 and has_prefix_suffix
 
     return is_doi_format
 
