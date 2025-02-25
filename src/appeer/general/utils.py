@@ -12,6 +12,7 @@ from datetime import datetime
 from random import randint
 
 import click
+import bs4
 
 def load_json(json_filename):
     """
@@ -280,6 +281,37 @@ def write_text_to_file(filepath, text_data):
 
     with open(filepath, 'w+', encoding='utf-8') as f:
         f.write(text_data)
+
+def load_soup(filepath):
+    """
+    Load file to a BeautifulSoup object
+
+    Parameters
+    ----------
+    filepath : str
+        Path to a file
+
+    Returns
+    -------
+    soup : bs4.BeautifulSoup | None
+        Text loaded into a BeautifulSoup object; None if loading failed
+    exception : None | type
+        None if loading passed, an exception if it did not
+
+    """
+
+    soup, exception = None, None
+
+    try:
+        with open(filepath, mode='r', encoding='utf-8') as f:
+            soup = bs4.BeautifulSoup(f.read())
+
+    except (FileNotFoundError, PermissionError,
+        IOError, UnicodeDecodeError) as exc:
+
+        exception = exc
+
+    return soup, exception
 
 def abspath(path):
     """
