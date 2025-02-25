@@ -3,7 +3,10 @@
 from appeer.general import utils as _utils
 from appeer.parse.parsers.parser import Parser
 
-class Parser_RSC_ANY(Parser, publisher_code='RSC', journal_code='ANY'):
+class Parser_RSC_ANY_txt(Parser,
+        publisher_code='RSC',
+        journal_code='ANY',
+        data_type='txt'):
     """
     Parser for any Royal Society of Chemistry (RSC) journal
 

@@ -16,19 +16,23 @@ class Parser(abc.ABC):
 
         (a) Choose unique publisher and journal codes
         (b) Place the parser module in ./<publisher_code> directory
-        (c) Name the module parser_<publisher_code>_<journal_code>.py
-        (d) Name the parser subclass Parser_<publisher_code>_<journal_code>
+        (c) Name the module
+                parser_<publisher_code>_<journal_code>_<data_type>.py
+        (d) Name the parser subclass
+                Parser_<publisher_code>_<journal_code>_<data_type>.py
 
-        Commonly, the same parser can be used for all journals of a given
-        publisher. In that case, choose ``journal_code = ANY``
+        * Commonly, the same parser can be used for all journals of a given
+            publisher. In that case, choose ``journal_code = ANY``.
+
+        * Currently, only ``data_type == 'txt'`` is supported.
 
         Examples of the naming convention:
 
-        Module                 Class
-        -------------------------------------
-        parser_RSC_ANY.py      Parser_RSC_ANY
-        parser_NAT_ANY.py      Parser_NAT_ANY
-        parser_APS_PRL.py      Parser_APS_PRL
+        Module                      Class
+        -----------------------------------------------
+        parser_RSC_ANY_txt.py      Parser_RSC_ANY_txt
+        parser_NAT_ANY_txt.py      Parser_NAT_ANY_txt
+        parser_APS_PRL_txt.py      Parser_APS_PRL_txt
 
     (2) Define a static method ``check_publisher_journal(input_data)``
     
@@ -92,7 +96,7 @@ class Parser(abc.ABC):
 
     """
 
-    def __init_subclass__(cls, publisher_code, journal_code):
+    def __init_subclass__(cls, publisher_code, journal_code, data_type):
         """
         Ensures that every Parser subclass is correctly defined
 
@@ -109,7 +113,7 @@ class Parser(abc.ABC):
 
         module_name = os.path.basename(inspect.getfile(cls))
 
-        module_prefix, module_publisher, module_journal =\
+        module_prefix, module_publisher, module_journal, module_data_type =\
                 module_name.split('.')[0].split('_')
 
         if not module_prefix == 'parser':
@@ -121,7 +125,11 @@ class Parser(abc.ABC):
         if not module_journal == journal_code:
             raise ValueError(f'Naming convention not respected: journal code "{journal_code}" is not equal to "{module_journal}" in {module_name}')
 
-        class_prefix, class_publisher, class_journal = cls.__name__.split('_')
+        if not module_data_type == data_type:
+            raise ValueError(f'Naming convention not respected: data type "{data_type}" is not equal to "{module_data_type}" in {module_name}')
+
+        class_prefix, class_publisher, class_journal, class_data_type =\
+                cls.__name__.split('_')
 
         if not class_prefix == 'Parser':
             raise ValueError(f'Naming convention not respected: class prefix "{class_prefix}" is not equal to "Parser" in class {cls.__name__}')
@@ -131,6 +139,9 @@ class Parser(abc.ABC):
 
         if not class_journal == journal_code:
             raise ValueError(f'Naming convention not respected: journal code "{journal_code}" is not equal to "{class_journal}" in class {cls.__name__}')
+
+        if not class_data_type == data_type:
+            raise ValueError(f'Naming convention not respected: data type "{data_type}" is not equal to "{class_data_type}" in class {cls.__name__}')
 
         #
         # Check if ``check_publisher_journal`` static method was implemented
@@ -153,7 +164,7 @@ class Parser(abc.ABC):
         if not check_implemented:
             raise NotImplementedError(f'The check_publisher_journal method in class {cls.__name__} must be declared as static.')
 
-    def __init__(self, input_data, data_type='text'):
+    def __init__(self, input_data, data_type='txt'):
         """
         Load the data to be parsed to ``self._input_data``
 
@@ -161,7 +172,7 @@ class Parser(abc.ABC):
             parameter is left as a placeholder so other data types can be
             implemented in the future.
 
-        If ``data_type == text``, the ``input_data`` parameter may be passed
+        If ``data_type == txt``, the ``input_data`` parameter may be passed
             as a ``str`` or a ``bs4.BeautifulSoup`` object.
 
             In case ``isinstance(input_data, str)``, it should be a path to
@@ -183,7 +194,7 @@ class Parser(abc.ABC):
         self._input_data = None
         self.reading_exception = None
 
-        if data_type == 'text':
+        if data_type == 'txt':
 
             self._input_data, self.reading_exception =\
                     _utils.convert_2_soup(input_data)
