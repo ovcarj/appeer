@@ -3,6 +3,7 @@
 import abc
 import os
 import inspect
+import functools
 
 from appeer.general import utils as _utils
 
@@ -81,22 +82,76 @@ class Parser(abc.ABC):
 
                 return is_publisher_journal, exception
 
-    #TODO: Write in more detail
-    (3) Implement the necessary abstract cached properties
-
-    (4) [Optional] Redefine the list of metadata properties that have to
+    (3) [Optional] Redefine the list of metadata properties that have to
             be parsed for the parsing process to be considered successful.
 
             Possibly, certain metadata properties are not available for some
             (publisher, journal) pairs, so list only the available properties
             so the parsing can be flagged as successful.
 
+            This list is defined in the ``_define_metadata_list`` class
+            method. This (abstract) class defines the default list.
+
+    (4) Implement the necessary cached properties
+
+            All the properties listed by ``_define_metadata_list`` must be
+            implemented as ``functools.cached_property``.
+
+            For more details, see the documentation of
+            ``_define_metadata_list``
+
     (5) Add the (publisher, journal) pair to ./implemented_parsers.json
             for the parser to be recognized by Preparser.
 
     """
 
-    def __init_subclass__(cls, publisher_code, journal_code, data_type):
+    @classmethod
+    def _define_metadata_list(cls):
+        """
+        Defines a list of metadata properties that a parser implements
+
+        Parsing will be considered successful only if all of the listed
+            metadata properties are parsed from the publication.
+
+        The default list of the properties is defined in this (abstract)
+            class. 
+
+        If it is not possible to parse a certain property for a given
+            (publisher, journal), this method should be redefined in the
+            parser subclass.
+
+        All properties defined in this list must be implemented as a
+            ``functools.cached_property``. E.g., for the ``doi`` property,
+            the parser subclass should implement a method that looks like:
+
+            @functools.cached_property
+            def doi(self):
+
+            # Method documentation
+                ...
+
+            # Parse the DOI from the publication
+
+            _doi = find_doi(self._input_data)
+
+            return _doi
+
+            ...and similarly for all the other properties in the metadata list
+
+        """
+
+        cls.metadata_list = [
+                'doi',
+                'publisher',
+                'journal',
+                'title',
+                'affiliations',
+                'received',
+                'accepted',
+                'published'
+                ]
+
+    def __init_subclass__(cls, publisher_code, journal_code, data_type): #pylint:disable=too-many-locals, too-many-branches
         """
         Ensures that every Parser subclass is correctly defined
 
@@ -108,8 +163,14 @@ class Parser(abc.ABC):
             Internal unique publisher identifier
         journal_code : str
             Internal unique journal identifier
+        data_type : str
+            The type of the input data. Currently, only "txt" is implemented
 
         """
+
+        #
+        # Check if the naming convention was respected in module name
+        #
 
         module_name = os.path.basename(inspect.getfile(cls))
 
@@ -127,6 +188,10 @@ class Parser(abc.ABC):
 
         if not module_data_type == data_type:
             raise ValueError(f'Naming convention not respected: data type "{data_type}" is not equal to "{module_data_type}" in {module_name}')
+
+        #
+        # Check if the naming convention was respected in the class name
+        #
 
         class_prefix, class_publisher, class_journal, class_data_type =\
                 cls.__name__.split('_')
@@ -163,6 +228,25 @@ class Parser(abc.ABC):
 
         if not check_implemented:
             raise NotImplementedError(f'The check_publisher_journal method in class {cls.__name__} must be declared as static.')
+
+        #
+        # Check if all defined metadata properties are implemented as
+        # functools.cached_property
+        #
+
+        cls._define_metadata_list()
+
+        for entry in cls.metadata_list:
+
+            try:
+                is_cached_property = isinstance(cls.__dict__[entry],
+                        functools.cached_property)
+
+            except KeyError as exc:
+                raise NotImplementedError(f'The "{entry}" cached property is not implemented in {cls.__name__}.') from exc
+
+            if not is_cached_property:
+                raise TypeError(f'"{entry}" must be implemented as functools.cached_property in {cls.__name__}')
 
     def __init__(self, input_data, data_type='txt'):
         """
