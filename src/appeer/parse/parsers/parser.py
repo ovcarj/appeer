@@ -127,14 +127,14 @@ class Parser(abc.ABC):
             @functools.cached_property
             def doi(self):
 
-            # Method documentation
+                # Method documentation
                 ...
 
-            # Parse the DOI from the publication
+                # Parse the DOI from the publication
 
-            _doi = find_doi(self._input_data)
+                _doi = find_doi(self._input_data)
 
-            return _doi
+                return _doi
 
             ...and similarly for all the other properties in the metadata list
 
