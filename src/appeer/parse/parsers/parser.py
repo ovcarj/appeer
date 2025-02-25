@@ -19,7 +19,7 @@ class Parser(abc.ABC):
         (c) Name the module
                 parser_<publisher_code>_<journal_code>_<data_type>.py
         (d) Name the parser subclass
-                Parser_<publisher_code>_<journal_code>_<data_type>.py
+                Parser_<publisher_code>_<journal_code>_<data_type>
 
         * Commonly, the same parser can be used for all journals of a given
             publisher. In that case, choose ``journal_code = ANY``.
