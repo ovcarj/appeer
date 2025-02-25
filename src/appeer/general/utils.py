@@ -304,7 +304,7 @@ def load_soup(filepath):
 
     try:
         with open(filepath, mode='r', encoding='utf-8') as f:
-            soup = bs4.BeautifulSoup(f.read())
+            soup = bs4.BeautifulSoup(f.read(), features='lxml')
 
     except (FileNotFoundError, PermissionError,
         IOError, UnicodeDecodeError) as exc:
