@@ -15,25 +15,25 @@ class Parser(abc.ABC):
 
     (1) Adhere to the naming convention
 
-        (a) Choose unique publisher and journal codes
-        (b) Place the parser module in ./<publisher_code> directory
-        (c) Name the module
-                parser_<publisher_code>_<journal_code>_<data_type>.py
-        (d) Name the parser subclass
-                Parser_<publisher_code>_<journal_code>_<data_type>
-
-        * Commonly, the same parser can be used for all journals of a given
-            publisher. In that case, choose ``journal_code = ANY``.
-
-        * Currently, only ``data_type == 'txt'`` is supported.
-
-        Examples of the naming convention:
-
-        Module                     Class
-        ---------------------------------------------
-        parser_RSC_ANY_txt.py      Parser_RSC_ANY_txt
-        parser_NAT_ANY_txt.py      Parser_NAT_ANY_txt
-        parser_APS_PRL_txt.py      Parser_APS_PRL_txt
+            (a) Choose unique publisher and journal codes
+            (b) Place the parser module in ./<publisher_code> directory
+            (c) Name the module
+                    parser_<publisher_code>_<journal_code>_<data_type>.py
+            (d) Name the parser subclass
+                    Parser_<publisher_code>_<journal_code>_<data_type>
+    
+            * Commonly, the same parser can be used for all journals of a given
+                publisher. In that case, choose ``journal_code = ANY``.
+    
+            * Currently, only ``data_type == 'txt'`` is supported.
+    
+            Examples of the naming convention:
+    
+            Module                     Class
+            ---------------------------------------------
+            parser_RSC_ANY_txt.py      Parser_RSC_ANY_txt
+            parser_NAT_ANY_txt.py      Parser_NAT_ANY_txt
+            parser_APS_PRL_txt.py      Parser_APS_PRL_txt
 
     (2) Define a static method ``check_publisher_journal(input_data)``
     
@@ -114,7 +114,7 @@ class Parser(abc.ABC):
             metadata properties are parsed from the publication.
 
         The default list of the properties is defined in this (abstract)
-            class. 
+            class.
 
         If it is not possible to parse a certain property for a given
             (publisher, journal), this method should be redefined in the
