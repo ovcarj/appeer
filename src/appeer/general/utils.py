@@ -265,20 +265,20 @@ def random_number():
 
     return random_no
 
-def write_text_to_file(path_to_file, text_data):
+def write_text_to_file(filepath, text_data):
     """
     Write text to a file
 
     Parameters
     ----------
-    path_to_file : str
+    filepath : str
         Output file path
     text_data : str
         Text data to be written into a file
 
     """
 
-    with open(path_to_file, 'w+', encoding='utf-8') as f:
+    with open(filepath, 'w+', encoding='utf-8') as f:
         f.write(text_data)
 
 def abspath(path):
