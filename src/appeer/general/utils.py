@@ -313,6 +313,40 @@ def load_soup(filepath):
 
     return soup, exception
 
+def convert_2_soup(input_data):
+    """
+    Load file to a BeautifulSoup object or do nothing if a soup was inputted
+
+    This function is useful for parsing, so a file has to be read and
+        converted to a ``BeautifulSoup`` only once
+
+    Parameters
+    ----------
+    input_data : bs4.BeautifulSoup | str
+        Data loaded into ``BeautifulSoup`` or a path to a file to be parsed
+
+    Returns
+    -------
+    soup : bs4.BeautifulSoup | None
+        Text loaded into a BeautifulSoup object; None if loading failed
+    exception : None | type
+        None if loading passed, an exception if it did not
+
+    """
+
+    soup, exception = None, None
+
+    if isinstance(input_data, bs4.BeautifulSoup):
+        soup = input_data
+
+    elif isinstance(input_data, str):
+        soup, exception = load_soup(input_data)
+
+    else:
+        exception = TypeError('Invalid input data type passed to convert_2_soup.')
+
+    return soup, exception
+
 def abspath(path):
     """
     Get the absolute path
