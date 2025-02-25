@@ -28,8 +28,8 @@ class Parser(abc.ABC):
 
         Examples of the naming convention:
 
-        Module                      Class
-        -----------------------------------------------
+        Module                     Class
+        ---------------------------------------------
         parser_RSC_ANY_txt.py      Parser_RSC_ANY_txt
         parser_NAT_ANY_txt.py      Parser_NAT_ANY_txt
         parser_APS_PRL_txt.py      Parser_APS_PRL_txt
