@@ -147,6 +147,39 @@ def txt2list(text_filename):
 
     return url_list
 
+def get_doi_substring(entry):
+    """
+    Extracts DOI from a string
+
+    If the regex finds multiple matches, only the first occurence is returned
+
+    Parameters
+    ----------
+    entry : str
+        String in which to search for DOI
+
+    Returns
+    -------
+    doi : str | None
+        DOI matched in the string; None if no match was found
+
+    """
+
+    if not isinstance(entry, str):
+        doi = None
+
+    else:
+
+        _doi = re.findall(r'10\.\S+/\S+', entry)
+
+        if _doi:
+            doi = _doi[0]
+
+        else:
+            doi = None
+
+    return doi
+
 def check_doi_format(entry):
     """
     Check if a string is in DOI format (10.prefix/suffix)
