@@ -273,8 +273,6 @@ class Parser(abc.ABC):
 
         """
 
-        self.success = False
-
         self._input_data = None
         self.reading_exception = None
 
@@ -285,3 +283,32 @@ class Parser(abc.ABC):
 
         else:
             raise NotImplementedError('Currently, only text parsing is implemented.')
+
+    @property
+    def success(self):
+        """
+        A flag describing whether the whole parsing procedure was successful
+
+        The cached properties, defined by ``self.metadata_list`` are checked.
+            If they are all not None, the parsing procedure is
+            considered a success
+
+        Returns
+        -------
+        _success : bool
+            True if parsing was successful, False otherwise
+
+        """
+
+        _success = all(getattr(self, entry) for entry in self.metadata_list)
+
+        return _success
+
+    @success.setter
+    def success(self, value):
+        """
+        This attribute should never be directly set
+
+        """
+
+        raise PermissionError('Cannot directly set the "success" attribute.')
