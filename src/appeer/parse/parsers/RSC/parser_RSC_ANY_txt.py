@@ -145,7 +145,21 @@ class Parser_RSC_ANY_txt(Parser,
         
         """
 
-        return None
+        _title = None
+
+        _meta = self._input_data.find('meta', attrs={'name': 'DC.title'})
+
+        if _meta:
+
+            try:
+
+                _title_candidate = _meta.attrs['content']
+                _title = _title_candidate or None
+
+            except KeyError:
+                pass
+
+        return _title
 
     @functools.cached_property
     def affiliations(self):
