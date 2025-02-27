@@ -68,6 +68,42 @@ class Parser_RSC_ANY_txt(Parser,
                 data_type=data_type,
                 parser=parser)
 
+    def _get_meta_content(self, meta_name):
+        """
+        Get the content of the <meta> tag with ``meta_name`` attribute
+
+        Useful for several metadata properties in RSC journals.
+
+        If not successful, return None
+
+        Parameters
+        ----------
+        meta_name : str
+            The attribute to search for in the <meta> tags
+
+        Returns
+        -------
+        content : str | None
+            The value of the ``content`` attribute
+
+        """
+
+        content = None
+
+        _meta = self._input_data.find('meta', attrs={'name': meta_name})
+
+        if _meta:
+
+            try:
+
+                candidate = _meta.attrs['content']
+                content = candidate or None
+
+            except KeyError:
+                pass
+
+        return content
+
     @functools.cached_property
     def doi(self):
         """
@@ -112,24 +148,12 @@ class Parser_RSC_ANY_txt(Parser,
 
         Returns
         -------
-        _publisher : str
+        _publisher : str | None
             The paper publisher
         
         """
 
-        _publisher = None
-
-        _meta = self._input_data.find('meta', attrs={'name': 'DC.publisher'})
-
-        if _meta:
-
-            try:
-
-                _publisher_candidate = _meta.attrs['content']
-                _publisher = _publisher_candidate or None
-
-            except KeyError:
-                pass
+        _publisher = self._get_meta_content(meta_name='DC.publisher')
 
         return _publisher
 
@@ -154,24 +178,12 @@ class Parser_RSC_ANY_txt(Parser,
 
         Returns
         -------
-        _title : str
+        _title : str | None
             Publication title
         
         """
 
-        _title = None
-
-        _meta = self._input_data.find('meta', attrs={'name': 'DC.title'})
-
-        if _meta:
-
-            try:
-
-                _title_candidate = _meta.attrs['content']
-                _title = _title_candidate or None
-
-            except KeyError:
-                pass
+        _title = self._get_meta_content(meta_name='DC.title')
 
         return _title
 
