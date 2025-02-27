@@ -317,14 +317,14 @@ def write_text_to_file(filepath, text_data):
 
 def load_soup(filepath, parser='xml'):
     """
-    Load file to a BeautifulSoup object
+    Load file to a ``BeautifulSoup`` object
 
     Parameters
     ----------
     filepath : str
         Path to a file
     parser : str
-        Parser used by BeautifulSoup
+        Parser used by ``BeautifulSoup``
             Available parsers: ('html.parser', 'lxml', 'xml')
 
     Returns
@@ -351,7 +351,7 @@ def load_soup(filepath, parser='xml'):
 
 def convert_2_soup(input_data, parser='xml'):
     """
-    Load file to a BeautifulSoup object or do nothing if a soup was inputted
+    Load file to a ``BeautifulSoup`` object or pass if a soup was inputted
 
     This function is useful for parsing, so a file has to be read and
         converted to a ``BeautifulSoup`` only once
@@ -361,13 +361,13 @@ def convert_2_soup(input_data, parser='xml'):
     input_data : bs4.BeautifulSoup | str
         Data loaded into ``BeautifulSoup`` or a path to a file to be parsed
     parser : str
-        Parser used by BeautifulSoup
+        Parser used by ``BeautifulSoup``
             Available parsers: ('html.parser', 'lxml', 'xml')
 
     Returns
     -------
     soup : bs4.BeautifulSoup | None
-        Text loaded into a BeautifulSoup object; None if loading failed
+        Text loaded into a ``BeautifulSoup object``; None if loading failed
     exception : None | type
         None if loading passed, an exception if it did not
 
