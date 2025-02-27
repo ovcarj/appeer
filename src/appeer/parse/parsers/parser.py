@@ -45,7 +45,7 @@ class Parser(abc.ABC):
             If the parser is intended to parse text, the type
             of ``input_data`` *must* be allowed to be ``BeautifulSoup``.
             Most likely, it should also allowed to be a ``str``, so a
-            filepath can be passed (useful for testing purposes).
+            filepath can be passed.
 
             The check_publisher_journal method must return a boolean and
                 an exception (if reading of ``input_data`` failed):
@@ -58,7 +58,8 @@ class Parser(abc.ABC):
 
             An appropriate function for loading text data is
 
-            soup, exception = appeer.general.utils.convert_2_soup(input_data)
+            soup, exception =\
+                    appeer.general.utils.convert_2_soup(input_data, parser)
 
             Pseudocode example
             ------------------
@@ -248,7 +249,7 @@ class Parser(abc.ABC):
             if not is_cached_property:
                 raise TypeError(f'"{entry}" must be implemented as functools.cached_property in {cls.__name__}')
 
-    def __init__(self, input_data, data_type='txt'):
+    def __init__(self, input_data, data_type='txt', parser='html.parser'):
         """
         Load the data to be parsed to ``self._input_data``
 
@@ -260,7 +261,7 @@ class Parser(abc.ABC):
             as a ``str`` or a ``bs4.BeautifulSoup`` object.
 
             In case ``isinstance(input_data, str)``, it should be a path to
-            a file to be parsed. This mode is intended mainly for testing.
+            a file to be parsed.
 
             Otherwise, the file may be previously read and passed as a
             ``bs4.BeautifulSoup`` object. This is the expected behavior,
@@ -270,6 +271,10 @@ class Parser(abc.ABC):
         ----------
         input_data : bs4.BeautifulSoup | str
             Data loaded into ``BeautifulSoup`` or a path to a file to be parsed
+        data_type : str
+            Input data type. Currently, only "str" is supported
+        parser : str
+            The parser used by ``BeautifulSoup``
 
         """
 
@@ -279,7 +284,7 @@ class Parser(abc.ABC):
         if data_type == 'txt':
 
             self._input_data, self.reading_exception =\
-                    _utils.convert_2_soup(input_data)
+                    _utils.convert_2_soup(input_data, parser=parser)
 
         else:
             raise NotImplementedError('Currently, only text parsing is implemented.')
