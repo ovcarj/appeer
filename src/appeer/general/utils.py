@@ -315,7 +315,7 @@ def write_text_to_file(filepath, text_data):
     with open(filepath, 'w+', encoding='utf-8') as f:
         f.write(text_data)
 
-def load_soup(filepath):
+def load_soup(filepath, parser='xml'):
     """
     Load file to a BeautifulSoup object
 
@@ -323,6 +323,9 @@ def load_soup(filepath):
     ----------
     filepath : str
         Path to a file
+    parser : str
+        Parser used by BeautifulSoup
+            Available parsers: ('html.parser', 'lxml', 'xml')
 
     Returns
     -------
@@ -337,7 +340,7 @@ def load_soup(filepath):
 
     try:
         with open(filepath, mode='r', encoding='utf-8') as f:
-            soup = bs4.BeautifulSoup(f.read(), features='xml')
+            soup = bs4.BeautifulSoup(f.read(), features=parser)
 
     except (FileNotFoundError, PermissionError,
         IOError, UnicodeDecodeError) as exc:
@@ -346,7 +349,7 @@ def load_soup(filepath):
 
     return soup, exception
 
-def convert_2_soup(input_data):
+def convert_2_soup(input_data, parser='xml'):
     """
     Load file to a BeautifulSoup object or do nothing if a soup was inputted
 
@@ -357,6 +360,9 @@ def convert_2_soup(input_data):
     ----------
     input_data : bs4.BeautifulSoup | str
         Data loaded into ``BeautifulSoup`` or a path to a file to be parsed
+    parser : str
+        Parser used by BeautifulSoup
+            Available parsers: ('html.parser', 'lxml', 'xml')
 
     Returns
     -------
@@ -373,7 +379,7 @@ def convert_2_soup(input_data):
         soup = input_data
 
     elif isinstance(input_data, str):
-        soup, exception = load_soup(input_data)
+        soup, exception = load_soup(input_data, parser=parser)
 
     else:
         exception = TypeError('Invalid input data type passed to convert_2_soup.')
