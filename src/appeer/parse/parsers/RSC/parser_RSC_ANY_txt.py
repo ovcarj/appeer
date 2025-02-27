@@ -117,7 +117,21 @@ class Parser_RSC_ANY_txt(Parser,
         
         """
 
-        return None
+        _publisher = None
+
+        _meta = self._input_data.find('meta', attrs={'name': 'DC.publisher'})
+
+        if _meta:
+
+            try:
+
+                _publisher_candidate = _meta.attrs['content']
+                _publisher = _publisher_candidate or None
+
+            except KeyError:
+                pass
+
+        return _publisher
 
     @functools.cached_property
     def journal(self):
