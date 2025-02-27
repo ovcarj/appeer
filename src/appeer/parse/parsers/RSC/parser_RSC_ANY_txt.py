@@ -114,7 +114,7 @@ class Parser_RSC_ANY_txt(Parser,
 
         Returns
         -------
-        _doi : str
+        _doi : str | None
             The publication DOI
 
         """
