@@ -15,7 +15,7 @@ class Parser_RSC_ANY_txt(Parser,
     """
 
     @staticmethod
-    def check_publisher_journal(input_data):
+    def check_publisher_journal(input_data, parser='html.parser'):
         """
         Checks whether ``input_data`` corresponds to RSC
 
@@ -23,6 +23,8 @@ class Parser_RSC_ANY_txt(Parser,
         ----------
         input data : bs4.BeautifulSoup | str
            Data loaded into ``BeautifulSoup`` or a path to a file to be parsed
+        parser : str
+            The parser used by ``BeautifulSoup``
 
         Returns
         -------
@@ -33,7 +35,7 @@ class Parser_RSC_ANY_txt(Parser,
 
         is_RSC_ANY = False
 
-        soup, exception = _utils.convert_2_soup(input_data)
+        soup, exception = _utils.convert_2_soup(input_data, parser=parser)
 
         if not exception:
 
@@ -47,7 +49,7 @@ class Parser_RSC_ANY_txt(Parser,
 
         return is_RSC_ANY, exception
 
-    def __init__(self, input_data):
+    def __init__(self, input_data, data_type='txt', parser='html.parser'):
         """
         Load the inputted data into ``self._input``
 
@@ -55,10 +57,16 @@ class Parser_RSC_ANY_txt(Parser,
         ----------
         input_data : bs4.BeautifulSoup | str
             Data loaded into BeautifulSoup or a path to a file to be parsed
+        data_type : str
+            Input data type. Currently, only "str" is supported
+        parser : str
+            The parser used by ``BeautifulSoup``
 
         """
 
-        super().__init__(input_data=input_data)
+        super().__init__(input_data=input_data,
+                data_type=data_type,
+                parser=parser)
 
     @functools.cached_property
     def doi(self):
