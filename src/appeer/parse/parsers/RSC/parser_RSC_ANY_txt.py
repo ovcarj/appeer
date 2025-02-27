@@ -164,12 +164,14 @@ class Parser_RSC_ANY_txt(Parser,
 
         Returns
         -------
-        _journal : str
+        _journal : str | None
             The publication journal
         
         """
 
-        return None
+        _journal = self._get_meta_content(meta_name='citation_journal_title')
+
+        return _journal
 
     @functools.cached_property
     def title(self):
