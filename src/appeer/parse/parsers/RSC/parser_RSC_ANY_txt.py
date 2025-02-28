@@ -250,8 +250,12 @@ class Parser_RSC_ANY_txt(Parser,
                 for div in divs:
 
                     if 'Submitted' in div.dt.text:
-                        _received = date_utils.get_d_M_y(div.dd.text)[0]
-                        break
+
+                        _received_list = date_utils.get_d_M_y(div.dd.text)
+
+                        if _received_list:
+                            _received = _received_list[0]
+                            break
 
                 else:
                     pass
@@ -266,14 +270,60 @@ class Parser_RSC_ANY_txt(Parser,
         """
         Get the date when the publication was accepted
 
+        During testing RSC parsing, two formats of XML files were encountered;
+            therefore, the two cases are taken into account below
+
         Returns
         -------
-        _accepted : str
+        _accepted : str | None
             The date when the publication was accepted
         
         """
 
-        return None
+        _accepted = None
+
+        # RSC XML type (1)
+
+        try:
+
+            candidate = self._input_data.find('span',
+                    class_='bold italic').text
+
+            if 'Accepted' in candidate:
+
+                _accepted_list = date_utils.get_d_M_y(candidate)
+
+                if _accepted_list:
+                    _accepted = _accepted_list[0]
+
+        # RSC XML type (2)
+
+        except AttributeError:
+
+            try:
+
+                divs = self._input_data.find_all('div', class_='c fixpadt--l')
+
+                if not divs:
+                    return _accepted
+
+                for div in divs:
+
+                    if 'Accepted' in div.dt.text:
+
+                        _accepted_list = date_utils.get_d_M_y(div.dd.text)
+
+                        if _accepted_list:
+                            _accepted = _accepted_list[0]
+                            break
+
+                else:
+                    pass
+
+            except AttributeError:
+                pass
+
+        return _accepted
 
     @functools.cached_property
     def published(self):
