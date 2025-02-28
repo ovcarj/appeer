@@ -3,7 +3,9 @@
 import functools
 
 from appeer.general import utils as _utils
+
 from appeer.parse.parsers.parser import Parser
+from appeer.parse.parsers import date_utils
 
 class Parser_RSC_ANY_txt(Parser,
         publisher_code='RSC',
@@ -51,7 +53,7 @@ class Parser_RSC_ANY_txt(Parser,
 
     def __init__(self, input_data, data_type='txt', parser='html.parser'):
         """
-        Load the inputted data into ``self._input``
+        Load the inputted data into ``self._input_data``
 
         Parameters
         ----------
@@ -208,14 +210,56 @@ class Parser_RSC_ANY_txt(Parser,
         """
         Get the date when the publication was received
 
+        During testing RSC parsing, two formats of XML files were encountered;
+            therefore, the two cases are taken into account below
+
         Returns
         -------
-        _received : str
+        _received : str | None
             The date when the publication was received
         
         """
 
-        return None
+        _received = None
+
+        # RSC XML type (1)
+
+        try:
+
+            candidate = self._input_data.find('span',
+                    class_='italic bold').text
+
+            if 'Received' in candidate:
+
+                _received_list = date_utils.get_d_M_y(candidate)
+
+                if _received_list:
+                    _received = _received_list[0]
+
+        # RSC XML type (2)
+
+        except AttributeError:
+
+            try:
+
+                divs = self._input_data.find_all('div', class_='c fixpadt--l')
+
+                if not divs:
+                    return _received
+
+                for div in divs:
+
+                    if 'Submitted' in div.dt.text:
+                        _received = date_utils.get_d_M_y(div.dd.text)[0]
+                        break
+
+                else:
+                    pass
+
+            except AttributeError:
+                pass
+
+        return _received
 
     @functools.cached_property
     def accepted(self):
