@@ -112,9 +112,11 @@ class Request:
                     self.status = err.response.status_code
                     self.error = None
 
-                self.success = True
-                self.status = self.response.status_code
-                self.error = None
+                else:
+
+                    self.success = True
+                    self.status = self.response.status_code
+                    self.error = None
 
             except requests.exceptions.ConnectionError as err:
 
