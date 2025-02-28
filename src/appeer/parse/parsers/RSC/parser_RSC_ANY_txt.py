@@ -3,6 +3,8 @@
 import functools
 import re
 
+import bs4
+
 from appeer.general import utils as _utils
 
 from appeer.parse.parsers.parser import Parser
@@ -197,6 +199,9 @@ class Parser_RSC_ANY_txt(Parser,
         """
         Get the publication type
 
+        During testing RSC parsing, two formats of XML files were encountered;
+            therefore, the two cases are taken into account below
+
         Returns
         -------
         _publication type : str | None
@@ -205,6 +210,42 @@ class Parser_RSC_ANY_txt(Parser,
         """
 
         _publication_type = None
+
+        # RSC XML type (1)
+
+        try:
+
+            _candidate = self._input_data\
+                    .find('div', class_='article_info')\
+                    .find('a')\
+                    .next_sibling
+
+            if _candidate and isinstance(
+                    _candidate, bs4.NavigableString):
+
+                # Clean up string from new lines and brackets
+
+                _cleanup = _candidate.strip()
+
+                if _cleanup.startswith('('):
+                    _cleanup = _cleanup[1:]
+
+                if _cleanup.endswith(')'):
+                    _cleanup = _cleanup[:-1]
+
+                _publication_type = _cleanup
+
+        # RSC XML type (2)
+
+        except AttributeError:
+
+            try:
+
+                _publication_type = self._input_data.\
+                        find('meta', attrs={'property': 'og:type'})['content']
+
+            except KeyError:
+                pass
 
         return _publication_type
 
