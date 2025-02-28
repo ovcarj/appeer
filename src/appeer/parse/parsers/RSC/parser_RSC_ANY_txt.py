@@ -332,9 +332,52 @@ class Parser_RSC_ANY_txt(Parser,
 
         Returns
         -------
-        _published : str
+        _published : str | None
             The date when the publication was published
         
         """
 
-        return None
+        _published = None
+
+        # RSC XML type (1)
+
+        try:
+
+            candidate = self._input_data.find('p',
+                    class_='bold italic').text
+
+            if 'First published' in candidate:
+
+                _published_list = date_utils.get_d_M_y(candidate)
+
+                if _published_list:
+                    _published = _published_list[0]
+
+        # RSC XML type (2)
+
+        except AttributeError:
+
+            try:
+
+                divs = self._input_data.find_all('div', class_='c fixpadt--l')
+
+                if not divs:
+                    return _published
+
+                for div in divs:
+
+                    if 'First published' in div.dt.text:
+
+                        _published_list = date_utils.get_d_M_y(div.dd.text)
+
+                        if _published_list:
+                            _published = _published_list[0]
+                            break
+
+                else:
+                    pass
+
+            except AttributeError:
+                pass
+
+        return _published
