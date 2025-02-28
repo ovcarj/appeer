@@ -107,6 +107,7 @@ class Parses(ActionTable,
             'publisher': '?',
             'journal': '?',
             'title': '?',
+            'publication_type': '?',
             'affiliations': '?',
             'received': '?',
             'accepted': '?',
@@ -120,7 +121,7 @@ class Parses(ActionTable,
         self._sanity_check()
 
         add_query = """
-        INSERT INTO parses VALUES(:label, :action_index, :scrape_label, :scrape_action_index, :date, :input_file, :doi, :publisher, :journal, :title, :affiliations, :received, :accepted, :published, :parser, :success, :status, :committed)
+        INSERT INTO parses VALUES(:label, :action_index, :scrape_label, :scrape_action_index, :date, :input_file, :doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :parser, :success, :status, :committed)
         """
 
         self._cur.execute(add_query, data)
@@ -135,7 +136,8 @@ class Parses(ActionTable,
         ``column_name`` must be in 
 
             ('date',
-            'doi', 'publisher', 'journal', 'title', 'affiliations',
+            'doi', 'publisher', 'journal',
+            'title', 'publication_type', 'affiliations',
             'received', 'accepted', 'published',
             'parser', 'success', 'status', 'committed'
             )
@@ -216,6 +218,18 @@ class Parses(ActionTable,
 
                 self._cur.execute("""
                 UPDATE parses SET title = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
+
+            case 'publication_type':
+
+                # TODO: explicit check of known article types should be implemented
+                if not isinstance(new_value, str):
+                    raise ValueError(f'Cannot update the parse database. Invalid publication_type={new_value} given; must be a string')
+
+                self._cur.execute("""
+                UPDATE parses SET publication_type = ? WHERE label = ? AND action_index = ?
                 """, (new_value, label, action_index))
 
                 self._con.commit()

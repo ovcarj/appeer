@@ -37,12 +37,14 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
     doi : str
         DOI of the publication; mutable
     publisher : str
-        Internal publisher code; mutable
+        Publisher; mutable
     journal : str
-        Internal journal code; mutable
+        Publication journal; mutable
     title : str
         Title of the publication; mutable
-    affiliations : str
+    publication_type : str
+        Type of publication; mutable
+    affiliations : list of str
         Author affiliations; mutable
     received : str
         Date of the publication reception; mutable

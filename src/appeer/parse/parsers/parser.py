@@ -146,6 +146,7 @@ class Parser(abc.ABC):
                 'publisher',
                 'journal',
                 'title',
+                'publication_type',
                 'affiliations',
                 'received',
                 'accepted',

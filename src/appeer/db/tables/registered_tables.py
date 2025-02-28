@@ -65,6 +65,7 @@ def get_registered_tables():
                  'publisher',
                  'journal',
                  'title',
+                 'publication_type',
                  'affiliations',
                  'received',
                  'accepted',

@@ -193,6 +193,22 @@ class Parser_RSC_ANY_txt(Parser,
         return _title
 
     @functools.cached_property
+    def publication_type(self):
+        """
+        Get the publication type
+
+        Returns
+        -------
+        _publication type : str | None
+            Publication type
+        
+        """
+
+        _publication_type = None
+
+        return _publication_type
+
+    @functools.cached_property
     def affiliations(self):
         """
         Get the author affiliations
