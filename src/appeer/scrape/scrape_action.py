@@ -183,7 +183,7 @@ class ScrapeAction(Action, action_type='scrape'): #pylint:disable=too-many-insta
             out_file = os.path.join(self.__download_directory,
                     f'{self.action_index}.html')
 
-            _utils.write_text_to_file(path_to_file=out_file,
+            _utils.write_text_to_file(filepath=out_file,
                     text_data=request.response.text)
 
             self.out_file = out_file
