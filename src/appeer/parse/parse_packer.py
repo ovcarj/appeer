@@ -328,7 +328,7 @@ class ParsePacker:
 
                 self.packet.extend([_ParseEntry(
                     scrape_label=action_file.label,
-                    scrape_action=action_file.action_index,
+                    scrape_action_index=action_file.action_index,
                     filepath=action_file.out_file)
                     for action_file in action_files
                         ])
