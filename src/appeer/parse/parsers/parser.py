@@ -273,7 +273,7 @@ class Parser(abc.ABC):
         input_data : bs4.BeautifulSoup | str
             Data loaded into ``BeautifulSoup`` or a path to a file to be parsed
         data_type : str
-            Input data type. Currently, only "str" is supported
+            Input data type. Currently, only "txt" is supported
         parser : str
             The parser used by ``BeautifulSoup``
 
