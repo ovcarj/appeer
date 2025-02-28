@@ -1,6 +1,7 @@
 """Parser for any Royal Society of Chemistry (RSC) journal"""
 
 import functools
+import re
 
 from appeer.general import utils as _utils
 
@@ -196,14 +197,53 @@ class Parser_RSC_ANY_txt(Parser,
         """
         Get the author affiliations
 
+        During testing RSC parsing, two formats of XML files were encountered;
+            therefore, the two cases are taken into account below
+
         Returns
         -------
-        _affiliations : list of str
+        _affiliations : list of str | None
             List of affiliations
         
         """
 
-        return None
+        # RSC XML type (1)
+
+        _affiliations = None
+
+        aff_id_tags = self._input_data.find_all('a', id=re.compile('aff.'))
+
+        _affiliations = [aff_id_tag.\
+                find_next('span', class_='italic').\
+                find_next('span', class_='italic').text.strip()
+                for aff_id_tag in aff_id_tags] or None
+
+        # RSC XML type (2)
+
+        if not _affiliations:
+
+            p_aff_tags = self._input_data.find_all(
+                    'p', class_=re.compile('.*author-affiliation'))
+
+            _affiliations = [p_aff_tag.\
+                    find_next('span').\
+                    find_next('span').text.strip()
+                    for p_aff_tag in p_aff_tags] or None
+
+        #
+        # Clean up emails and new lines from affiliations.
+        #
+        # Some publications have a 'Corresponding authors' entry,
+        # which is also removed
+        #
+
+        if _affiliations:
+
+            _affiliations = [_aff.split('\n')[0].split('E-mail')[0].strip()
+                    for _aff in _affiliations
+                    if 'authors' not in _aff]
+
+        return _affiliations
 
     @functools.cached_property
     def received(self):
