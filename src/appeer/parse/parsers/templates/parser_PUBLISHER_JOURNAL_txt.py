@@ -80,7 +80,7 @@ class Parser_PUBLISHER_JOURNAL_txt(Parser,
         input_data : bs4.BeautifulSoup | str
             Data loaded into BeautifulSoup or a path to a file to be parsed
         data_type : str
-            Input data type.
+            Input data type
         parser : str
             The parser used by ``BeautifulSoup``
 
