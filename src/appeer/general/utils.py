@@ -12,7 +12,6 @@ from datetime import datetime
 from random import randint
 
 import click
-import bs4
 
 def load_json(json_filename):
     """
@@ -314,77 +313,6 @@ def write_text_to_file(filepath, text_data):
 
     with open(filepath, 'w+', encoding='utf-8') as f:
         f.write(text_data)
-
-def load_soup(filepath, parser='xml'):
-    """
-    Load file to a ``BeautifulSoup`` object
-
-    Parameters
-    ----------
-    filepath : str
-        Path to a file
-    parser : str
-        Parser used by ``BeautifulSoup``
-            Available parsers: ('html.parser', 'lxml', 'xml')
-
-    Returns
-    -------
-    soup : bs4.BeautifulSoup | None
-        Text loaded into a BeautifulSoup object; None if loading failed
-    exception : None | type
-        None if loading passed, an exception if it did not
-
-    """
-
-    soup, exception = None, None
-
-    try:
-        with open(filepath, mode='r', encoding='utf-8') as f:
-            soup = bs4.BeautifulSoup(f.read(), features=parser)
-
-    except (FileNotFoundError, PermissionError,
-        IOError, UnicodeDecodeError) as exc:
-
-        exception = exc
-
-    return soup, exception
-
-def convert_2_soup(input_data, parser='xml'):
-    """
-    Load file to a ``BeautifulSoup`` object or pass if a soup was inputted
-
-    This function is useful for parsing, so a file has to be read and
-        converted to a ``BeautifulSoup`` only once
-
-    Parameters
-    ----------
-    input_data : bs4.BeautifulSoup | str
-        Data loaded into ``BeautifulSoup`` or a path to a file to be parsed
-    parser : str
-        Parser used by ``BeautifulSoup``
-            Available parsers: ('html.parser', 'lxml', 'xml')
-
-    Returns
-    -------
-    soup : bs4.BeautifulSoup | None
-        Text loaded into a ``BeautifulSoup object``; None if loading failed
-    exception : None | type
-        None if loading passed, an exception if it did not
-
-    """
-
-    soup, exception = None, None
-
-    if isinstance(input_data, bs4.BeautifulSoup):
-        soup = input_data
-
-    elif isinstance(input_data, str):
-        soup, exception = load_soup(input_data, parser=parser)
-
-    else:
-        exception = TypeError('Invalid input data type passed to convert_2_soup.')
-
-    return soup, exception
 
 def abspath(path):
     """

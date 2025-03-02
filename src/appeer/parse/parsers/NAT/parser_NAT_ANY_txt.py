@@ -9,6 +9,7 @@ from appeer.general import utils as _utils
 
 from appeer.parse.parsers.parser import Parser
 #from appeer.parse.parsers import date_utils
+from appeer.parse.parsers import soup_utils
 
 class Parser_NAT_ANY_txt(Parser,
         publisher_code='NAT',
@@ -41,7 +42,7 @@ class Parser_NAT_ANY_txt(Parser,
 
         is_PUBLISHER_JOURNAL = False
 
-        soup, exception = _utils.convert_2_soup(input_data, parser=parser)
+        soup, exception = soup_utils.convert_2_soup(input_data, parser=parser)
 
         if not exception:
 

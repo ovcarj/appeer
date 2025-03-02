@@ -5,7 +5,7 @@ import os
 import inspect
 import functools
 
-from appeer.general import utils as _utils
+from appeer.parse.parsers import soup_utils
 
 class Parser(abc.ABC):
     """
@@ -285,7 +285,7 @@ class Parser(abc.ABC):
         if data_type == 'txt':
 
             self._input_data, self.reading_exception =\
-                    _utils.convert_2_soup(input_data, parser=parser)
+                    soup_utils.convert_2_soup(input_data, parser=parser)
 
         else:
             raise NotImplementedError('Currently, only text parsing is implemented.')

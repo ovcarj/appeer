@@ -41,7 +41,7 @@ class Parser_RSC_ANY_txt(Parser,
 
         is_RSC_ANY = False
 
-        soup, exception = _utils.convert_2_soup(input_data, parser=parser)
+        soup, exception = soup_utils.convert_2_soup(input_data, parser=parser)
 
         if not exception:
 
