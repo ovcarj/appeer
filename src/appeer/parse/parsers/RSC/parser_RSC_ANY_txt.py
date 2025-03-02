@@ -9,6 +9,7 @@ from appeer.general import utils as _utils
 
 from appeer.parse.parsers.parser import Parser
 from appeer.parse.parsers import date_utils
+from appeer.parse.parsers import soup_utils
 
 class Parser_RSC_ANY_txt(Parser,
         publisher_code='RSC',
@@ -73,42 +74,6 @@ class Parser_RSC_ANY_txt(Parser,
                 data_type=data_type,
                 parser=parser)
 
-    def _get_meta_content(self, meta_name):
-        """
-        Get the content of the <meta> tag with ``meta_name`` attribute
-
-        Useful for several metadata properties in RSC journals.
-
-        If not successful, return None
-
-        Parameters
-        ----------
-        meta_name : str
-            The attribute to search for in the <meta> tags
-
-        Returns
-        -------
-        content : str | None
-            The value of the ``content`` attribute
-
-        """
-
-        content = None
-
-        _meta = self._input_data.find('meta', attrs={'name': meta_name})
-
-        if _meta:
-
-            try:
-
-                candidate = _meta.attrs['content']
-                content = candidate or None
-
-            except KeyError:
-                pass
-
-        return content
-
     @functools.cached_property
     def doi(self):
         """
@@ -132,17 +97,14 @@ class Parser_RSC_ANY_txt(Parser,
 
         if not _doi:
 
-            _meta = self._input_data.find('meta',
-                    attrs={'name': 'citation_doi'})
+            _doi_candidate = soup_utils.get_meta_content(
+                    soup=self._input_data,
+                    attr_value='citation_doi',
+                    )
 
-            if _meta:
+            if _doi_candidate:
 
-                try:
-                    _doi_candidate = _meta.attrs['content']
-                    _doi = _utils.get_doi_substring(str(_doi_candidate))
-
-                except KeyError:
-                    pass
+                _doi = _utils.get_doi_substring(str(_doi_candidate))
 
         return _doi
 
@@ -158,7 +120,9 @@ class Parser_RSC_ANY_txt(Parser,
         
         """
 
-        _publisher = self._get_meta_content(meta_name='DC.publisher')
+        _publisher = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='DC.publisher')
 
         return _publisher
 
@@ -174,7 +138,9 @@ class Parser_RSC_ANY_txt(Parser,
         
         """
 
-        _journal = self._get_meta_content(meta_name='citation_journal_title')
+        _journal = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='citation_journal_title')
 
         return _journal
 
@@ -190,7 +156,9 @@ class Parser_RSC_ANY_txt(Parser,
         
         """
 
-        _title = self._get_meta_content(meta_name='DC.title')
+        _title = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='DC.title')
 
         return _title
 
@@ -239,13 +207,10 @@ class Parser_RSC_ANY_txt(Parser,
 
         except AttributeError:
 
-            try:
-
-                _publication_type = self._input_data.\
-                        find('meta', attrs={'property': 'og:type'})['content']
-
-            except KeyError:
-                pass
+            _publication_type = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='og:type',
+                attr_key='property')
 
         return _publication_type
 
