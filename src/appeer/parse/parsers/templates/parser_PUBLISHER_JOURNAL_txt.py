@@ -27,6 +27,7 @@ from appeer.general import utils as _utils
 
 from appeer.parse.parsers.parser import Parser
 #from appeer.parse.parsers import date_utils
+#from appeer.parse.parsers import soup_utils
 
 class Parser_PUBLISHER_JOURNAL_txt(Parser,
         publisher_code='PUBLISHER',
