@@ -141,10 +141,9 @@ class Parser_NAT_ANY_txt(Parser,
         
         """
 
-        # Get the publication title from self._input_data
-        # In case of failure, return None
-
-        _title = None
+        _title = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='dc.title')
 
         return _title
 
