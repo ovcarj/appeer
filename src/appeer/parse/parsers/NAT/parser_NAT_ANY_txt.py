@@ -8,7 +8,7 @@ import functools
 from appeer.general import utils as _utils
 
 from appeer.parse.parsers.parser import Parser
-#from appeer.parse.parsers import date_utils
+from appeer.parse.parsers import date_utils
 from appeer.parse.parsers import soup_utils
 
 class Parser_NAT_ANY_txt(Parser,
@@ -72,6 +72,55 @@ class Parser_NAT_ANY_txt(Parser,
         super().__init__(input_data=input_data,
                 data_type=data_type,
                 parser=parser)
+
+    def _parse_NAT_date(self, date_type):
+        """
+        Parses the received/published/accepted dates from any Nature journal
+
+        Parameters
+        ----------
+        date_type : str
+            One of ('Received', 'Accepted', 'Published')
+
+        Returns
+        -------
+        _date : str | None
+            The parsed date; None if parsing failed
+
+        """
+
+        if date_type not in('Received', 'Accepted', 'Published'):
+            raise ValueError('Invalid date_type inputted into _parse_NAT_date; must be one of ("Received", "Accepted", "Published").')
+
+        _date = None
+
+        li_list = self._input_data.find_all('li',
+                class_='c-bibliographic-information__list-item')
+
+        if li_list:
+
+            for li in li_list:
+
+                try:
+                    text = li.p.text
+
+                except AttributeError:
+                    pass
+
+                else:
+
+                    if date_type in text:
+
+                        try:
+                            _date = date_utils.get_d_M_y(text)[0]
+
+                        except IndexError:
+                            pass
+
+                        else:
+                            break
+
+        return _date
 
     @functools.cached_property
     def doi(self):
@@ -194,10 +243,7 @@ class Parser_NAT_ANY_txt(Parser,
         
         """
 
-        # Get the publication reception date from self._input_data
-        # In case of failure, return None
-
-        _received = None
+        _received = self._parse_NAT_date('Received')
 
         return _received
 
@@ -213,10 +259,7 @@ class Parser_NAT_ANY_txt(Parser,
         
         """
 
-        # Get the publication acceptance date from self._input_data
-        # In case of failure, return None
-
-        _accepted = None
+        _accepted = self._parse_NAT_date('Accepted')
 
         return _accepted
 
@@ -232,9 +275,6 @@ class Parser_NAT_ANY_txt(Parser,
         
         """
 
-        # Get the publication date from self._input_data
-        # In case of failure, return None
-
-        _published = None
+        _published = self._parse_NAT_date('Published')
 
         return _published
