@@ -121,10 +121,9 @@ class Parser_NAT_ANY_txt(Parser,
         
         """
 
-        # Get the journal from self._input_data
-        # In case of failure, return None
-
-        _journal = None
+        _journal = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='citation_journal_title')
 
         return _journal
 
