@@ -104,10 +104,9 @@ class Parser_NAT_ANY_txt(Parser,
         
         """
 
-        # Get the publisher from self._input_data
-        # In case of failure, return None
-
-        _publisher = None
+        _publisher = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='dc.publisher')
 
         return _publisher
 
