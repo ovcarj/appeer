@@ -157,10 +157,9 @@ class Parser_NAT_ANY_txt(Parser,
         
         """
 
-        # Get the publication type from self._input_data
-        # In case of failure, return None
-
-        _publication_type = None
+        _publication_type = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='citation_article_type')
 
         return _publication_type
 
