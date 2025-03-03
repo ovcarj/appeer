@@ -1,9 +1,6 @@
 """Text parser for any Nature journal"""
 
 import functools
-#import re
-
-#import bs4
 
 from appeer.general import utils as _utils
 
