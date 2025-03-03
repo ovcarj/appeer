@@ -193,8 +193,10 @@ class Parser_PUBLISHER_JOURNAL_txt(Parser,
 
         Returns
         -------
-        _affiliations : list of str | None
-            List of affiliations
+        _affiliations : list of list of str | None
+            List of affiliations;
+                each entry corresponds to one or more affiliation(s)
+                of a single author
         
         """
 
