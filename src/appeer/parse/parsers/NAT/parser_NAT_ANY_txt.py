@@ -21,7 +21,7 @@ class Parser_NAT_ANY_txt(Parser,
     """
 
     @staticmethod
-    def check_publisher_journal(input_data, parser='xml'):
+    def check_publisher_journal(input_data, parser='lxml'):
         """
         Checks whether ``input_data`` corresponds to Nature
 
@@ -54,7 +54,7 @@ class Parser_NAT_ANY_txt(Parser,
 
         return is_NAT_ANY, exception
 
-    def __init__(self, input_data, data_type='txt', parser='xml'):
+    def __init__(self, input_data, data_type='txt', parser='lxml'):
         """
         Load the inputted data into ``self._input_data``
 
