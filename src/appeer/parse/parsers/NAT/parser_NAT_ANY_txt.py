@@ -21,7 +21,7 @@ class Parser_NAT_ANY_txt(Parser,
     """
 
     @staticmethod
-    def check_publisher_journal(input_data, parser='html.parser'):
+    def check_publisher_journal(input_data, parser='xml'):
         """
         Checks whether ``input_data`` corresponds to Nature
 
@@ -34,23 +34,27 @@ class Parser_NAT_ANY_txt(Parser,
 
         Returns
         -------
-        is_PUBLISHER_JOURNAL : bool
+        is_NAT_ANY : bool
             True if ``input_data`` corresponds to Nature;
                 False otherwise
 
         """
 
-        is_PUBLISHER_JOURNAL = False
+        is_NAT_ANY = False
 
         soup, exception = soup_utils.convert_2_soup(input_data, parser=parser)
 
         if not exception:
 
-            pass
+            publisher = soup_utils.get_meta_content(
+                    soup=soup,
+                    attr_value='dc.publisher')
 
-        return is_PUBLISHER_JOURNAL, exception
+            is_NAT_ANY = 'Nature' in publisher
 
-    def __init__(self, input_data, data_type='txt', parser='html.parser'):
+        return is_NAT_ANY, exception
+
+    def __init__(self, input_data, data_type='txt', parser='xml'):
         """
         Load the inputted data into ``self._input_data``
 
