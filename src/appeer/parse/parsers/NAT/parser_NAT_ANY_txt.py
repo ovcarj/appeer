@@ -85,10 +85,9 @@ class Parser_NAT_ANY_txt(Parser,
 
         """
 
-        # Get the DOI from self._input_data
-        # In case of failure, return None
-
-        _doi = None
+        _doi = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='DOI')
 
         return _doi
 
