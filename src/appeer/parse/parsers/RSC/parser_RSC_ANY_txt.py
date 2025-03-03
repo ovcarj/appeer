@@ -230,46 +230,120 @@ class Parser_RSC_ANY_txt(Parser,
 
         Returns
         -------
-        _affiliations : list of str | None
-            List of affiliations
+        _affiliations : list of list of str | None
+            List of affiliations;
+                each entry corresponds to one or more affiliation(s)
+                of a single author
         
         """
 
-        # RSC XML type (1)
-
         _affiliations = None
 
-        aff_id_tags = self._input_data.find_all('a', id=re.compile('aff.'))
+        #
+        # RSC XML type (1)
+        #
 
-        _affiliations = [aff_id_tag.\
-                find_next('span', class_='italic').\
-                find_next('span', class_='italic').text.strip()
-                for aff_id_tag in aff_id_tags] or None
+        author_sups = None
+        sup_aff_map = None
 
+        # Get superscripts which denote the affiliations of all the authors
+
+        try:
+
+            author_sup_tags = self._input_data.\
+                    find('div', class_='article__authors').\
+                    find_all('sup')
+
+        except AttributeError:
+            pass
+
+        else:
+
+            if author_sup_tags:
+
+                author_sups = [list(sup.text) for sup in author_sup_tags]
+
+                # Get a map from superscripts to affiliations
+
+                try:
+
+                    aff_tags = self._input_data.find_all(
+                        'p', class_='article__author-affiliation')
+
+                except AttributeError:
+                    pass
+
+                else:
+
+                    if aff_tags:
+
+                        sup_aff_map = {
+                                tag.sup.text.strip(): tag.find('span').\
+                                        find_next('span').text.strip()
+                                for tag in aff_tags if tag.sup
+                                }
+
+        #
         # RSC XML type (2)
-
-        if not _affiliations:
-
-            p_aff_tags = self._input_data.find_all(
-                    'p', class_=re.compile('.*author-affiliation'))
-
-            _affiliations = [p_aff_tag.\
-                    find_next('span').\
-                    find_next('span').text.strip()
-                    for p_aff_tag in p_aff_tags] or None
-
-        #
-        # Clean up emails and new lines from affiliations.
-        #
-        # Some publications have a 'Corresponding authors' entry,
-        # which is also removed
         #
 
-        if _affiliations:
+        if not (author_sups and sup_aff_map):
 
-            _affiliations = [_aff.split('\n')[0].split('E-mail')[0].strip()
-                    for _aff in _affiliations
-                    if 'authors' not in _aff]
+            # Get superscripts which denote the affiliations of all the authors
+
+            author_sup_tags = self._input_data.\
+                    find_all('span', class_=re.compile(r'sup_ref .*'))
+
+            if not author_sup_tags:
+                return None
+
+            try:
+                author_sups = [list(sup.text) for sup in author_sup_tags]
+
+            except AttributeError:
+                return None
+
+            # Get a map from superscripts to affiliations
+
+            aff_tags = self._input_data.find_all('a', id=re.compile(r'aff.'))
+
+            if not aff_tags:
+                return None
+
+            try:
+
+                sup_aff_map = {
+                        tag.text.strip(): tag.find_next('span')\
+                                .find_next('span')\
+                                .text.strip()
+                        for tag in aff_tags
+                    }
+
+            except AttributeError:
+                return None
+
+        #
+        # Finally, get the affiliations
+        # using the author superscripts
+        # and the superscript -> affiliation map
+        #
+
+        _affiliations = [
+            [sup_aff_map[sup] for sup in author_sup]
+            for author_sup in author_sups
+            ]
+
+        #
+        # Clean up emails and new lines from affiliations
+        #
+
+        _affiliations = [
+                [aff.split('\n')[0].\
+                        split('E-mail')[0].\
+                        strip()
+                        for aff in aff_entry]
+                for aff_entry in _affiliations
+                ]
 
         return _affiliations
 
