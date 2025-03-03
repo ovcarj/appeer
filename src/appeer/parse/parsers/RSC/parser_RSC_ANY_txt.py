@@ -207,10 +207,16 @@ class Parser_RSC_ANY_txt(Parser,
 
         except AttributeError:
 
-            _publication_type = soup_utils.get_meta_content(
-                soup=self._input_data,
-                attr_value='og:type',
-                attr_key='property')
+            try:
+
+                _candidate = self._input_data.\
+                        find('dd', class_='c__14').text
+
+            except AttributeError:
+                pass
+
+            else:
+                _publication_type = _candidate or None
 
         return _publication_type
 
