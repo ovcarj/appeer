@@ -219,15 +219,55 @@ class Parser_NAT_ANY_txt(Parser,
 
         Returns
         -------
-        _affiliations : list of str | None
-            List of affiliations
+        _affiliations : list of list of str | None
+            List of affiliations;
+                each entry corresponds to one or more affiliation(s)
+                of a single author
         
         """
 
-        # Get the affiliations from self._input_data
-        # In case of failure, return None
+        _affiliations = []
 
-        _affiliations = None
+        search_ended = True
+
+        pivot = self._input_data.find('meta', attrs={'name': 'citation_author_institution'})
+
+        if pivot:
+
+            search_ended = False
+
+            try:
+                _affiliations.append([pivot['content']])
+
+            except KeyError:
+                return None
+
+        while not search_ended:
+
+            pivot = pivot.find_next()
+
+            try:
+
+                match pivot.attrs['name']:
+
+                    case 'citation_author_institution':
+
+                        try:
+                            _affiliations[-1].append(pivot['content'])
+
+                        except KeyError:
+                            return None
+
+                    case 'citation_author':
+                        _affiliations.append([])
+
+                    case _:
+                        search_ended = True
+
+            except AttributeError:
+                return _affiliations or None
+
+        _affiliations = _affiliations or None
 
         return _affiliations
 
