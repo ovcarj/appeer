@@ -16,6 +16,7 @@
 			"web":			"nature.com",
 			"publisher_full_name":	"Nature Publishing Group",
 			"journal":		"ANY",
+			"journal_full_name":	"Any",
 			"dtype":		"txt",
 			"description":		"Any Nature Publishing Group journal"
 			}
