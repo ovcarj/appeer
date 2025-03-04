@@ -1,0 +1,25 @@
+{"implemented_parsers":
+
+	{
+
+		"RSC": {
+			"web":			"pubs.rsc.org",
+			"publisher_full_name":	"Royal Society of Chemistry",
+			"journal":		"ANY",
+			"journal_full_name":	"Any",
+			"dtype":		"txt",
+			"description":		"Any Royal Society of Chemistry journal"
+			},
+
+
+		"NAT": {
+			"web":			"nature.com",
+			"publisher_full_name":	"Nature Publishing Group",
+			"journal":		"ANY",
+			"dtype":		"txt",
+			"description":		"Any Nature Publishing Group journal"
+			}
+
+	}
+
+}
