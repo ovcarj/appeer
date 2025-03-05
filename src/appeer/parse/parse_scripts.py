@@ -43,6 +43,11 @@ def append_publications(label, data_source):
         None for modes ('A', 'E'), list of scrape job labels ('S'),
             list of file paths ('F')
 
+    Returns
+    -------
+    pj : appeer.scrape.scrape_job.ParseJob
+        Parse job instance with added publications
+
     """
 
     pj = ParseJob(label=label, job_mode='write')
