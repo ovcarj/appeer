@@ -47,7 +47,11 @@ class Parser_NAT_ANY_txt(Parser,
                     soup=soup,
                     attr_value='dc.publisher')
 
-            is_NAT_ANY = 'Nature' in publisher
+            if publisher:
+                is_NAT_ANY = 'Nature' in publisher
+
+            else:
+                pass
 
         return is_NAT_ANY, exception
 
