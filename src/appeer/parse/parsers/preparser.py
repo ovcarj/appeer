@@ -1,6 +1,8 @@
 """Determine which parser to use for a given file"""
 
 import os
+import importlib
+import inspect
 
 import bs4
 
@@ -151,6 +153,79 @@ class Preparser:
 
             with open(filepath, 'r', encoding='utf-8') as f:
                 self._txt_data = f.read()
+
+    def determine_parser(self):
+        """
+        Determines the appropriate parser for the given input file
+
+        In case of success, returns the appropriate ``Parser`` subclass;
+            in case of failure, returns ``None``.
+
+        The method also returns the data loaded into the appropriate object,
+            (e.g. ``bs4.BeautifulSoup``), so it can be reused for parsing
+            the data without rereading the input file; in case of failure,
+            returns None
+
+        Returns
+        -------
+        parser : appeer...Parser_<publisher>_<journal>_<data_type> | None
+            The appropriate Parser subclass; None if search failed
+        loaded_data : bs4.BeautifulSoup | ? | None
+            The data loaded into a BeautifulSoup object (for "txt" data type);
+                ? is left as placeholder for other data types;
+                None if the search failed
+
+        """
+
+        parser = None
+        loaded_data = None
+
+        parsers_lib = 'appeer.parse.parsers'
+
+        for publisher, meta in self._parsers_dict.items():
+
+            parser_code = f'{publisher}_{meta["journal"]}_{meta["dtype"]}'
+
+            parser_module = importlib.import_module(
+                    f'{parsers_lib}.{publisher}.parser_{parser_code}')
+
+            parser_class = getattr(parser_module, f'Parser_{parser_code}')
+
+            # Text parser case
+
+            if meta['dtype'] == 'txt':
+
+                #
+                # Get the default BeautifulSoup parser
+                # used by the "check_publisher_journal" method of
+                # the Parser subclass
+                #
+
+                bs_parser = inspect.signature(
+                        parser_class.check_publisher_journal).\
+                        parameters['parser'].default
+
+                # Check if the data was already loaded with bs_parser
+
+                self._load_txt_data(bs_parser=bs_parser)
+
+                soup = self._loaded_data['txt'][bs_parser]
+
+                # Run the "check_publisher_journal" method
+
+                is_publisher_journal, exception =\
+                        parser_class.check_publisher_journal(
+                        input_data=soup,
+                        parser=bs_parser)
+
+                if (is_publisher_journal and not exception):
+
+                    parser = parser_class
+                    loaded_data = soup
+
+                    break
+
+        return parser, loaded_data
 
     def _load_txt_data(self, bs_parser):
         """
