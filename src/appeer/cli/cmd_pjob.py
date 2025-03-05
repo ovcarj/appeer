@@ -95,17 +95,32 @@ def new(**kwargs):
 @pjob_cli.command('add',
         help="""Add publications to a preexisting parse job
 
-        Example usage:
+        The [INPUTS] argument must be provided for parse job in modes 'S' and 'F'.
 
-            ...
+        (1) Add publications automatically (modes 'A' and 'E'):
+
+            appeer pjob add -j parse_job_label
+
+        (2) Add publications from a list of scrape jobs (mode 'S')
+
+            appeer pjob add -j parse_job_label scrape_2025_1 scrape_2025_2
+
+        (3) Add publications from a list of file paths (mode 'F')
+
+            appeer pjob add -j parse_job_label file_1.html -f file_2.xml
+
+            appeer pjob add -j parse_job_label *
         
         """)
-@click.argument('filename')
 @click.option('-j', '--job_label', help='Parse job label', required=True)
-def add(filename, job_label):
+@click.argument('inputs', nargs=-1)
+def add(job_label, inputs):
     """
     Add publications to a preexisting parse job
 
     """
 
-#    parse_scripts.append_publications(label=job_label, publications=filename)
+    data_source = list(inputs) or None
+
+    parse_scripts.append_publications(label=job_label,
+            data_source=data_source)
