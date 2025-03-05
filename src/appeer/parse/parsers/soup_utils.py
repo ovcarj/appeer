@@ -131,7 +131,7 @@ def get_meta_content(soup, attr_value, attr_key='name'):
 
         this function can be used to retrieve the contents:
 
-            authors = get_meta_content(soup, attry_value='dc.creator')
+            authors = get_meta_content(soup, attr_value='dc.creator')
 
             for author in authors:
                 print(author)
