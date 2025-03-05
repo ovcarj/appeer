@@ -275,7 +275,7 @@ class Parser(abc.ABC):
         data_type : str
             Input data type. Currently, only "txt" is supported
         parser : str
-            The parser used by ``BeautifulSoup``
+            In case of "txt" data type, the parser used by ``BeautifulSoup``
 
         """
 
