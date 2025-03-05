@@ -2,6 +2,8 @@
 
 import os
 
+import bs4
+
 from appeer.general import utils as _utils
 
 class Preparser:
@@ -149,3 +151,32 @@ class Preparser:
 
             with open(filepath, 'r', encoding='utf-8') as f:
                 self._txt_data = f.read()
+
+    def _load_txt_data(self, bs_parser):
+        """
+        Loads the data using the given ``BeautifulSoup`` parser
+
+        The data is stored in ``self._loaded_data['txt']['bs_parser']``.
+
+        If the data was previously loaded, do nothing
+
+        Parameters
+        ----------
+        bs_parser : str
+            The ``BeautifulSoup`` parser used to parse the data
+
+        """
+
+        if bs_parser in self._loaded_data['txt']:
+            pass
+
+        else:
+
+            #
+            # Perhaps some error handling should be added here,
+            # though an error is unlikely to be encountered in
+            # normal usage
+            #
+
+            self._loaded_data['txt'][bs_parser] =\
+                    bs4.BeautifulSoup(self._txt_data, features=bs_parser)
