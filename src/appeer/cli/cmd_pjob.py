@@ -109,39 +109,3 @@ def add(filename, job_label):
     """
 
 #    parse_scripts.append_publications(label=job_label, publications=filename)
-
-@pjob_cli.command('run',
-        help="""Run a parse job
-
-        Example usage:
-        
-            appeer pjob run -j "my_label"
-
-            appeer pjob run -r "resume" -c -j "my_label"
-
-        Available run modes ("-r" flag): from_scratch/resume
-        
-            from_scratch: (Re)start parsing publications from index=0
-
-            resume: Resume a previously interrupted job
-
-
-        """)
-@click.option('-j', '--job_label', help='Parse job label', required=True)
-@click.option('-r', '--run_mode', help='Run mode', default='from_scratch', show_default=True)
-@click.option('-c', '--cleanup',
-        is_flag=True, default=False,
-        help="Delete the directory containing the downloaded data after job ends") #pylint:disable=line-too-long
-def run(**kwargs):
-    """
-    Add publications to a preexisting parse job
-
-    """
-
-    label = kwargs['job_label']
-    parse_mode = kwargs['run_mode']
-    cleanup = kwargs['cleanup']
-
-#    parse_scripts.run_job(label=label,
-#            parse_mode=parse_mode,
-#            cleanup=cleanup)
