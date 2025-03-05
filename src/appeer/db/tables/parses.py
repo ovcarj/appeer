@@ -90,12 +90,6 @@ class Parses(ActionTable,
 
         """
 
-        if kwargs['scrape_label'] is None:
-            kwargs['scrape_label'] = (None,)
-
-        if kwargs['scrape_action_index'] is None:
-            kwargs['scrape_action_index'] = (None,)
-
         data = ({
             'label': kwargs['label'],
             'action_index': kwargs['action_index'],
