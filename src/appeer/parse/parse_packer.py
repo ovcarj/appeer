@@ -61,7 +61,7 @@ class ParsePacker:
 
             case 'S' | 'F':
                 if not _utils.is_list_of_str(data_source):
-                    raise ValueError(f'Failed to initialize ParsePacker; in parse_mode="{parse_mode}", the data_source must be provided as a list of strings or a single string in parse_mode="{parse_mode}".\n')
+                    raise ValueError(f'Failed to initialize ParsePacker; in parse_mode="{parse_mode}", the data_source must be provided as a list of strings or a single string."\n')
 
             case _:
                 raise ValueError(f'Failed to initialize ParsePacker; invalid parse_mode={parse_mode} inputted.\n')
