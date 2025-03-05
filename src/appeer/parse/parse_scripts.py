@@ -30,3 +30,22 @@ def create_new_job(**kwargs):
     pj.new_job(**kwargs)
 
     return pj
+
+def append_publications(label, data_source):
+    """
+    Add ``publications`` to a preexisting job
+
+    Parameters
+    ----------
+    label : str
+        Unique job label
+    data_source : None | list of str
+        None for modes ('A', 'E'), list of scrape job labels ('S'),
+            list of file paths ('F')
+
+    """
+
+    pj = ParseJob(label=label, job_mode='write')
+    pj.add_publications(data_source=data_source)
+
+    return pj
