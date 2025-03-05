@@ -1,5 +1,7 @@
 """Determine which parser to use for a given file"""
 
+import os
+
 from appeer.general import utils as _utils
 
 class Preparser:
@@ -84,8 +86,11 @@ class Preparser:
 
         # Filter parsers dictionary
 
+        path_2_json = os.path.join(f'{os.path.dirname(__file__)}',
+                'implemented_parsers.json')
+
         self._parsers_dict = _utils.load_json(
-                './implemented_parsers.json')['implemented_parsers']
+                path_2_json)['implemented_parsers']
 
         if publishers:
 
