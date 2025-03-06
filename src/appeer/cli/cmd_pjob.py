@@ -80,8 +80,9 @@ def pjob_cli(ctx, job_label, uncommitted):
         help="Parsing mode")
 @click.option('-l', '--log_directory',
         help="Directory in which to store the log")
-@click.option('-d', '--parse_directory',
-        help="Directory in which to create files for parsing")
+@click.option('-t', '--tmp_directory',
+        type=click.Path(file_okay=False, writable=True),
+        help="Directory into which to unpack files")
 def new(**kwargs):
     """
     Initialize an empty parse job
