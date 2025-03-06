@@ -72,15 +72,20 @@ def pjob_cli(ctx, job_label, uncommitted):
         
             appeer pjob new
 
-            appeer pjob new -j "my_label" -s "My description" -m "A"
+            appeer pjob new -E -j "my_label" -s "My description"
 
         """)
+@click.option('-A', '--automatic', 'mode', flag_value='A', default=True,
+        help="Parse mode A [default]")
+@click.option('-E', '--everything', 'mode', flag_value='E',
+        help='Parse mode E')
+@click.option('-S', '--scrape_jobs', 'mode', flag_value='S',
+        help='Parse mode S')
+@click.option('-F', '--file_list', 'mode', flag_value='F',
+        help='Parse mode F')
 @click.option('-j', '--job_label', help='Parse job label')
 @click.option('-s', '--description', 'description',
         help="Optional description of the parse job")
-@click.option('-m', '--mode', default='A', show_default=True,
-        type=click.Choice(('A', 'E', 'S', 'F')),
-        help="Parse job mode")
 @click.option('-l', '--log_directory',
         help="Directory in which to store the log")
 @click.option('-t', '--tmp_directory',
