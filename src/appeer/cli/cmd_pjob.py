@@ -1,5 +1,7 @@
 """Defines the ``appeer pjob`` CLI"""
 
+import sys
+
 import click
 
 from appeer.db.jobs_db import JobsDB
@@ -123,6 +125,18 @@ def add(job_label, inputs):
     """
 
     data_source = list(inputs) or None
+
+    pj = ParseJob(label=job_label)
+
+    parse_mode = pj.mode
+
+    if (data_source and parse_mode in ('A', 'E')):
+        click.echo('No inputs should be provided for parse modes "A" and "E".')
+        sys.exit()
+
+    if (not data_source and parse_mode in ('S', 'F')):
+        click.echo('Inputs must be provided for parse modes "S" and "F".')
+        sys.exit()
 
     parse_scripts.append_publications(label=job_label,
             data_source=data_source)
