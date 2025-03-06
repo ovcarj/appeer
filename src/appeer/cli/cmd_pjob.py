@@ -107,7 +107,7 @@ def new(**kwargs):
 
         (3) Add publications from a list of file paths (mode 'F')
 
-            appeer pjob add -j parse_job_label file_1.html -f file_2.xml
+            appeer pjob add -j parse_job_label file_1.html file_2.xml
 
             appeer pjob add -j parse_job_label *
         
