@@ -77,7 +77,8 @@ def pjob_cli(ctx, job_label, uncommitted):
 @click.option('-s', '--description', 'description',
         help="Optional description of the parse job")
 @click.option('-m', '--mode', default='A', show_default=True,
-        help="Parsing mode")
+        type=click.Choice(('A', 'E', 'S', 'F')),
+        help="Parse job mode")
 @click.option('-l', '--log_directory',
         help="Directory in which to store the log")
 @click.option('-t', '--tmp_directory',
