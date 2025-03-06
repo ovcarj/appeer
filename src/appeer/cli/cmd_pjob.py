@@ -101,17 +101,17 @@ def new(**kwargs):
 
         (1) Add publications automatically (modes 'A' and 'E'):
 
-            appeer pjob add -j parse_job_label
+                appeer pjob add -j parse_job_label
 
         (2) Add publications from a list of scrape jobs (mode 'S')
 
-            appeer pjob add -j parse_job_label scrape_2025_1 scrape_2025_2
+                appeer pjob add -j parse_job_label scrape_2025_1 scrape_2025_2
 
         (3) Add publications from a list of file paths (mode 'F')
 
-            appeer pjob add -j parse_job_label file_1.html file_2.xml
+                appeer pjob add -j parse_job_label file_1.html file_2.xml
 
-            appeer pjob add -j parse_job_label *
+                appeer pjob add -j parse_job_label *
         
         """)
 @click.option('-j', '--job_label', help='Parse job label', required=True)
