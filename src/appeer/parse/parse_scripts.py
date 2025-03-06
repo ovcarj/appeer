@@ -17,7 +17,7 @@ def create_new_job(**kwargs):
     parse_directory : str
         Directory into which to (temporarily) create files for parsing
     mode : str
-        Parsing mode; one of ('E', 'A', 'S', F); 'A' is default
+        Parsing mode; one of ('A', 'E', 'S', F); 'A' is default
  
     Returns
     -------
