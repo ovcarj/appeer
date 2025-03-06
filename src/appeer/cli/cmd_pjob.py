@@ -128,6 +128,10 @@ def add(job_label, inputs):
 
     pj = ParseJob(label=job_label)
 
+    if not pj._job_exists: #pylint:disable=protected-access
+        click.echo(f'Cannot add publications for parsing; parse job "{job_label}" does not exist.')
+        sys.exit()
+
     parse_mode = pj.mode
 
     if (data_source and parse_mode in ('A', 'E')):
