@@ -18,7 +18,7 @@ if settings:
             settings['ScrapeDefaults']['retry_sleep_time'])
 
 else:
-    # most probably "appeer init" was not yet run
+    # most likely "appeer init" was not yet run
     default_sleep_time = 1.0
     default_max_tries = 3
     default_retry_sleep_time = 10.0
