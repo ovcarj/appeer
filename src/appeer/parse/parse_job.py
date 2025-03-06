@@ -218,7 +218,7 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
             if packer.success:
                 self._queue.put(
-                        f'\n{len(packer.packet)} files are ready for parsing.')
+                        f'\nPrepared {len(packer.packet)} files for parsing.')
 
                 self._add_actions(parse_packet=packer.packet)
 
