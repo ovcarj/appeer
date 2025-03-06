@@ -53,7 +53,6 @@ class Job(abc.ABC):
 
         """
 
-
         if job_type not in ('scrape_job', 'parse_job', 'commit_job'):
             raise ValueError('Invalid job type specified: must be in ("scrape_job", "parse_job", "commit_job")')
 
