@@ -230,12 +230,17 @@ class Parses(ActionTable,
 
             case 'affiliations':
 
-                if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid affiliations={new_value} given; must be a string')
+                if not isinstance(new_value, list):
+                    raise ValueError(f'Cannot update the parse database. Invalid affiliations={new_value} given; must be a list')
+
+                if not all(_utils.is_list_of_str(aff) for aff in new_value):
+                    raise ValueError(f'Cannot update the parse database. Invalid affiliations={new_value} given; each entry must be list of strings')
+
+                affs_str = _utils.aff_list2str(new_value)
 
                 self._cur.execute("""
                 UPDATE parses SET affiliations = ? WHERE label = ? AND action_index = ?
-                """, (new_value, label, action_index))
+                """, (affs_str, label, action_index))
 
                 self._con.commit()
 
