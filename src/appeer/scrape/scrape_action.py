@@ -240,3 +240,14 @@ class ScrapeAction(Action, action_type='scrape'): #pylint:disable=too-many-insta
                     }
 
             self._aprint(reports.doi_report(_doi_report))
+
+    def mark_as_parsed(self):
+        """
+        Marks the scrape action as parsed.
+
+        If the action does not exist, does nothing.
+
+        """
+
+        if self._action_exists:
+            self.parsed = 'T'
