@@ -1,5 +1,6 @@
 """Generate appeer parse-related reports"""
 
+from string import ascii_lowercase
 from copy import deepcopy
 
 import appeer.general.log as _log
@@ -247,5 +248,67 @@ def parse_action_start(action):
 
     report += f'{"Filepath":<{align}} {filepath}\n'
     report += f'{"Parser":<{align}} {parser}\n'
+
+    return report
+
+def parsing_report(parser):
+    """
+    Return a formatted report on parsing a single file
+
+    Parameters
+    ----------
+    parser : appeer.parse.parsers.<PUBLISHER>.<PUBLISHER>_<JOURNAL>_<DTYPE>
+        An instance of an appeer parser
+
+    Returns
+    -------
+    report : str
+        A formatted report on parsing a single file
+
+    """
+
+    report = ''
+
+    if parser.success:
+        report += 'Parsing successful!\n\n'
+
+    else:
+        report += 'Parsing failed.\n'
+
+    align = len(max(parser.metadata_list, key=len)) + 4
+
+    for meta in parser.metadata_list:
+
+        meta_brackets = f'[{meta.upper()}]'
+
+        if meta != 'affiliations':
+            report += f'{meta_brackets:<{align}} {getattr(parser, meta)}\n'
+
+    if 'affiliations' in parser.metadata_list:
+
+        report += '\n[AFFILIATIONS]'
+
+        if parser.affiliations:
+
+            align = len(str(len(parser.affiliations))) + 3
+
+            report += '\n\n'
+
+            for i, aff_list in enumerate(parser.affiliations):
+
+                if len(aff_list) > 1:
+                    suff = ascii_lowercase[:len(aff_list)]
+
+                else:
+                    suff = ' '
+
+                for j, aff in enumerate(aff_list):
+
+                    aff_string = f'({i+1}{suff[j].strip()})'
+
+                    report += f'{aff_string:<{align}} {aff}\n'
+
+        else:
+            report += '{"":<{align}} None'
 
     return report
