@@ -5,7 +5,7 @@ from appeer.db.tables.registered_tables import get_registered_tables
 
 from appeer.parse import parse_reports as reports
 
-from appeer.general.utils import check_doi_format
+from appeer.general import utils as _utils
 
 class Parses(ActionTable,
         name='parses',
@@ -171,7 +171,7 @@ class Parses(ActionTable,
 
             case 'doi':
 
-                if not check_doi_format(new_value):
+                if not _utils.check_doi_format(new_value):
                     raise ValueError(f'Cannot update the parse database. Invalid doi={new_value} given; must be valid DOI format')
 
                 self._cur.execute("""
