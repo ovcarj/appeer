@@ -1,8 +1,11 @@
 """Parse a single file"""
 
+from appeer.general import utils as _utils
+
 from appeer.jobs.action import Action
 
 from appeer.parse.parsers.preparser import Preparser
+from appeer.parse import parse_reports as reports
 
 class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instance-attributes
     """
@@ -115,6 +118,79 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
                 scrape_action_index=parse_entry.scrape_action_index,
                 input_file=parse_entry.filepath,
                 status='W')
+
+    def run(self, _queue=None, **kwargs):
+        """
+        Run the parse action
+
+        If ``queue`` is given, messages will be sent to the ``queue``
+            and logged in the job log file
+
+        The rest of the arguments will be passed to the Preparser.
+            They may be used to accelerate determining the appropriate
+            parser for the given input file.
+
+        For more details, see the documentation of the Preparser class
+
+        Parameters
+        ----------
+        queue : queue.Queue
+            If given, messages will be logged in the job log file
+
+        Keyword Arguments
+        -----------------
+        publishers : str | list of str | None
+            List of candidate parser publisher codes
+        journals : str | list of str | None
+            List of candidate parser journal codes
+        data_types : str | list of str | None
+            List of candidate parser data types;
+                currently, only 'txt' is supported
+
+        """
+
+        start_datetime = _utils.get_current_datetime()
+
+        self._queue = _queue
+
+        self._action_mode = 'write'
+        self.status = 'R'
+
+        self.date = start_datetime
+
+        parser_class, loaded_data = self._determine_parser(**kwargs)
+
+        try:
+            self.parser = parser_class.__name__
+
+        except AttributeError:
+            self.parser = None
+            self.success = 'F'
+
+        self._aprint(reports.parse_action_start(self))
+
+        if not self.parser:
+            self._aprint('Preparser failed to determine the appropriate parser. Skipping this entry.\n')
+
+        else:
+
+            parser = parser_class(loaded_data)
+
+            self._aprint(reports.parsing_report(parser))
+
+            if parser.success:
+
+                for meta in parser.metadata_list:
+                    setattr(self,
+                            meta,
+                            getattr(parser, meta))
+
+                self.success = 'T'
+
+            else:
+                self.success = 'F'
+
+        self.status = 'X'
 
     def _determine_parser(self, **kwargs):
         """
