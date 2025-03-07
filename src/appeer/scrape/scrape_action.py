@@ -1,7 +1,6 @@
 """Scrape a single publication"""
 
 import os
-import click
 
 from appeer.general import utils as _utils
 
