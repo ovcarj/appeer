@@ -192,3 +192,32 @@ def parse_start_report(job, run_parameters):
     report += _log.boxed_message(f'{start_resume} parsing job from step {job.job_step}/{job.no_of_publications - 1}')
 
     return report
+
+def parse_step_report(job, action_index=None):
+    """
+    Return a formatted report at launching of a parse action
+
+    Parameters
+    ----------
+    job : appeer.parse.parse_job.ParseJob
+        appeer parse job
+    action_index : int
+        Index of the parse action that is beginning;
+            defaults to ``job.job_step``
+
+    Returns
+    -------
+    report : str
+        Report on the launch of a parse action
+
+    """
+
+    if not action_index:
+        action_index = job.job_step
+
+    current_time = _utils.get_current_datetime()
+    human_time = _utils.human_datetime(current_time)
+
+    report = _log.boxed_message(f'Parsing entry {job.job_step}/{job.no_of_publications - 1}; {human_time}')
+
+    return report
