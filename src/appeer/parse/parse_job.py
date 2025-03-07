@@ -184,11 +184,11 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
         self._queue = queue.Queue()
         threading.Thread(target=self._log_server, daemon=True).start()
 
-        self.__prepare_parsing(data_source=data_source)
+        self._prepare_parsing(data_source=data_source)
 
         self._queue.join()
 
-    def __prepare_parsing(self, data_source):
+    def _prepare_parsing(self, data_source):
         """
         Prepare parsing depending on the parsing mode
 
