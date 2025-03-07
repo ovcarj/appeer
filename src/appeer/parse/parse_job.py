@@ -190,7 +190,7 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
     def _prepare_parsing(self, data_source):
         """
-        Prepare parsing depending on the parsing mode
+        Prepare inputted data for parsing depending on the parsing mode
 
         Parameters
         ----------
