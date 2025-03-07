@@ -310,7 +310,7 @@ class ParsePacker:
         if relevant_actions:
 
             no_of_publications = len(relevant_actions)
-            self._pprint(f'Found {no_of_publications} scrape actions.\n')
+            self._pprint(f'Found {no_of_publications} successful scrape actions.\n')
 
             self._pprint('Checking the scraped files for readability and existence...\n')
 
