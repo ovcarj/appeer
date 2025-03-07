@@ -221,3 +221,31 @@ def parse_step_report(job, action_index=None):
     report = _log.boxed_message(f'Parsing entry {job.job_step}/{job.no_of_publications - 1}; {human_time}')
 
     return report
+
+def parse_action_start(action):
+    """
+    Return a formatted report at the beginning of a parse action
+
+    Parameters
+    ----------
+    action : appeer.parse.parse_action.ParseAction
+        appeer parse action
+
+    Returns
+    -------
+    report : str
+        Report on the beginning of a parse action
+
+    """
+
+    filepath = action.input_file
+    parser = action.parser
+
+    align = len(max('Filepath', 'Parser', key=len)) + 2
+
+    report = '\n'
+
+    report += f'{"Filepath":<{align}} {filepath}\n'
+    report += f'{"Parser":<{align}} {parser}\n'
+
+    return report
