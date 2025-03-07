@@ -568,7 +568,8 @@ def file_list_readable(file_list):
         file_list = [file_list]
 
     files_readability = {
-            abspath(f): os.access(abspath(f), os.R_OK)
+            abspath(f): os.access(abspath(f), os.R_OK)\
+                    and os.path.isfile(abspath(f))
                 for f in file_list
             }
 
