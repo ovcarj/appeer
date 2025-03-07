@@ -1,5 +1,7 @@
 """Generate appeer parse-related reports"""
 
+from copy import deepcopy
+
 import appeer.general.log as _log
 import appeer.general.utils as _utils
 
@@ -125,5 +127,68 @@ def files_readability_report(files_readability):
 
     for i in range(len(files_readability)):
         report += f'{i:<{max_index_len}}  {paths[i]:<{max_path_len}}  {readable[i]:^{max_r_len}}\n'
+
+    return report
+
+def parse_start_report(job, run_parameters):
+    """
+    Return a formatted report at the beginning of a parse job run
+
+    Parameters
+    ----------
+    job : appeer.parse.parse_job.ParseJob
+        appeer parse job
+    run_parameters : dict
+        Dictionary containing restart_mode, cleanup,
+            publishers, journals, data_types
+
+    Returns
+    -------
+    report : str
+        Report on the beginning of a parse job run
+
+    """
+
+    current_time = _utils.get_current_datetime()
+    human_time = _utils.human_datetime(current_time)
+
+    report = '\n'
+
+    report += _log.boxed_message('PARSE JOB EXECUTION', centered=True)
+
+    report += '\n'
+    report += _log.center(f'{human_time}')
+    report += '\n\n'
+
+    msg = ''
+    msg += f'{"no_of_publications":<20} {job.no_of_publications}\n'
+
+    run_parameters_copy = deepcopy(run_parameters)
+
+    if run_parameters_copy['publishers'] is None:
+        run_parameters_copy['publishers'] = 'All'
+
+    if run_parameters_copy['journals'] is None:
+        run_parameters_copy['journals'] = 'All'
+
+    if run_parameters_copy['data_types'] is None:
+        run_parameters_copy['data_types'] = 'All'
+
+    for name, value in run_parameters_copy.items():
+        msg += f'{name:<20} {value}\n'
+
+    msg = msg.rstrip('\n')
+
+    report += _log.boxed_message(msg, header='Job parameters')
+
+    report += '\n\n'
+
+    if run_parameters['restart_mode'] == 'from_scratch':
+        start_resume = 'Starting'
+
+    else:
+        start_resume = 'Resuming'
+
+    report += _log.boxed_message(f'{start_resume} parsing job from step {job.job_step}/{job.no_of_publications - 1}')
 
     return report
