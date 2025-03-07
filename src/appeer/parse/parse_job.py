@@ -14,6 +14,7 @@ from appeer.scrape.scrape_job import ScrapeJob
 
 from appeer.parse.parse_action import ParseAction
 from appeer.parse.parse_packer import ParsePacker
+from appeer.parse import parse_reports as reports
 
 
 class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-attributes
@@ -251,6 +252,50 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
                     action_index=self.no_of_publications + i)
 
             action.new_action(parse_entry=parse_entry)
+
+    def run_action(self, action_index=None, _queue=None, **action_parameters):
+        """
+        Runs the parse action given by ``action_index``
+
+        Parameters
+        ----------
+        action_index : int
+            Index of the parse action to run; defaults to
+                ``self.job_step``
+        _queue : queue.Queue
+            If given, messages will be logged in the job log file
+
+        Keyword Arguments
+        -----------------
+        no_scrape_mark : bool
+            If True, scrape jobs will not be labeled as parsed
+                even if they are parsed successfully
+        publishers : str | list of str | None
+            List of candidate parser publisher codes
+        journals : str | list of str | None
+            List of candidate parser journal codes
+        data_types : str | list of str | None
+            List of candidate parser data types;
+                currently, only 'txt' is supported
+
+        """
+
+        if not action_index:
+            action_index = self.job_step
+
+        self._wlog(reports.parse_step_report(self,
+            action_index=action_index))
+
+        self.actions[action_index].run(
+                _queue=self._queue,
+                **action_parameters)
+
+        if self.actions[action_index].success == 'F':
+            self.job_fails += 1
+
+        if self.actions[action_index].success == 'T':
+
+            self.job_successes += 1
 
     def _update_scrape(self, action_index):
         """
