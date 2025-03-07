@@ -202,6 +202,49 @@ def check_doi_format(entry):
 
     return is_doi_format
 
+def aff_list2str(aff_list):
+    """
+    Transform a list of affiliations to a string
+
+    As sqlite3 does not support adding Python lists as values,
+        this function is used to transform a list of affiliations
+        to a single string.
+
+    The affiliations are obtained by parsing in a "list of list of str" data
+        type. Each entry corresponds to one or more affiliation(s) of an
+        author. An example affiliation list might look like:
+
+        [
+            [affiliation0],
+            [affiliation0, affiliation1],
+            ...
+        ]
+
+    This function will transform this list to the following string:
+
+        affiliation0?_?affiliation0!_!affiliation1?_?...
+
+    I.e., "?_?" is the separator for the affiliations of different authors,
+        while "!_!" is the separator for the affiliations of a single author
+
+    Parameters
+    ----------
+    aff_list : list of list of str
+        List of affiliations
+
+    Returns
+    -------
+    aff_str : str
+        The affiliation list concatenated to a single string
+
+    """
+
+    aff_str = '?_?'.join([
+        '!_!'.join(aff) for aff in aff_list
+        ])
+
+    return aff_str
+
 def get_current_datetime():
     """
     Get current datetime in the ``%Y%m%d-%H%M%S`` format
