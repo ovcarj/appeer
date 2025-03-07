@@ -250,4 +250,6 @@ class ScrapeAction(Action, action_type='scrape'): #pylint:disable=too-many-insta
         """
 
         if self._action_exists:
+
+            self._action_mode = 'write'
             self.parsed = 'T'
