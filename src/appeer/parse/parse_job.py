@@ -10,6 +10,8 @@ from appeer.general import utils as _utils
 
 from appeer.jobs.job import Job
 
+from appeer.scrape.scrape_job import ScrapeJob
+
 from appeer.parse.parse_action import ParseAction
 from appeer.parse.parse_packer import ParsePacker
 
@@ -249,3 +251,35 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
                     action_index=self.no_of_publications + i)
 
             action.new_action(parse_entry=parse_entry)
+
+    def _update_scrape(self, action_index):
+        """
+        Updates the "parsed" status of a scrape action corresponding to the
+            parse action defined by ``action_index``
+
+        The status is updated only if the parse action is successful.
+
+        If the parse action does not correspond to a scrape action
+            (parse mode "F"), does nothing.
+
+        If all the successful scrape actions within a scrape job
+            are parsed, the scrape job will also be marked as
+            completely parsed
+
+        """
+
+        parse_action = self.actions[action_index]
+
+        if (parse_action.scrape_label is not None and\
+                parse_action.scrape_action_index is not None and
+                parse_action.success == 'T'):
+
+            scrape_job = ScrapeJob(label=parse_action.scrape_label,
+                    job_mode='write')
+
+            scrape_action = scrape_job.actions\
+                    [parse_action.scrape_action_index]
+
+            scrape_action.mark_as_parsed()
+
+            scrape_job.update_parsed()
