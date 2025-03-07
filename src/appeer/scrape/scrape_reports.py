@@ -233,7 +233,7 @@ def scrape_action_start(action):
 
     Parameters
     ----------
-    job : appeer.scrape.scrape_action.ScrapeAction
+    action : appeer.scrape.scrape_action.ScrapeAction
         appeer scrape action
 
     Returns
