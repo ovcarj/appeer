@@ -442,3 +442,19 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
                 file_list=file_list)
 
         self._wlog(f'Archived {len(self.successful_actions)} publications to {self.zip_file}')
+
+    def update_parsed(self):
+        """
+        If all successful actions are parsed, mark the job as parsed.
+
+        If the job does not exist, does nothing
+
+        """
+
+        if self._job_exists:
+
+            if all(action.parsed == 'T' for action in self.successful_actions):
+                self.job_parsed = 'T'
+
+            else:
+                self.job_parsed = 'F'
