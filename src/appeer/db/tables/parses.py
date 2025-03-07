@@ -275,8 +275,8 @@ class Parses(ActionTable,
             case 'parser':
 
                 #TODO: explicit parser check should be implemented
-                if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid parser={new_value} given; must be ...')
+                if new_value and not isinstance(new_value, str):
+                    raise ValueError(f'Cannot update the parse database. Invalid parser={new_value} given; must be a string.')
 
                 self._cur.execute("""
                 UPDATE parses SET parser = ? WHERE label = ? AND action_index = ?
