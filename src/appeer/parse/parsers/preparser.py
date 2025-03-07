@@ -68,7 +68,7 @@ class Preparser:
         if journals and not _utils.is_list_of_str(journals):
             raise TypeError('Invalid "journals" argument passed to Preparser; must be a string or a list of strings.')
 
-        if data_types not in ('txt', ['txt']):
+        if data_types and data_types not in ('txt', ['txt']):
             raise NotImplementedError('Only "txt" data type is currently implemented.')
 
         filepath = _utils.abspath(filepath)
