@@ -2,6 +2,8 @@
 
 from appeer.jobs.action import Action
 
+from appeer.parse.parsers.preparser import Preparser
+
 class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instance-attributes
     """
     Parse a single file
@@ -113,3 +115,37 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
                 scrape_action_index=parse_entry.scrape_action_index,
                 input_file=parse_entry.filepath,
                 status='W')
+
+    def _determine_parser(self, **kwargs):
+        """
+        Determines the appropriate Parser subclass for ``self.filepath``
+
+        Keyword Arguments
+        -----------------
+        publishers : str | list of str | None
+            List of candidate parser publisher codes
+        journals : str | list of str | None
+            List of candidate parser journal codes
+        data_types : str | list of str | None
+            List of candidate parser data types;
+                currently, only 'txt' is supported
+
+        Returns
+        -------
+        parser : appeer...Parser_<PUBLISHER>_<JOURNAL>_<DATA_TYPE> | None
+            The appropriate Parser subclass; None if search failed
+        loaded_data : bs4.BeautifulSoup | ? | None
+            The data loaded into a BeautifulSoup object (for "txt" data type);
+            ? is left as placeholder for other data types;
+            None if the search failed
+
+        """
+
+        preparser = Preparser(filepath=self.input_file,
+                publishers=kwargs['publishers'],
+                journals=kwargs['journals'],
+                data_types=kwargs['data_types'])
+
+        parser_class, loaded_data = preparser.determine_parser()
+
+        return parser_class, loaded_data
