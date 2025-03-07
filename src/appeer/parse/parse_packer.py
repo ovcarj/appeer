@@ -381,6 +381,7 @@ class ParsePacker:
                         # is added to self.packet if the newly
                         # extracted file is readable
                         #
+
                         self.packet.extend([_ParseEntry(
                             scrape_label=scrape_job_label,
                             scrape_action_index=action_file.action_index,
