@@ -241,23 +241,3 @@ class ScrapeAction(Action, action_type='scrape'): #pylint:disable=too-many-insta
                     }
 
             self._aprint(reports.doi_report(_doi_report))
-
-    def _aprint(self, message):
-        """
-        Prints a ``message`` to stdout or puts it in the queue
-        
-        If the message is put into the queue, it will be logged in
-            the job log file
-
-        Parameters
-        ----------
-        message : str
-            String to be printed to stdout or logged in the job log file
-
-        """
-
-        if self._queue:
-            self._queue.put(message)
-
-        else:
-            click.echo(message)
