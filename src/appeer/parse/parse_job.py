@@ -253,6 +253,55 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
             action.new_action(parse_entry=parse_entry)
 
+    def _prepare_run_parameters(self, restart_mode, cleanup, **kwargs):
+        """
+        Helper method to prepare run arguments for ``self.run_job()``
+
+        Parameters and keyword arguments are the same as in self.run_job()
+
+        """
+
+        if restart_mode not in ('from_scratch', 'resume'):
+            raise ValueError('scrape_mode must be "from_scratch" or "resume".')
+
+        if not isinstance(cleanup, bool):
+            raise ValueError('The "cleanup" parameter must be boolean.')
+
+        kwargs.setdefault('publishers', None)
+        kwargs.setdefault('journals', None)
+        kwargs.setdefault('data_types', 'txt')
+
+        kwargs.setdefault('no_scrape_mark', False)
+
+        no_scrape_mark = kwargs['no_scrape_mark']
+
+        if not isinstance(no_scrape_mark, bool):
+            raise ValueError('The "no_scrape_mark" parameter must be boolean.')
+
+        publishers, journals, data_types =\
+                kwargs['publishers'],\
+                kwargs['journals'],\
+                kwargs['data_types']
+
+        if publishers and not _utils.is_list_of_str(publishers):
+            raise TypeError('Invalid "publishers" argument passed to run_job; must be a string or a list of strings.')
+
+        if journals and not _utils.is_list_of_str(journals):
+            raise TypeError('Invalid "journals" argument passed to run_job; must be a string or a list of strings.')
+
+        if (data_types and data_types not in ('txt', ['txt'])):
+            raise NotImplementedError('Only "txt" data type is currently implemented.')
+
+        run_parameters = {'restart_mode': restart_mode,
+                'no_scrape_mark': no_scrape_mark,
+                'cleanup': cleanup,
+                'publishers': publishers,
+                'journals': journals,
+                'data_types': data_types,
+                }
+
+        return run_parameters
+
     def run_action(self, action_index=None, _queue=None, **action_parameters):
         """
         Runs the parse action given by ``action_index``
