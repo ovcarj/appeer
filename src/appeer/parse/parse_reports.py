@@ -404,3 +404,28 @@ def action_list_summary(action_list, add_committed_info=False): #pylint:disable=
         report += '\n'
 
     return report
+
+def end_logo(job):
+    """
+    Write a logo and the parse job label at the end of the job
+
+    Parameters
+    ----------
+    job : appeer.parse.parse_job.ParseJob
+        appeer parse job
+
+    Returns
+    -------
+    report : str
+        Logo and scrape job label for the end of a scrape job
+
+    """
+
+    current_time = _utils.get_current_datetime()
+    human_time = _utils.human_datetime(current_time)
+
+    report = _log.get_logo(centered=True) + '\n'
+    report += _log.boxed_message(f'PARSE JOB: {job.label}', centered=True) + '\n'
+    report += _log.center(f'Finished on {human_time}') + '\n'
+
+    return report
