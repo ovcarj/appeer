@@ -321,9 +321,6 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         Keyword Arguments
         -----------------
-        no_scrape_mark : bool
-            If True, scrape jobs will not be labeled as parsed
-                even if they are parsed successfully
         publishers : str | list of str | None
             List of candidate parser publisher codes
         journals : str | list of str | None
