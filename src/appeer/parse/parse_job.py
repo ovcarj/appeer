@@ -346,6 +346,16 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
             self.job_successes += 1
 
+    def _update_scrapes(self):
+        """
+        Updates the "parsed" status of all scrape jobs/actions corresponding
+            to the ``ParseJob``
+
+        """
+
+        for action_index in range(len(self.actions)):
+            self._update_scrape(action_index=action_index)
+
     def _update_scrape(self, action_index):
         """
         Updates the "parsed" status of a scrape action corresponding to the
