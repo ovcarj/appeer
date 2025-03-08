@@ -464,17 +464,8 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
         Updates the "parsed" status of all scrape jobs/actions corresponding
             to the ``ParseJob``
 
-        """
-
-        for action_index in range(len(self.actions)):
-            self._update_scrape(action_index=action_index)
-
-    def _update_scrape(self, action_index):
-        """
-        Updates the "parsed" status of a scrape action corresponding to the
-            parse action defined by ``action_index``
-
-        The status is updated only if the parse action is successful.
+        The scrape action "parsed" status is updated only if the corresponding
+            parse action is successful.
 
         If the parse action does not correspond to a scrape action
             (parse mode "F"), does nothing.
@@ -485,18 +476,44 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         """
 
-        parse_action = self.actions[action_index]
+        unique_scrape_labels = set(action.scrape_label
+            for action in self.actions)
 
-        if (parse_action.scrape_label is not None and\
-                parse_action.scrape_action_index is not None and
-                parse_action.success == 'T'):
+        if unique_scrape_labels != {None}:
 
-            scrape_job = ScrapeJob(label=parse_action.scrape_label,
-                    job_mode='write')
+            self._wlog(_log.boxed_message('Updating the "parsed" status of scrape jobs/actions'))
 
-            scrape_action = scrape_job.actions\
-                    [parse_action.scrape_action_index]
+            self._wlog('\nReport format:\n<SCRAPE_ACTION_INDEX>: <OLD_PARSED_STATUS> -> <UPDATED_PARSED_STATUS>\n')
 
-            scrape_action.mark_as_parsed()
+            for scrape_label in unique_scrape_labels:
 
-            scrape_job.update_parsed()
+                self._wlog(_log.underlined_message(f'Scrape job: {scrape_label}'))
+
+                scrape_job = ScrapeJob(label=scrape_label, job_mode='write')
+
+                old_job_status = scrape_job.job_parsed
+
+                parse_actions = [action
+                        for action in self.successful_actions
+                        if action.scrape_label == scrape_label]
+
+                for parse_action in parse_actions:
+
+                    scrape_action = scrape_job.actions\
+                            [parse_action.scrape_action_index]
+
+                    old_status = scrape_action.parsed
+                    scrape_action.mark_as_parsed()
+                    updated_status = scrape_action.parsed
+
+                    self._wlog(f'{scrape_action.action_index}: {old_status} -> {updated_status}')
+
+                scrape_job.update_parsed()
+                updated_job_status = scrape_job.job_parsed
+
+                self._wlog(f'\nScrape job {scrape_label} parsed status: {old_job_status} -> {updated_job_status}\n')
+
+            self._wlog(_log.boxed_message('Completed updating the "parsed" status of scrape jobs/actions') + '\n')
+
+        else:
+            self._wlog('No scrape jobs were associated with this parse job; no scrape jobs/actions will be labeled as parsed.\n')
