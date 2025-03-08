@@ -328,9 +328,11 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         self._wlog(reports.parse_end(job=self))
 
-        if self.successful_actions and not run_parameters['no_scrape_mark']:
-
+        if not run_parameters['no_scrape_mark']:
             self._update_scrapes()
+
+        else:
+            self._wlog('no_scrape_mark was set to True; no scrape job/actions will be marked as parsed.\n')
 
         if run_parameters['cleanup']:
             _utils.delete_directory(self.parse_directory, verbose=False)
