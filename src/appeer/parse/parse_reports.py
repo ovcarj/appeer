@@ -312,3 +312,54 @@ def parsing_report(parser):
             report += '{"":<{align}} None'
 
     return report
+
+def action_list_summary(action_list, add_committed_info=False): #pylint:disable='too-many-locals'
+    """
+    Return a summary of a list of parse actions
+
+    Parameters
+    ----------
+    action_list : list of appeer.parse.parse_job.ParseAction
+        List of appeer parse actions
+    add_parsed_info : bool
+        If True, write action.committed values to summary
+
+    Returns
+    -------
+    report : str
+        Summary of a list of actions
+
+    """
+
+    action_indices = [str(action.action_index) for action in action_list]
+    inputs = [action.input_file for action in action_list]
+    parsers = [action.parser or 'None' for action in action_list]
+    statuses = [action.status for action in action_list]
+
+    if add_committed_info:
+        committed = [action.committed for action in action_list]
+
+    max_index_len = max(len(max(action_indices, key=len)), len('Index'))
+    max_input_len = max(len(max(inputs, key=len)), len('Filepath'))
+    max_parser_len = max(len(max(parsers, key=len)), len('Parser'))
+    max_status_len = max(len(max(statuses, key=len)), len('Status'))
+
+    if add_committed_info:
+        max_committed_len = max(len(max(committed, key=len)), len('Committed'))
+
+    _msg = f'{"Index":<{max_index_len}}  {"Filepath":<{max_input_len}}  {"Parser":<{max_parser_len}}  {"Status":<{max_status_len}}'
+
+    if add_committed_info:
+        _msg += f'  {"Committed":<{max_committed_len}}'
+
+    report = _log.underlined_message(_msg) + '\n'
+
+    for i in range(len(action_list)):
+        report += f'{action_indices[i]:<{max_index_len}}  {inputs[i]:<{max_input_len}}  {parsers[i]:<{max_parser_len}}    {statuses[i]:<{max_status_len}}'
+
+        if add_committed_info:
+            report += f'  {committed[i]:<{max_committed_len}}'
+
+        report += '\n'
+
+    return report
