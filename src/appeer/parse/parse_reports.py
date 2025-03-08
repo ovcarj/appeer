@@ -313,6 +313,47 @@ def parsing_report(parser):
 
     return report
 
+def parse_end(job):
+    """
+    Return a formatted report at the end of a parse job
+
+    Parameters
+    ----------
+    job : appeer.parse.parse_job.ParseJob
+        appeer parse job
+
+    Returns
+    -------
+    report : str
+        Report on the beginning of a scrape action
+
+    """
+
+    report = ''
+
+    report += _log.boxed_message('PARSE JOB EXECUTED', centered=True) + '\n'
+
+    align = len(max('Successes', 'Fails', key=len)) + 2
+
+    msg = ''
+
+    msg += f'{"Succeeded":<{align}} {job.job_successes}/{job.no_of_publications}\n'
+    msg += f'{"Failed":<{align}} {job.job_fails}/{job.no_of_publications}\n'
+
+    msg = msg.rstrip('\n')
+    report += _log.boxed_message(msg, centered=True)
+
+    report += '\n'
+
+    if job.job_fails > 0:
+
+        report += _log.boxed_message('Failed parse actions')
+        report += '\n'
+
+        report += action_list_summary(action_list=job.failed_actions)
+
+    return report
+
 def action_list_summary(action_list, add_committed_info=False): #pylint:disable='too-many-locals'
     """
     Return a summary of a list of parse actions
