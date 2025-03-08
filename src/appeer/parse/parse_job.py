@@ -259,6 +259,11 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         Parameters and keyword arguments are the same as in self.run_job()
 
+        Returns
+        -------
+        run_parameters : dict
+            Appropriately sanitized arguments for a parse job
+
         """
 
         if restart_mode not in ('from_scratch', 'resume'):
