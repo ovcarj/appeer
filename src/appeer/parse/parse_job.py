@@ -1,5 +1,6 @@
 """Parse scraped publications"""
 
+import sys
 import os
 import threading
 import queue
@@ -230,6 +231,115 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
             else:
                 self._queue.put('No new actions were added to the parse job.')
+
+    def run_job(self, restart_mode='from_scratch', cleanup=False, **kwargs):
+        """
+        Runs the actions defined in self.actions
+
+        If ``restart_mode == 'from_scratch'``, the ``job_step`` is set to 0
+            and the parsing is performed for all the actions in the job.
+
+        If ``parse_mode == 'resume'``, parsing is resumed from the current
+            ``job_step``.
+
+        If ``cleanup == 'True', the temporary directory given by
+            ``self.parse_directory`` will be deleted at the end of the
+            parse job
+
+        If the keyword argument ``no_scrape_mark == True``, scrape jobs
+            and actions corresponding to parse actions will not be labeled
+            as parsed, even if parsing is successful.
+
+            If ``no_scrape_mark == False``, scrape jobs and actions will
+            be marked as parsed upon completion of the parse job.
+
+        The appropriate parser for each input file is determined automatically
+            by the Preparser class. This process may be accelerated by
+            specifying the ``publishers``, ``journals`` and ``data_types``
+            keyword arguments. For more details, see the documentation
+            of the Preparser class.
+
+        Parameters
+        ----------
+        restart_mode : str
+            Must be in ('from_scratch', 'resume')
+        cleanup : bool
+            If True, delete the temporary parsing directory
+                upon completion of the parse job
+
+        Keyword Arguments
+        -----------------
+        no_scrape_mark : bool
+            If True, scrape jobs will not be labeled as parsed
+                even if they are parsed successfully
+        publishers : str | list of str | None
+            List of candidate parser publisher codes
+        journals : str | list of str | None
+            List of candidate parser journal codes
+        data_types : str | list of str | None
+            List of candidate parser data types;
+                currently, only 'txt' is supported
+
+        """
+
+        if self.no_of_publications == 0:
+            self._wlog(f'\nError: Cannot run parse job "{self.label}"; no publications were added to this job. Exiting.\n')
+            self.job_status = 'E'
+            sys.exit()
+
+        run_parameters =\
+                self._prepare_run_parameters(restart_mode=restart_mode,
+                        cleanup=cleanup,
+                        **kwargs)
+
+        self.job_mode = 'write'
+
+        if run_parameters['restart_mode'] == 'from_scratch':
+
+            self.job_step = 0
+            self.job_fails = 0
+            self.job_successes = 0
+
+        self.job_status = 'R'
+
+        self._wlog(reports.parse_start_report(job=self,
+            run_parameters=run_parameters))
+
+        action_parameters = {
+                'publishers': run_parameters['publishers'],
+                'journals': run_parameters['journals'],
+                'data_types': run_parameters['data_types']
+                }
+
+        while self.job_step < self.no_of_publications:
+
+            self.run_action(queue=self._queue,
+                    action_index=self.job_step,
+                    **action_parameters)
+
+            self.job_step += 1
+
+        self._queue.join()
+
+        if all(status == 'X' for status in
+                (getattr(action, 'status') for action in self.actions)):
+
+            self.job_status = 'X'
+
+        self._wlog(reports.parse_end(job=self))
+
+        if self.successful_actions and not run_parameters['no_scrape_mark']:
+
+            self._update_scrapes()
+
+        if run_parameters['cleanup']:
+            _utils.delete_directory(self.parse_directory, verbose=False)
+            self._wlog(f'Cleanup requested; deleted {self.parse_directory}')
+
+        else:
+            self._wlog(f'Cleanup not requested; keeping {self.parse_directory}')
+
+        self._wlog(reports.end_logo(job=self))
 
     def _add_actions(self, parse_packet):
         """
