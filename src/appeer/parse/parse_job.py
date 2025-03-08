@@ -345,7 +345,6 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
             self.job_fails += 1
 
         if self.actions[action_index].success == 'T':
-
             self.job_successes += 1
 
     def _update_scrapes(self):
