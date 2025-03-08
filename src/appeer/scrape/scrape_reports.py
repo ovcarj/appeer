@@ -395,7 +395,7 @@ def scrape_end(job):
 
     if job.job_fails > 0:
 
-        report += _log.boxed_message('Failed URLS')
+        report += _log.boxed_message('Failed URLs')
         report += '\n'
 
         report += action_list_summary(action_list=job.failed_actions)
