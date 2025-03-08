@@ -368,12 +368,12 @@ def scrape_end(job):
     Parameters
     ----------
     job : appeer.scrape.scrape_job.ScrapeJob
-        appeer scrape action
+        appeer scrape job
 
     Returns
     -------
     report : str
-        Report on the beginning of a scrape action
+        Report on the end of a scrape job
 
     """
 
