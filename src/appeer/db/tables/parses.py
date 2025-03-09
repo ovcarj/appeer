@@ -46,7 +46,7 @@ class Parses(ActionTable,
         """
 
         uncommitted_parses = self._search_table(
-                status='X', parsed='F', success='T')
+                status='X', committed='F', success='T')
 
         return uncommitted_parses
 
