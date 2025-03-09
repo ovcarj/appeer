@@ -31,6 +31,43 @@ def create_new_job(**kwargs):
 
     return pj
 
+def run_job(label,
+            restart_mode='from_scratch',
+            cleanup=False,
+            **kwargs):
+    """
+    Run the parse job with the given ``label``
+
+    Parameters
+    ----------
+    label : str
+        Unique job label
+    restart_mode : str
+        Must be in ('from_scratch', 'resume')
+    cleanup : bool
+        If True, delete the temporary parsing directory
+            upon completion of the parse job
+
+    Keyword Arguments
+    -----------------
+    no_scrape_mark : bool
+        If True, scrape jobs will not be labeled as parsed
+            even if they are parsed successfully
+    publishers : str | list of str | None
+        List of candidate parser publisher codes
+    journals : str | list of str | None
+        List of candidate parser journal codes
+    data_types : str | list of str | None
+        List of candidate parser data types;
+            currently, only 'txt' is supported
+
+    """
+
+    pj = ParseJob(label=label, job_mode='write')
+    pj.run_job(restart_mode=restart_mode,
+               cleanup=cleanup,
+               **kwargs)
+
 def append_publications(label, data_source):
     """
     Add ``publications`` to a preexisting job
