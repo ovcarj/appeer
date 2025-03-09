@@ -62,10 +62,9 @@ class Parses(ActionTable,
 
         """
 
-#       TODO: this report will be implemented
-#        _summary = reports.uncommitted_parses(parses=self)
+        _summary = reports.uncommitted_parses(parses=self)
 
-#        return _summary
+        return _summary
 
     def add_entry(self, **kwargs):
         """
