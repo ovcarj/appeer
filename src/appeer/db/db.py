@@ -67,7 +67,6 @@ class DB(abc.ABC):
 
         Parameters
         ----------
-
         db_type : str
             Must be 'jobs' or 'pub'.
 
@@ -168,7 +167,7 @@ class DB(abc.ABC):
     def _handle_database_exists(self):
         """
         Handles the case when the user tries to run ``self.create_database()``
-        with a preexisting database.
+            with a preexisting database.
 
         """
 
