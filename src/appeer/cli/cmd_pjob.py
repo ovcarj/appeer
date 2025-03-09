@@ -60,7 +60,7 @@ def pjob_cli(ctx, job_label, uncommitted):
 
         elif job_label:
             pj = ParseJob(job_label)
-#            click.echo(pj.summary)
+            click.echo(pj.summary)
 
         else:
             click.echo(jobs_db.parse_jobs.summary)
