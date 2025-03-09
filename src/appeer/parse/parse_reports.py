@@ -41,7 +41,7 @@ def parse_general_report(job, add_status_info=False):
         msg += '\n'
         msg += f'{"Job status":19} {job.job_status}\n'
         msg += f'{"Succ./Tot.":19} {job.job_successes}/{job.no_of_publications}\n'
-        msg += f'{"Committed":19} {job.job_parsed}'
+        msg += f'{"Committed":19} {job.job_committed}'
 
     report += _log.boxed_message(msg) + '\n'
 
