@@ -185,4 +185,5 @@ def run(**kwargs):
 
     scrape_scripts.run_job(label=label,
             scrape_mode=scrape_mode,
-            cleanup=cleanup)
+            cleanup=cleanup,
+            **kwargs)
