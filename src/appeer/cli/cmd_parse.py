@@ -65,7 +65,7 @@ from appeer.parse import parse_scripts
         (2) -x flag: DO NOT mark scrape jobs as parsed upon parse job completion, even if they were successfully parsed
 
 
-""")
+""", short_help='Parse publications')
 @click.argument('inputs', nargs=-1)
 @click.option('-A', '--automatic', 'mode', flag_value='A', default=True,
         help="Parse mode A [default]")
