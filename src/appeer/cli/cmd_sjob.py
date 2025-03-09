@@ -175,7 +175,7 @@ def add(filename, job_label):
         help="Time (in seconds) between retrying a URL")
 def run(**kwargs):
     """
-    Add publications to a preexisting scrape job
+    Run a preexisting scrape job
 
     """
 
