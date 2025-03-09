@@ -305,6 +305,9 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
         self._wlog(reports.parse_start_report(job=self,
             run_parameters=run_parameters))
 
+        self._queue = queue.Queue()
+        threading.Thread(target=self._log_server, daemon=True).start()
+
         action_parameters = {
                 'publishers': run_parameters['publishers'],
                 'journals': run_parameters['journals'],
