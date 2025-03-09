@@ -399,7 +399,7 @@ def action_list_summary(action_list, add_committed_info=False): #pylint:disable=
         report += f'{action_indices[i]:<{max_index_len}}  {inputs[i]:<{max_input_len}}  {parsers[i]:<{max_parser_len}}    {statuses[i]:<{max_status_len}}'
 
         if add_committed_info:
-            report += f'  {committed[i]:<{max_committed_len}}'
+            report += f'    {committed[i]:<{max_committed_len}}'
 
         report += '\n'
 
