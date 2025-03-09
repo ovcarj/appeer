@@ -433,6 +433,52 @@ def action_list_summary(action_list, add_committed_info=False): #pylint:disable=
 
     return report
 
+def uncommitted_parses(parses):
+    """
+    A summary of all uncommitted parse actions
+
+    Parameters
+    ----------
+    parses : appeer.db.tables.parses.Parses
+        Parses table
+
+    Returns
+    -------
+    report : str
+        Summary of all uncommitted parse actions
+
+    """
+
+    if parses.uncommitted:
+
+        labels = [parse.label
+                for parse in parses.uncommitted]
+        parsers = [parse.parser
+                for parse in parses.uncommitted]
+        action_indices = [str(parse.action_index)
+                for parse in parses.uncommitted]
+        filepaths = [parse.input_file
+                for parse in parses.uncommitted]
+
+        max_label_len = max(len(max(labels, key=len)), len('Label'))
+        max_index_len = max(len(max(action_indices, key=len)), len('Index'))
+        max_parser_len = max(len(max(parsers, key=len)), len('Parser'))
+        max_filepath_len = max(len(max(filepaths, key=len)), len('Filepath'))
+
+        _msg = f'{"Label":<{max_label_len}}  {"Index":<{max_index_len}}  {"Parser":<{max_parser_len}}  {"Filepath":<{max_filepath_len}}'
+
+        report = _log.underlined_message(_msg) + '\n'
+
+        for i in range(len(parses.uncommitted)):
+            report += f'{labels[i]:<{max_label_len}}  {action_indices[i]:<{max_index_len}}  {parsers[i]:<{max_parser_len}}  {filepaths[i]:<{max_filepath_len}}\n'
+
+        report = report.rstrip('\n')
+
+    else:
+        report = 'No uncommitted parse entries found.'
+
+    return report
+
 def end_logo(job):
     """
     Write a logo and the parse job label at the end of the job
