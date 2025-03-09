@@ -92,6 +92,34 @@ def parse_jobs_summary(parse_table):
 
     return report
 
+def parse_job_summary(job):
+    """
+    Get a summary of a parse job
+
+    Parameters
+    ----------
+    job : appeer.parse.parse_job.ParseJob
+        appeer parse job
+
+    Returns
+    -------
+    report : str
+        Parse job summary
+
+    """
+
+    report = parse_general_report(job=job, add_status_info=True)
+
+    if not job.actions:
+        report += '\nNo publications added to the job.'
+
+    else:
+
+        report += '\n'
+        report += action_list_summary(job.actions, add_committed_info=True)
+
+    return report
+
 def files_readability_report(files_readability):
     """
     Return a formatted report on whether a list of files is readable
