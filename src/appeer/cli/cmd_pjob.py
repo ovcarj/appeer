@@ -149,3 +149,44 @@ def add(job_label, inputs):
 
     parse_scripts.append_publications(label=job_label,
             data_source=data_source)
+
+@pjob_cli.command('run',
+        help="""Run a preexisting parse job
+
+        Example usage:
+
+            appeer pjob run -j "my_label"
+
+            appeer pjob run -r "resume" -c -j "my_label"
+
+        Available run modes ("-r" flag): from_scratch/resume
+
+            from_scratch: (Re)start downloading publications from index=0
+
+            resume: Resume a previously interrupted job
+
+        """)
+@click.option('-j', '--job_label', help='Parse job label', required=True)
+@click.option('-r', '--restart_mode', help='Restart mode',
+        default='from_scratch',
+        show_default=True)
+@click.option('-c', '--cleanup',
+        is_flag=True, default=False,
+        help="Delete the temporary directory after job ends")
+@click.option('-p', '--publishers', multiple=True,
+        help="Candidate parser")
+@click.option('-r', '--journals', multiple=True,
+        help="Candidate journal")
+@click.option('-d', '--data_types', multiple=True,
+        help="Candidate data type")
+@click.option('-x', '--no_scrape_mark',
+        is_flag=True, default=False,
+        help="Do not mark scrape jobs as parsed")
+def run(**kwargs):
+    """
+    Run a preexisting parse job
+
+    """
+
+    parse_scripts.run_job(label=kwargs['job_label'],
+            **kwargs)
