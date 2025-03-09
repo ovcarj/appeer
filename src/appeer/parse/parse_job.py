@@ -101,6 +101,26 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         super().__init__(label=label, job_mode=job_mode)
 
+    @property
+    def summary(self):
+        """
+        A formatted summary of the parse job
+
+        Returns
+        -------
+        _summary : str
+            Job summary
+
+        """
+
+        if not self._job_exists:
+            _summary = f'Parse job {self.label} does not exist.'
+
+        else:
+            _summary = reports.parse_job_summary(job=self)
+
+        return _summary
+
     def _prepare_new_job_parameters(self, **kwargs):
         """
         Helper method to prepare parse parameters given to ``self.new_job()``
