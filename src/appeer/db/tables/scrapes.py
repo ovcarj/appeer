@@ -228,6 +228,8 @@ class Scrapes(ActionTable,
                 UPDATE scrapes SET date = ? WHERE label = ? AND action_index = ?
                 """, (new_value, label, action_index))
 
+                self._con.commit()
+
             case 'parsed':
 
                 if new_value not in ('T', 'F'):
