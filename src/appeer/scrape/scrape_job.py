@@ -458,3 +458,23 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
             else:
                 self.job_parsed = 'F'
+
+    def unmark_actions(self):
+        """
+        Set the "parsed" status of all scrape actions in the job to "F"
+
+        If the job does not exist, does nothing
+
+        """
+
+        if self._job_exists:
+
+            if not self.actions:
+                pass
+
+            else:
+
+                for action in self.actions:
+                    action.mark_as_unparsed()
+
+            self.update_parsed()
