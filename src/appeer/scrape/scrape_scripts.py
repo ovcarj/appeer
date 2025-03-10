@@ -333,7 +333,7 @@ def unmark_scrapes(scrape_labels=None, _all=False):
 
         jobs_db = JobsDB()
         scrape_labels = [entry.label
-                for entry in jobs_db.scrape_labels.entries]
+                for entry in jobs_db.scrape_jobs.entries]
 
     if not _utils.is_list_of_str(scrape_labels):
         click.echo('Scrape labels must be provided as a list of strings.')
