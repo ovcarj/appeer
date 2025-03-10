@@ -253,3 +253,16 @@ class ScrapeAction(Action, action_type='scrape'): #pylint:disable=too-many-insta
 
             self._action_mode = 'write'
             self.parsed = 'T'
+
+    def mark_as_unparsed(self):
+        """
+        Marks the scrape action as unparsed.
+
+        If the action does not exist, does nothing.
+
+        """
+
+        if self._action_exists:
+
+            self._action_mode = 'write'
+            self.parsed = 'F'
