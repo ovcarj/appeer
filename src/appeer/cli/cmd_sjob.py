@@ -51,6 +51,10 @@ else:
 
             appeer sjob run --help
 
+        Mark scrape jobs as unparsed
+
+            appeer sjob unmark --help
+
         Instructions for cleaning the scrape database:
 
             appeer clean sjob --help
@@ -187,3 +191,30 @@ def run(**kwargs):
             scrape_mode=scrape_mode,
             cleanup=cleanup,
             **kwargs)
+
+@sjob_cli.command('unmark',
+        help="""Mark scrape jobs as unparsed
+
+        WARNING: Passing the (-a, --all) flag will mark ALL scrape jobs in the
+        database as unparsed.
+
+        Example usage:
+
+            appeer sjob unmark scrape_label1 scrape_label2
+
+            appeer sjob unmark --all
+
+        """)
+@click.argument('scrape_labels', default=None, nargs=-1)
+@click.option('-a', '--all', '_all',
+        is_flag=True, default=False,
+        help="Mark ALL scrape jobs as unparsed")
+def unmark(scrape_labels, _all):
+    """
+    Mark scrape jobs as unparsed
+
+    """
+
+    scrape_labels = list(scrape_labels) or None
+
+    scrape_scripts.unmark_scrapes(scrape_labels=scrape_labels, _all=_all)
