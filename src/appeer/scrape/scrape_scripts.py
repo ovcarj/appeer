@@ -3,6 +3,8 @@
 import os
 from collections import namedtuple
 
+import click
+
 from appeer.general import utils as _utils
 
 from appeer.db.jobs_db import JobsDB
@@ -305,3 +307,54 @@ def check_action_outputs(actions):
             file_ok=file_readable))
 
     return actions_files
+
+def unmark_scrapes(scrape_labels=None, _all=False):
+    """
+    Set the "parsed" status of all scrape actions in ``scrape_jobs`` to "F"
+
+    If ``_all is True``, mark ALL scrape jobs as unparsed.
+
+    ``scrape_labels`` and ``_all`` cannot be simultaneously be truthy.
+
+    Parameters
+    ----------
+    scrape_labels : None | list of str
+        List of appeer scrape job labels
+     _all : bool
+        If True, mark ALL scrape jobs as unparsed
+
+    """
+
+    if scrape_labels and _all:
+        click.echo('Cannot simultaneously provide "scrape_labels" and "_all" parameters.')
+        return
+
+    if _all:
+
+        jobs_db = JobsDB()
+        scrape_labels = [entry.label
+                for entry in jobs_db.scrape_labels.entries]
+
+    if not _utils.is_list_of_str(scrape_labels):
+        click.echo('Scrape labels must be provided as a list of strings.')
+        return
+
+    for scrape_label in scrape_labels:
+
+        sj = ScrapeJob(scrape_label, job_mode='write')
+
+        if not sj._job_exists: #pylint:disable=protected-access
+            click.echo(f'Scrape job "{scrape_label}" does not exist.')
+
+        else:
+
+            job_old_status = sj.job_parsed
+
+            if not sj.actions:
+                click.echo(f'No actions associated with scrape job "{scrape_label}"')
+
+            sj.unmark_actions()
+
+            job_new_status = sj.job_parsed
+
+            click.echo(f'scrape job "{scrape_label}": Parsed status updated {job_old_status} -> {job_new_status}')
