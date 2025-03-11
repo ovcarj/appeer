@@ -259,7 +259,7 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
         If ``parse_mode == 'resume'``, parsing is resumed from the current
             ``job_step``.
 
-        If ``cleanup == 'True', the temporary directory given by
+        If ``cleanup == 'True'``, the temporary directory given by
             ``self.parse_directory`` will be deleted at the end of the
             parse job
 
