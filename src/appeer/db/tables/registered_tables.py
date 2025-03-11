@@ -75,6 +75,18 @@ def get_registered_tables():
                  'status',
                  'committed'],
 
+            'commit_jobs':
+                ['label',
+                 'date',
+                 'description',
+                 'log',
+                 'mode',
+                 'job_status',
+                 'job_step',
+                 'job_successes',
+                 'job_fails',
+                 'no_of_publications'],
+
             'pubs':
                 ['doi',
                  'received',
