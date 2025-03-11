@@ -21,7 +21,7 @@ def create_new_job(**kwargs):
  
     Returns
     -------
-    pj : appeer.scrape.scrape_job.ParseJob
+    pj : appeer.parse.parse_job.ParseJob
         Parse job instance with the label set to the new job label
 
     """
@@ -82,7 +82,7 @@ def append_publications(label, data_source):
 
     Returns
     -------
-    pj : appeer.scrape.scrape_job.ParseJob
+    pj : appeer.parse.parse_job.ParseJob
         Parse job instance with added publications
 
     """
