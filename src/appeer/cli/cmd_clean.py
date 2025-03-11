@@ -75,6 +75,28 @@ def clean_parse_logs():
     ad = Datadir()
     ad.clean_parse_logs()
 
+@click.command('commit',
+        help='Delete contents of the appeer/commit directory')
+def clean_commit():
+    """
+    Deletes the contents of the ``appeer/commit`` directory
+
+    """
+
+    ad = Datadir()
+    ad.clean_commit()
+
+@click.command('commit_logs',
+        help='Delete contents of the appeer/commit_logs directory')
+def clean_commit_logs():
+    """
+    Deletes the contents of the ``appeer/commit_logs`` directory
+
+    """
+
+    ad = Datadir()
+    ad.clean_commit_logs()
+
 @click.command('db',
         help='Delete contents of the appeer/db directory')
 def clean_db():
@@ -210,6 +232,8 @@ clean_cli.add_command(clean_scrape_archives)
 clean_cli.add_command(clean_scrape_logs)
 clean_cli.add_command(clean_parse)
 clean_cli.add_command(clean_parse_logs)
+clean_cli.add_command(clean_commit)
+clean_cli.add_command(clean_commit_logs)
 clean_cli.add_command(clean_db)
 
 clean_cli.add_command(clean_config)
