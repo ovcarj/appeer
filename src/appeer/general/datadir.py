@@ -11,8 +11,8 @@
 import os
 import click
 
-from appeer.general import log
-from appeer.general import utils
+from appeer.general import log as _log
+from appeer.general import utils as _utils
 
 from appeer.general.config import Config
 
@@ -50,7 +50,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
         self.check_existence()
 
-        self._dashes = log.get_log_dashes()
+        self._dashes = _log.get_log_dashes()
 
     def check_existence(self):
         """
@@ -58,7 +58,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
         the ``self._base_exists`` attribute is updated accordingly.
         """
 
-        self._base_exists = utils.directory_exists(self.base)
+        self._base_exists = _utils.directory_exists(self.base)
 
     def create_directories(self):
         """
@@ -69,7 +69,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
         if self._base_exists:
 
-            overwrite = log.ask_yes_no(f'WARNING: appeer data base directory exists at {self.base}\nDo you want to overwrite it? All data will be deleted. [Y/n]\n')
+            overwrite = _log.ask_yes_no(f'WARNING: appeer data base directory exists at {self.base}\nDo you want to overwrite it? All data will be deleted. [Y/n]\n')
 
             if overwrite == 'Y':
 
@@ -118,7 +118,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
             click.echo('Nothing to clean.')
 
         else:
-            utils.delete_directory(self.base)
+            _utils.delete_directory(self.base)
 
         self.check_existence()
 
@@ -128,7 +128,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
         """
 
-        utils.delete_directory_content(self.downloads)
+        _utils.delete_directory_content(self.downloads)
 
     def clean_scrape_archives(self):
         """
@@ -136,7 +136,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
         """
 
-        utils.delete_directory_files(self.scrape_archives)
+        _utils.delete_directory_files(self.scrape_archives)
 
     def clean_scrape_logs(self):
         """
@@ -144,7 +144,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
         """
 
-        utils.delete_directory_files(self.scrape_logs)
+        _utils.delete_directory_files(self.scrape_logs)
 
     def clean_parse(self):
         """
@@ -152,7 +152,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
         """
 
-        utils.delete_directory_files(self.parse)
+        _utils.delete_directory_files(self.parse)
 
     def clean_parse_logs(self):
         """
@@ -160,7 +160,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
         """
 
-        utils.delete_directory_files(self.parse_logs)
+        _utils.delete_directory_files(self.parse_logs)
 
     def clean_db(self):
         """
@@ -168,7 +168,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
         """
 
-        utils.delete_directory_files(self.db)
+        _utils.delete_directory_files(self.db)
 
     def clean_scrape_job_data(self, scrape_label, download_directory, zip_file, log):
         """
@@ -188,20 +188,19 @@ class Datadir: #pylint:disable=too-many-instance-attributes
         Returns
         -------
         success : str
-            True if any data does not exist after attempting deletion, False if it does
 
         """
 
         click.echo(f'Deleting data associated with the scrape job: {scrape_label} ...')
 
-        utils.delete_directory(download_directory)
-        utils.delete_file(zip_file)
-        utils.delete_file(log)
+        _utils.delete_directory(download_directory)
+        _utils.delete_file(zip_file)
+        _utils.delete_file(log)
 
         if (
-            not utils.directory_exists(download_directory) and
-            not utils.file_exists(zip_file) and
-            not utils.file_exists(log)
+            not _utils.directory_exists(download_directory) and
+            not _utils.file_exists(zip_file) and
+            not _utils.file_exists(log)
             ):
 
             success = True
@@ -229,18 +228,17 @@ class Datadir: #pylint:disable=too-many-instance-attributes
         Returns
         -------
         success : str
-            True if any data does not exist after attempting deletion, False if it does
 
         """
 
         click.echo(f'Deleting data associated with the parse job: {parse_label} ...')
 
-        utils.delete_directory(parse_directory)
-        utils.delete_file(log)
+        _utils.delete_directory(parse_directory)
+        _utils.delete_file(log)
 
         if (
-            not utils.directory_exists(parse_directory) and
-            not utils.file_exists(log)
+            not _utils.directory_exists(parse_directory) and
+            not _utils.file_exists(log)
             ):
 
             success = True
