@@ -123,10 +123,7 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
     def _prepare_new_job_parameters(self, **kwargs):
         """
-        Helper method to prepare parse parameters given to ``self.new_job()``
-
-        Keyword arguments are the same as the ones in ``self.new_job()``,
-            excluding ``label``
+        Set defaults and sanitize parameters passed to ``self.new_job()``
 
         Keyword Arguments
         -----------------
