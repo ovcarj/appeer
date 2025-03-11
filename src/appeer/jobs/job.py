@@ -18,6 +18,7 @@ from appeer.parse.parse_action import ParseAction
 
 from appeer.scrape import scrape_reports
 from appeer.parse import parse_reports
+from appeer.commit import commit_reports
 
 def _validate_job_label(label):
     """
@@ -364,6 +365,9 @@ class Job(abc.ABC):
 
             case 'parse_job':
                 self._wlog(parse_reports.parse_general_report(job=self))
+
+            case 'commit_job':
+                self._wlog(commit_reports.commit_general_report(job=self))
 
     @abc.abstractmethod
     def _prepare_new_job_parameters(self, **kwargs):
