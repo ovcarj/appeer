@@ -1,6 +1,11 @@
-"""
-Handles creation, deletion and checking of the ``appeer`` data directory,
-which is defined in the ``appeer`` configuration file
+"""Handles creation, deletion and checking of the ``appeer`` data directory
+
+    The path to the data directory is defined in the ``appeer``
+        configuration file.
+
+    The config file can be printed using the CLI:
+
+        appeer config print
 """
 
 import os
@@ -12,7 +17,7 @@ from appeer.general import utils
 from appeer.general.config import Config
 
 
-class Datadir:
+class Datadir: #pylint:disable=too-many-instance-attributes
     """
     Handles creation, deletion and checking of the
     ``appeer`` data directory defined in the ``appeer``
