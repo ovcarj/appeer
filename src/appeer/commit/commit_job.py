@@ -89,8 +89,6 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
             Optional job description
         log_directory : str
             Directory into which to store the log file
-        parse_directory : str
-            Directory into which to (temporarily) create files for parsing
         mode : str
             Commit mode; one of ('A', 'E', 'P'); 'A' is default
 
