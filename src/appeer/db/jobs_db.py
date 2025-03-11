@@ -6,7 +6,8 @@ class JobsDB(DB, tables=[
         'scrape_jobs',
         'scrapes',
         'parse_jobs',
-        'parses'
+        'parses',
+        'commit_jobs'
     ]):
     """
     Handles the ``jobs.db`` database
