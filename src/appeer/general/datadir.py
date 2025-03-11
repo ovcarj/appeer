@@ -19,18 +19,23 @@ from appeer.general.config import Config
 
 class Datadir: #pylint:disable=too-many-instance-attributes
     """
-    Handles creation, deletion and checking of the
-    ``appeer`` data directory defined in the ``appeer``
-    configuration file.
+    Handles creation, deletion and checking of the ``appeer`` data directory
 
-    The default location is given by
-    ``platformdirs.user_data_dir(appname='appeer')``.
+    The path to the data directory is defined in the ``appeer``
+        configuration file.
+
+    The config file can be printed using the CLI:
+
+        appeer config print
+
+    The default location of the base directory is:
+        ``platformdirs.user_data_dir(appname='appeer')``
 
     """
 
     def __init__(self):
         """
-        Defines paths to directories in the base directory.
+        Defines paths to directories in the base directory
 
         """
 
@@ -54,16 +59,20 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
     def check_existence(self):
         """
-        Checks the existence of the ``self.base`` directory; 
-        the ``self._base_exists`` attribute is updated accordingly.
+        Checks the existence of the ``self.base`` directory
+
+        The ``self._base_exists`` attribute is updated accordingly.
+
         """
 
         self._base_exists = _utils.directory_exists(self.base)
 
     def create_directories(self):
         """
-        Creates ``appeer`` data directories. If ``self.base`` already exists, 
-        the user is prompted if they want to overwrite the directory.
+        Creates ``appeer`` data directories
+
+        If ``self.base`` already exists, the user is prompted if they want
+            to overwrite the directory.
 
         """
 
@@ -108,7 +117,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
     def clean_all_directories(self):
         """
-        Deletes all ``appeer`` data directories.
+        Deletes all ``appeer`` data directories
 
         """
 
@@ -170,9 +179,13 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
         _utils.delete_directory_files(self.db)
 
-    def clean_scrape_job_data(self, scrape_label, download_directory, zip_file, log):
+    def clean_scrape_job_data(self,
+            scrape_label,
+            download_directory,
+            zip_file,
+            log):
         """
-        Deletes all data associated with a scrape job.
+        Deletes all data associated with a scrape job
 
         Parameters
         ----------
@@ -188,6 +201,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
         Returns
         -------
         success : str
+            True if any data remains after deletion, False if it does
 
         """
 
@@ -214,7 +228,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
 
     def clean_parse_job_data(self, parse_label, parse_directory, log):
         """
-        Deletes all data associated with a parse job.
+        Deletes all data associated with a parse job
 
         Parameters
         ----------
@@ -228,6 +242,7 @@ class Datadir: #pylint:disable=too-many-instance-attributes
         Returns
         -------
         success : str
+            True if no data remains after deletion, False if it does
 
         """
 
