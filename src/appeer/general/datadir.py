@@ -51,6 +51,9 @@ class Datadir: #pylint:disable=too-many-instance-attributes
         self.parse = os.path.join(self.base, 'parse')
         self.parse_logs = os.path.join(self.base, 'parse_logs')
 
+        self.commit = os.path.join(self.base, 'commit')
+        self.commit_logs = os.path.join(self.base, 'commit_logs')
+
         self.db = os.path.join(self.base, 'db')
 
         self.check_existence()
@@ -112,6 +115,11 @@ class Datadir: #pylint:disable=too-many-instance-attributes
         os.makedirs(self.parse_logs)
         click.echo(f'appeer parse_logs directory created at {self.parse_logs}')
 
+        os.makedirs(self.commit)
+        click.echo(f'appeer commit directory created at {self.commit}')
+        os.makedirs(self.commit_logs)
+        click.echo(f'appeer commit_logs directory created at {self.commit_logs}')
+
         os.makedirs(self.db)
         click.echo(f'appeer db directory created at {self.db}')
 
@@ -170,6 +178,22 @@ class Datadir: #pylint:disable=too-many-instance-attributes
         """
 
         _utils.delete_directory_files(self.parse_logs)
+
+    def clean_commit(self):
+        """
+        Deletes the files in ``self.commit``
+
+        """
+
+        _utils.delete_directory_files(self.commit)
+
+    def clean_commit_logs(self):
+        """
+        Deletes the files in ``self.commit_logs``
+
+        """
+
+        _utils.delete_directory_files(self.commit_logs)
 
     def clean_db(self):
         """
@@ -262,5 +286,38 @@ class Datadir: #pylint:disable=too-many-instance-attributes
         else:
             success = False
             click.echo(f'Failed to delete all data associated with {parse_label}.\n')
+
+        return success
+
+    def clean_commit_job_data(self, commit_label, log):
+        """
+        Deletes all data associated with a commit job
+
+        Parameters
+        ----------
+        commit_label : str
+            Label of the commit job whose data is being deleted
+        log : str
+            Path to the commit log
+
+        Returns
+        -------
+        success : str
+            True if no data remains after deletion, False if it does
+
+        """
+
+        click.echo(f'Deleting data associated with the commit job: {commit_label} ...')
+
+        _utils.delete_file(log)
+
+        if not _utils.file_exists(log):
+
+            success = True
+            click.echo(f'Data associated with {commit_label} deleted.\n')
+
+        else:
+            success = False
+            click.echo(f'Failed to delete all data associated with {commit_label}.\n')
 
         return success
