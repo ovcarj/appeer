@@ -104,7 +104,7 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
     def _prepare_new_job_parameters(self, **kwargs):
         """
-        Helper method to prepare parameters given to ``self.new_job()``
+        Set defaults and sanitize parameters passed to ``self.new_job()``
 
         Keyword Arguments
         -----------------
