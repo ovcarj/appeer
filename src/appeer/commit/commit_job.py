@@ -1,5 +1,10 @@
 """Commit publications to the pubs.db database"""
 
+import queue
+import threading
+
+from appeer.general import log as _log
+
 from appeer.jobs.job import Job
 
 
@@ -111,3 +116,54 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
                 }
 
         return job_parameters
+
+    def add_publications(self, data_source=None):
+        """
+        Add publications to be committed
+
+        Depending on the ``self.mode`` attribute, data_source may be:
+
+            1) (A): None
+            2) (E): None
+            3) (P): List of parse job labels
+
+        Parameters
+        ----------
+        data_source : None | list of str
+            None for modes ('A', 'E'), list of scrape job labels ('P'),
+
+        """
+
+        if not self._job_exists:
+            raise PermissionError('Cannot add publications to a parse job; most likely, the job has not yet been initialized.')
+
+        if self.job_status == 'X':
+            raise PermissionError(f'Cannot add new publications to the parse job "{self.label}"; the job has already been executed.')
+
+        if self.job_status == 'R':
+            raise PermissionError(f'Cannot add new publications to the parse job "{self.label}"; the job is in the "R" (Running) state.')
+
+        if self.job_status == 'E':
+            raise PermissionError(f'Cannot add new publications to the parse job "{self.label}"; the job is in the "E" (Error) state.')
+
+        self._job_mode = 'write'
+
+        self._queue = queue.Queue()
+        threading.Thread(target=self._log_server, daemon=True).start()
+
+        self._prepare_committing(data_source=data_source)
+
+        self._queue.join()
+
+    def _prepare_committing(self, data_source):
+        """
+        Prepare inputted data for committing depending on the commit mode
+
+        Parameters
+        ----------
+        data_source : None | list of str
+            None for modes ('A', 'E'), list of parse job labels ('P'),
+
+        """
+
+        self._wlog(_log.boxed_message('PREPARING PARSING', centered=True) + '\n')
