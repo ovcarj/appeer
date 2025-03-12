@@ -86,7 +86,7 @@ class CommitPacker:
                 self._pack_mode_A()
 
             case 'E':
-                raise NotImplementedError('CommitPacker: mode "E" not implemented.')
+                self._pack_mode_E()
 
             case 'P':
                 self._pack_mode_P()
@@ -116,6 +116,34 @@ class CommitPacker:
 
         else:
             self._cprint('No uncommitted jobs found.')
+
+    def _pack_mode_E(self):
+        """
+        Prepares a parse packet automatically from executed parse jobs
+
+        ``self._data_source`` will be automatically set.
+
+        The packet is prepared only for jobs in the executed ('X') status.
+
+        In mode 'E', all succesful actions are taken into account,
+            regardless of whether they were previously committed.
+
+        """
+
+        self._cprint('Searching for executed parse jobs...')
+
+        executed_job_labels = parse_scripts.get_executed_job_labels()
+
+        if executed_job_labels:
+
+            self._cprint(f'Found {len(executed_job_labels)} jobs.')
+            self._cprint('Preparing the data for committing...')
+            self._data_source = executed_job_labels
+
+            self._pack_mode_P()
+
+        else:
+            self._cprint('No executed jobs found.')
 
     def _pack_mode_P(self):
         """
