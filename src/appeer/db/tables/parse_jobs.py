@@ -63,7 +63,7 @@ class ParseJobs(JobTable,
         """
 
         uncommitted_parse_jobs = self._search_table(
-                job_status='X', job_parsed='F')
+                job_status='X', job_committed='F')
 
         return uncommitted_parse_jobs
 
