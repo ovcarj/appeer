@@ -28,3 +28,26 @@ def create_new_job(**kwargs):
     cj.new_job(**kwargs)
 
     return cj
+
+def append_publications(label, data_source):
+    """
+    Add ``publications`` to a preexisting job
+
+    Parameters
+    ----------
+    label : str
+        Unique job label
+    data_source : None | list of str
+        None for modes ('A', 'E'), list of parse job labels ('P'),
+
+    Returns
+    -------
+    cj : appeer.parse.parse_job.CommitJob
+        Commit job instance with added publications
+
+    """
+
+    cj = CommitJob(label=label, job_mode='write')
+    cj.add_publications(data_source=data_source)
+
+    return cj
