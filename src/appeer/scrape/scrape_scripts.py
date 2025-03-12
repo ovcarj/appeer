@@ -206,7 +206,6 @@ def get_execution_dict(job_labels):
 
     """
 
-
     if not _utils.is_list_of_str(job_labels):
         raise TypeError('Scrape job labels must be provided as a list of strings or a single string.')
 
