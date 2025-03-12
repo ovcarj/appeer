@@ -1,5 +1,7 @@
 """Basic parse job scripts"""
 
+from appeer.general import utils as _utils
+
 from appeer.parse.parse_job import ParseJob
 
 def create_new_job(**kwargs):
@@ -144,3 +146,58 @@ def create_and_run(data_source,
     pj.run_job(restart_mode='from_scratch',
             cleanup=cleanup,
             **kwargs)
+
+def get_execution_dict(job_labels):
+    """
+    Get a dictionary describing the status of a list of parse jobs
+
+    Parameters
+    ----------
+    job_labels : list of str
+        List of parse job labels
+
+    Returns
+    -------
+    parse_jobs_executed_dict : dict
+        Dictionary of form {label1: status1, label2: status2, ...},
+            where the keys are parse job labels and the values are
+            the job statuses
+
+    """
+
+    if not _utils.is_list_of_str(job_labels):
+        raise TypeError('Scrape job labels must be provided as a list of strings or a single string.')
+
+    if isinstance(job_labels, str):
+        job_labels = [job_labels]
+
+    try:
+
+        pjs = [ParseJob(label=label) for label in job_labels]
+        statuses = [pj.job_status if pj.job_status else 'N/A' for pj in pjs]
+
+    # This means that an invalid job label was passed, so iterate the labels
+    # one-by-one to find the error. This edge case is written as a seperate
+    # block because it's slower to iterate instead of using list comprehension.
+    except ValueError:
+
+        statuses = []
+
+        for label in job_labels:
+
+            try:
+
+                pj = ParseJob(label=label)
+
+                if pj.job_status:
+                    statuses.append(pj.job_status)
+
+                else:
+                    statuses.append('N/A')
+
+            except ValueError:
+                statuses.append('N/A')
+
+    parse_jobs_executed_dict = dict(zip(job_labels, statuses))
+
+    return parse_jobs_executed_dict
