@@ -59,6 +59,18 @@ class CommitPacker:
 
         self.packet = []
 
+        self._metadata_list = [
+                'doi',
+                'publisher',
+                'journal',
+                'title',
+                'publication_type',
+                'affiliations',
+                'received',
+                'accepted',
+                'published'
+                ]
+
     def pack(self):
         """
         Runs the appropriate packing method depending on the commit mode
