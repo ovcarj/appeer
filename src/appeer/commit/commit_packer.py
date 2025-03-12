@@ -193,7 +193,7 @@ class CommitPacker:
 
                 relevant_actions.extend(
                         [action for action in successful_actions
-                        if action.parsed == 'F'])
+                        if action.committed == 'F'])
 
             else:
                 relevant_actions.extend(successful_actions)
