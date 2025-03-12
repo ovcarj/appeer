@@ -6,6 +6,9 @@ import click
 
 from appeer.general import utils as _utils
 
+from appeer.parse.parse_job import ParseJob
+from appeer.parse import parse_scripts
+from appeer.parse import parse_reports
 
 _CommitEntry = namedtuple('_CommitEntry', [
     'parse_label',
@@ -86,7 +89,7 @@ class CommitPacker:
                 raise NotImplementedError('CommitPacker: mode "E" not implemented.')
 
             case 'P':
-                raise NotImplementedError('CommitPacker: mode "P" not implemented.')
+                self._pack_mode_P()
 
     def _cprint(self, message):
         """
@@ -107,3 +110,129 @@ class CommitPacker:
 
         else:
             click.echo(message)
+
+    def _pack_mode_P(self):
+        """
+        Prepares a parse packet from a list of parse job labels
+
+        ``self._data_source`` must be a list of strings or a single string.
+
+        The packet is prepared only for jobs in the executed ('X') status.
+
+        For those jobs, ``self._prepare_metadata`` is invoked
+            to search for successful actions and obtain the
+            parsed metadata
+
+        """
+
+        parse_labels = self._data_source
+
+        if isinstance(parse_labels, str):
+            parse_labels = [parse_labels]
+
+        no_of_jobs = len(parse_labels)
+
+        self._cprint(f'\nInputted {no_of_jobs} parse job label(s).')
+        self._cprint('Checking if the jobs exist and if their status is executed (X)...\n')
+
+        parse_jobs_execution_dict = parse_scripts.get_execution_dict(
+                job_labels=parse_labels)
+
+        self._cprint(parse_reports.parse_jobs_execution_report(
+            parse_jobs_execution_dict=parse_jobs_execution_dict))
+
+        valid_jobs = [job for job, execution_status in
+                parse_jobs_execution_dict.items()
+                if execution_status == 'X']
+
+        if valid_jobs:
+
+            self._cprint(f'Determined that {len(valid_jobs)}/{no_of_jobs} inputted parse jobs are executed.\n')
+
+            self._prepare_parsed_metadata(parse_labels=valid_jobs)
+
+        else:
+            self._cprint('None of the inputted parse jobs exist or are executed.\n')
+
+    def _prepare_parsed_metadata(self, parse_labels):
+        """
+        Prepare the parsed metadata from jobs given by ``parse_labels``
+
+        The parsed metadata is obtained from the successful actions
+            corresponding to the parse jobs.
+
+        In commit mode 'A', if a parse action was already committed,
+            it is ignored.
+        In modes 'E' and 'P', all parse actions will be considered
+            regardless if they were previously parsed.
+
+        This method should *never* be invoked directly, but only through the
+            ``self._pack_*`` methods.
+
+        If a parse job with an execution status other than 'X' is passed
+            in ``scrape_labels``, an error is raised
+
+        Parameters
+        ----------
+        parse_labels : list of str
+            List of parse job labels
+
+        """
+
+        match self._commit_mode:
+
+            case 'A':
+                ignore_committed_actions = True
+
+            case 'E' | 'P':
+                ignore_committed_actions = False
+
+            case _:
+                raise ValueError('CommitPacker failed; _prepare_parsed_metadata was invoked in invalid commit mode.')
+
+        relevant_actions = []
+
+        if ignore_committed_actions:
+            self._cprint('Searching for successful and uncomitted parse actions...')
+
+        else:
+            self._cprint('Searching for successful parse actions...')
+
+        for parse_label in parse_labels:
+
+            parse_job = ParseJob(label=parse_label)
+
+            if not parse_job._job_exists: #pylint:disable=protected-access
+                raise ValueError('CommitPacker failed; nonexistent parse job inputted.')
+            if not parse_job.job_status == 'X':
+                raise ValueError('CommitPacker failed; inputted a parse job which was not executed to _prepare_parsed_metadata.')
+
+            successful_actions = parse_job.successful_actions
+
+            if successful_actions and ignore_committed_actions:
+
+                relevant_actions.extend(
+                        [action for action in successful_actions
+                        if action.parsed == 'F'])
+
+            else:
+                relevant_actions.extend(successful_actions)
+
+        if relevant_actions:
+
+            no_of_publications = len(relevant_actions)
+            self._cprint(f'Found {no_of_publications} successful parse actions.\n')
+
+            self.packet.extend([_CommitEntry(
+                parse_label=action.label,
+                parse_action_index=action.action_index,
+                metadata={meta: getattr(action, meta)
+                    for meta in self._metadata_list
+                    })
+                for action in relevant_actions
+                ])
+
+            self.success = True
+
+        else:
+            self._cprint('No valid actions were found.')
