@@ -198,7 +198,7 @@ class Parses(ActionTable,
                     raise ValueError(f'Cannot update the parse database. Invalid journal={new_value} given; must be a string')
 
                 self._cur.execute("""
-                UPDATE parses SET publisher = ? WHERE label = ? AND action_index = ?
+                UPDATE parses SET journal = ? WHERE label = ? AND action_index = ?
                 """, (new_value, label, action_index))
 
                 self._con.commit()
