@@ -168,6 +168,25 @@ def get_uncommitted_job_labels():
 
     return uncommitted_job_labels
 
+def get_executed_job_labels():
+    """
+    Returns a list of parse job labels which are executed
+
+    Returns
+    -------
+    executed_job_labels : list of str
+        List of parse job labels which are executed
+
+    """
+
+    db = JobsDB()
+
+    executed_jobs = db.parse_jobs.executed
+
+    executed_job_labels = [job.label for job in executed_jobs]
+
+    return executed_job_labels
+
 def get_execution_dict(job_labels):
     """
     Get a dictionary describing the status of a list of parse jobs
