@@ -25,7 +25,7 @@ class ParsePacker:
     Prepare (scraped) files for parsing
 
     Used by ParseJob to check the validity of the inputted data
-        and prepare the files in a unified format.
+        and prepare the files in a unified format
 
     """
 
@@ -146,7 +146,7 @@ class ParsePacker:
 
         The packet is prepared only for jobs in the executed ('X') status.
 
-        In mode 'A', only previously unparsed actions are taken into account.
+        In mode 'A', only previously unparsed actions are taken into account
 
         """
 
@@ -174,7 +174,7 @@ class ParsePacker:
         The packet is prepared only for jobs in the executed ('X') status.
 
         In mode 'E', all succesful actions are taken into account,
-            regardless of whether they were previously parsed.
+            regardless of whether they were previously parsed
 
         """
 
@@ -202,10 +202,10 @@ class ParsePacker:
         The packet is prepared only for jobs in the executed ('X') status.
 
             For those jobs, ``self._prepare_scrape_actions`` is invoked
-            to search for successful actions.
+                to search for successful actions.
 
             If needed, the scrape job output ZIP files are extracted to the 
-            temporary parsing directory
+                temporary parsing directory
 
         """
 
