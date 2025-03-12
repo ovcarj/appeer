@@ -50,6 +50,23 @@ class ParseJobs(JobTable,
 
         return _summary
 
+    @property
+    def uncommitted(self):
+        """
+        Returns all uncommitted parse jobs (status='X', job_committed='F')
+
+        Returns
+        -------
+        uncommitted_parse_jobs : list of appeer.db.tables.parse_jobs._ParseJobs
+            Uncommitted parse jobs
+
+        """
+
+        uncommitted_parse_jobs = self._search_table(
+                job_status='X', job_parsed='F')
+
+        return uncommitted_parse_jobs
+
     def add_entry(self, **kwargs):
         """
         Initializes an entry for a parse job
