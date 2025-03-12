@@ -24,7 +24,7 @@ from appeer.commit import commit_scripts
 
             appeer cjob new --help
 
-        Add publications to a preexisting job (TODO):
+        Add publications to a preexisting job:
 
             appeer cjob add --help
 
@@ -87,3 +87,46 @@ def new(**kwargs):
     kwargs['label'] = kwargs['job_label']
 
     commit_scripts.create_new_job(**kwargs)
+
+@cjob_cli.command('add',
+        help="""Add publications to a preexisting commit job
+
+        The [INPUTS] argument must be provided for commit job in mode 'P'.
+
+        (1) Add publications automatically (modes 'A' and 'E'):
+
+                appeer cjob add -j commit_job_label
+
+        (2) Add publications from a list of parse jobs (mode 'P')
+
+                appeer cjob add -j commit_job_label parse_2025_1 parse_2025_2
+
+        """)
+@click.option('-j', '--job_label', help='Commit job label', required=True)
+@click.argument('inputs', nargs=-1)
+def add(job_label, inputs):
+    """
+    Add publications to a preexisting commit job
+
+    """
+
+    data_source = list(inputs) or None
+
+    cj = CommitJob(label=job_label)
+
+    if not cj._job_exists: #pylint:disable=protected-access
+        click.echo(f'Error: Cannot add publications for committing; commit job "{job_label}" does not exist.')
+        sys.exit()
+
+    commit_mode = cj.mode
+
+    if (data_source and commit_mode in ('A', 'E')):
+        click.echo('Error: No inputs should be provided for commit modes "A" and "E".')
+        sys.exit()
+
+    if (not data_source and commit_mode == 'P'):
+        click.echo('Error: Inputs must be provided for commit mode "P".')
+        sys.exit()
+
+    commit_scripts.append_publications(label=job_label,
+            data_source=data_source)
