@@ -2,6 +2,8 @@
 
 from appeer.general import utils as _utils
 
+from appeer.db.jobs_db import JobsDB
+
 from appeer.parse.parse_job import ParseJob
 
 def create_new_job(**kwargs):
@@ -146,6 +148,25 @@ def create_and_run(data_source,
     pj.run_job(restart_mode='from_scratch',
             cleanup=cleanup,
             **kwargs)
+
+def get_uncommitted_job_labels():
+    """
+    Returns a list of parse job labels which are executed and not committed
+
+    Returns
+    -------
+    uncommitted_job_labels : list of str
+        List of parse job labels which are executed and not committed
+
+    """
+
+    db = JobsDB()
+
+    uncommitted_jobs = db.parse_jobs.uncommitted
+
+    uncommitted_job_labels = [job.label for job in uncommitted_jobs]
+
+    return uncommitted_job_labels
 
 def get_execution_dict(job_labels):
     """
