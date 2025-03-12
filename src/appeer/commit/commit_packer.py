@@ -91,26 +91,6 @@ class CommitPacker:
             case 'P':
                 self._pack_mode_P()
 
-    def _cprint(self, message):
-        """
-        Prints a ``message`` to stdout or puts it in the queue
-
-        If the message is put into the queue, it will be logged in
-            the job log file
-
-        Parameters
-        ----------
-        message : str
-            String to be printed to stdout or logged in the job log file
-
-        """
-
-        if self._queue:
-            self._queue.put(message)
-
-        else:
-            click.echo(message)
-
     def _pack_mode_P(self):
         """
         Prepares a parse packet from a list of parse job labels
@@ -236,3 +216,23 @@ class CommitPacker:
 
         else:
             self._cprint('No valid actions were found.')
+
+    def _cprint(self, message):
+        """
+        Prints a ``message`` to stdout or puts it in the queue
+
+        If the message is put into the queue, it will be logged in
+            the job log file
+
+        Parameters
+        ----------
+        message : str
+            String to be printed to stdout or logged in the job log file
+
+        """
+
+        if self._queue:
+            self._queue.put(message)
+
+        else:
+            click.echo(message)
