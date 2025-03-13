@@ -75,7 +75,7 @@ class Parses(ActionTable,
         label : str
             Label of the parse job
         action_index : int
-            Index of the URL in the input
+            Index of the action within the job
         scrape_label : str
             Label of the scrape job that the input file corresponds to
                 (can be None if the input file does not come from a scrape job)
