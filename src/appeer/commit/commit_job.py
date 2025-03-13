@@ -7,6 +7,9 @@ from appeer.general import log as _log
 
 from appeer.jobs.job import Job
 
+from appeer.commit.commit_action import CommitAction
+from appeer.commit.commit_packer import CommitPacker
+
 
 class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-attributes
     """
@@ -167,3 +170,23 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
         """
 
         self._wlog(_log.boxed_message('PREPARING PARSING', centered=True) + '\n')
+
+    def _add_actions(self, commit_packet):
+        """
+        Add CommitActions to the CommitJob
+
+        ``commit_packet`` is given by ``appeer.commit.commit_packer.packet``
+
+        Parameters
+        ----------
+        commit_packet : list of appeer.commit.commit_packer._CommitEntry
+            Packet containing info on the metadata to be committed
+
+        """
+
+        for i, commit_entry in enumerate(commit_packet):
+
+            action = CommitAction(label=self.label,
+                    action_index=self.no_of_publications + i)
+
+            action.new_action(commit_entry=commit_entry)
