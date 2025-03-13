@@ -87,6 +87,25 @@ def get_registered_tables():
                  'job_fails',
                  'no_of_publications'],
 
+            'commits':
+                ['label',
+                 'action_index',
+                 'parse_label',
+                 'parse_action_index',
+                 'date',
+                 'doi',
+                 'publisher',
+                 'journal',
+                 'title',
+                 'publication_type',
+                 'affiliations',
+                 'received',
+                 'accepted',
+                 'published',
+                 'success',
+                 'status',
+                 'passed'],
+
             'pubs':
                 ['doi',
                  'received',
