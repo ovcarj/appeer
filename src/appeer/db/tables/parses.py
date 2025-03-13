@@ -140,7 +140,7 @@ class Parses(ActionTable,
         label : str
             Label of the job that the parse belongs to
         action_index : int
-            Index of the URL in the input
+            Index of the action within the job
         column_name : str
             Name of the column whose value is being updated
         new_value : str : int
