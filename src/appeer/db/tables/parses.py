@@ -160,7 +160,7 @@ class Parses(ActionTable,
             case 'date':
 
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid date={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid date={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE parses SET date = ? WHERE label = ? AND action_index = ?
@@ -171,7 +171,7 @@ class Parses(ActionTable,
             case 'doi':
 
                 if not _utils.check_doi_format(new_value):
-                    raise ValueError(f'Cannot update the parse database. Invalid doi={new_value} given; must be valid DOI format')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid doi={new_value} given; must be valid DOI format')
 
                 self._cur.execute("""
                 UPDATE parses SET doi = ? WHERE label = ? AND action_index = ?
@@ -183,7 +183,7 @@ class Parses(ActionTable,
 
                 # TODO: explicit publisher check should be implemented
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid date={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid date={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE parses SET publisher = ? WHERE label = ? AND action_index = ?
@@ -195,7 +195,7 @@ class Parses(ActionTable,
 
                 # TODO: explicit journal check should be implemented
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid journal={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid journal={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE parses SET journal = ? WHERE label = ? AND action_index = ?
@@ -207,7 +207,7 @@ class Parses(ActionTable,
 
                 # TODO: explicit journal check should be implemented
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid title={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid title={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE parses SET title = ? WHERE label = ? AND action_index = ?
@@ -219,7 +219,7 @@ class Parses(ActionTable,
 
                 # TODO: explicit check of known article types should be implemented
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid publication_type={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid publication_type={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE parses SET publication_type = ? WHERE label = ? AND action_index = ?
@@ -230,10 +230,10 @@ class Parses(ActionTable,
             case 'affiliations':
 
                 if not isinstance(new_value, list):
-                    raise ValueError(f'Cannot update the parse database. Invalid affiliations={new_value} given; must be a list')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid affiliations={new_value} given; must be a list')
 
                 if not all(_utils.is_list_of_str(aff) for aff in new_value):
-                    raise ValueError(f'Cannot update the parse database. Invalid affiliations={new_value} given; each entry must be list of strings')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid affiliations={new_value} given; each entry must be list of strings')
 
                 affs_str = _utils.aff_list2str(new_value)
 
@@ -246,7 +246,7 @@ class Parses(ActionTable,
             case 'received':
 
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid received={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid received={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE parses SET received = ? WHERE label = ? AND action_index = ?
@@ -257,7 +257,7 @@ class Parses(ActionTable,
             case 'accepted':
 
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid accepted={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid accepted={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE parses SET accepted = ? WHERE label = ? AND action_index = ?
@@ -268,7 +268,7 @@ class Parses(ActionTable,
             case 'published':
 
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid published={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid published={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE parses SET published = ? WHERE label = ? AND action_index = ?
@@ -280,7 +280,7 @@ class Parses(ActionTable,
 
                 #TODO: explicit parser check should be implemented
                 if new_value and not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the parse database. Invalid parser={new_value} given; must be a string.')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid parser={new_value} given; must be a string.')
 
                 self._cur.execute("""
                 UPDATE parses SET parser = ? WHERE label = ? AND action_index = ?
@@ -291,7 +291,7 @@ class Parses(ActionTable,
             case 'success':
 
                 if not new_value in ('T', 'F'):
-                    raise ValueError(f'Cannot update the parse database. Invalid success={new_value} given; must be one of ("T", "F").')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid success={new_value} given; must be one of ("T", "F").')
 
                 self._cur.execute("""
                 UPDATE parses SET success = ? WHERE label = ? AND action_index = ?
@@ -302,7 +302,7 @@ class Parses(ActionTable,
             case 'status':
 
                 if not new_value in ('I', 'W', 'R', 'E', 'X'):
-                    raise ValueError(f'Cannot update the parse database. Invalid status={new_value} given; must be one of ("I", "W", "R", "E", "X").')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid status={new_value} given; must be one of ("I", "W", "R", "E", "X").')
 
                 self._cur.execute("""
                 UPDATE parses SET status = ? WHERE label = ? AND action_index = ?
@@ -313,7 +313,7 @@ class Parses(ActionTable,
             case 'committed':
 
                 if new_value not in ('T', 'F'):
-                    raise ValueError(f'Cannot update the parse database. Invalid parsed={new_value} given; must be "T" or "F".')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid parsed={new_value} given; must be "T" or "F".')
 
                 self._cur.execute("""
                 UPDATE parses SET parsed = ? WHERE label = ? AND action_index = ?
@@ -324,6 +324,6 @@ class Parses(ActionTable,
             case _:
 
                 self._con.close()
-                raise ValueError(f'Cannot update the parse database. Invalid column name "{column_name}" given.')
+                raise ValueError(f'Cannot update the "parses" table. Invalid column name "{column_name}" given.')
 
         self._con.close()
