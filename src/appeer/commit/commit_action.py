@@ -91,3 +91,36 @@ class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-insta
         super().__init__(label=label,
                 action_index=action_index,
                 action_mode=action_mode)
+
+    def new_action(self,
+            commit_entry,
+            label=None,
+            action_index=None):
+        """
+        Creates a new commit action for a given commit entry
+
+        Parameters
+        ----------
+        commit_entry : appeer.commit.commit_packer._CommitEntry
+            Named tuple with fields
+                ('scrape_label', 'scrape_action_index', 'metadata')
+        label : str
+            Label of the job that the action corresponds to
+        action_index : int
+            Index of the action within the corresponding job
+
+        """
+
+        self._action_mode = 'write'
+
+        if label:
+            self.label = label
+
+        if action_index:
+            self.action_index = action_index
+
+        self._initialize_action_common(
+                parse_label=commit_entry.parse_label,
+                parse_action_index=commit_entry.parse_action_index,
+                status='W',
+                **commit_entry.metadata)
