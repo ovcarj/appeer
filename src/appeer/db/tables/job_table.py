@@ -117,7 +117,7 @@ class JobTable(Table, name=None, columns=None):
         Returns
         -------
         exists : bool
-            True if scrape job exists, False if it does not
+            True if job exists, False if it does not
 
         """
 
