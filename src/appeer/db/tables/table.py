@@ -148,7 +148,7 @@ class Table(abc.ABC):
         Performs simple table searches
 
         Returns rows from the table with (column, value) pairs
-        (not) equal to (key, value) in ``kwargs``
+            (not) equal to (key, value) in ``kwargs``
         
         Parameters
         ----------
