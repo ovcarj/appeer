@@ -1,4 +1,4 @@
-"""Handles the jobs database, which includes scrape and parse jobs"""
+"""Handles the jobs database, which includes scrape, parse and commit jobs"""
 
 from appeer.db.db import DB
 
@@ -7,7 +7,8 @@ class JobsDB(DB, tables=[
         'scrapes',
         'parse_jobs',
         'parses',
-        'commit_jobs'
+        'commit_jobs',
+        'commits'
     ]):
     """
     Handles the ``jobs.db`` database

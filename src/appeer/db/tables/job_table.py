@@ -6,6 +6,7 @@ from appeer.db.tables.table import Table
 
 from appeer.db.tables.scrapes import Scrapes
 from appeer.db.tables.parses import Parses
+from appeer.db.tables.commits import Commits
 
 class JobTable(Table, name=None, columns=None):
     """
@@ -179,6 +180,9 @@ class JobTable(Table, name=None, columns=None):
 
                 case 'parse_jobs':
                     actions = Parses(connection=self._con)
+
+                case 'commit_jobs':
+                    actions = Commits(connection=self._con)
 
             actions_label = actions.get_actions_by_label(label)
 
