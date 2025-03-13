@@ -1,14 +1,10 @@
-import click
-
-from collections import namedtuple
-
-from appeer.general import log
+"""Interface to the pubs.db database"""
 
 from appeer.db.db import DB
 
 class PubsDB(DB, tables=['pubs']):
     """
-    Handles the ``pubs.db`` database.
+    Interface to the pubs.db database
 
     """
 
