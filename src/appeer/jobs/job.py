@@ -15,6 +15,7 @@ from appeer.jobs.db_properties import JobProperty
 
 from appeer.scrape.scrape_action import ScrapeAction
 from appeer.parse.parse_action import ParseAction
+from appeer.commit.commit_action import CommitAction
 
 from appeer.scrape import scrape_reports
 from appeer.parse import parse_reports
@@ -244,6 +245,15 @@ class Job(abc.ABC):
                     _actions = [ParseAction(label=entry.label,
                         action_index=entry.action_index)
                         for entry in __parse_entries]
+
+                case 'commit_job':
+
+                    __commit_entries = self._db.commit_jobs.get_actions(
+                            label=self.label)
+
+                    _actions = [CommitAction(label=entry.label,
+                        action_index=entry.action_index)
+                        for entry in __commit_entries]
 
             _actions.sort(key=lambda x: x.action_index)
 
