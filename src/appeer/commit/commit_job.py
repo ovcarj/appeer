@@ -169,7 +169,32 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
 
         """
 
-        self._wlog(_log.boxed_message('PREPARING PARSING', centered=True) + '\n')
+        self._wlog(_log.boxed_message('PREPARING METADATA', centered=True) + '\n')
+
+        try:
+
+            packer = CommitPacker(commit_mode=self.mode,
+                    data_source=data_source,
+                    _queue=self._queue)
+
+        except ValueError as err:
+            self._wlog(err)
+
+        else:
+
+            packer.pack()
+
+            if packer.success:
+                self._queue.put(
+                        f'Prepared {len(packer.packet)} entries.')
+
+                self._add_actions(commit_packet=packer.packet)
+
+                self.no_of_publications = len(self.actions)
+                self.job_status = 'W'
+
+            else:
+                self._queue.put('No new actions were added to the commit job.')
 
     def _add_actions(self, commit_packet):
         """
