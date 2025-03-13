@@ -146,7 +146,7 @@ class Scrapes(ActionTable,
                 # TODO: strategies in the ScrapePlan will be revised
                 # if False is left as a placeholder
                 if False:
-                    raise ValueError(f'Cannot update the scrape database. Invalid strategy={new_value} given; must be ...')
+                    raise ValueError(f'Cannot update the "scrapes" table. Invalid strategy={new_value} given; must be ...')
 
                 else:
 
@@ -161,7 +161,7 @@ class Scrapes(ActionTable,
                 # TODO: strategies in the ScrapePlan will be revised
                 # if False is left as a placeholder
                 if False:
-                    raise ValueError(f'Cannot update the scrape database. Invalid method={new_value} given; must be ...')
+                    raise ValueError(f'Cannot update the "scrapes" table. Invalid method={new_value} given; must be ...')
 
                 else:
 
@@ -176,7 +176,7 @@ class Scrapes(ActionTable,
                 # TODO: journals in the ScrapePlan will be revised
                 # if False is left as a placeholder
                 if False:
-                    raise ValueError(f'Cannot update the scrape database. Invalid journal={new_value} given; must be ...')
+                    raise ValueError(f'Cannot update the "scrapes" table. Invalid journal={new_value} given; must be ...')
 
                 else:
 
@@ -189,7 +189,7 @@ class Scrapes(ActionTable,
             case 'success':
 
                 if not new_value in ('T', 'F'):
-                    raise ValueError(f'Cannot update the scrape database. Invalid success={new_value} given; must be one of ("T", "F").')
+                    raise ValueError(f'Cannot update the "scrapes" table. Invalid success={new_value} given; must be one of ("T", "F").')
 
                 self._cur.execute("""
                 UPDATE scrapes SET success = ? WHERE label = ? AND action_index = ?
@@ -200,7 +200,7 @@ class Scrapes(ActionTable,
             case 'status':
 
                 if not new_value in ('I', 'W', 'R', 'E', 'X'):
-                    raise ValueError(f'Cannot update the scrape database. Invalid status={new_value} given; must be one of ("I", "W", "R", "E", "X").')
+                    raise ValueError(f'Cannot update the "scrapes" table. Invalid status={new_value} given; must be one of ("I", "W", "R", "E", "X").')
 
                 self._cur.execute("""
                 UPDATE scrapes SET status = ? WHERE label = ? AND action_index = ?
@@ -211,7 +211,7 @@ class Scrapes(ActionTable,
             case 'out_file':
 
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the scrape database. Invalid out_file={new_value} given; must be a string.')
+                    raise ValueError(f'Cannot update the "scrapes" table. Invalid out_file={new_value} given; must be a string.')
 
                 self._cur.execute("""
                 UPDATE scrapes SET out_file = ? WHERE label = ? AND action_index = ?
@@ -222,7 +222,7 @@ class Scrapes(ActionTable,
             case 'date':
 
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the scrape database. Invalid date={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "scrapes" table. Invalid date={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE scrapes SET date = ? WHERE label = ? AND action_index = ?
@@ -233,7 +233,7 @@ class Scrapes(ActionTable,
             case 'parsed':
 
                 if new_value not in ('T', 'F'):
-                    raise ValueError(f'Cannot update the scrape database. Invalid parsed={new_value} given; must be "T" or "F".')
+                    raise ValueError(f'Cannot update the "scrapes" table. Invalid parsed={new_value} given; must be "T" or "F".')
 
                 self._cur.execute("""
                 UPDATE scrapes SET parsed = ? WHERE label = ? AND action_index = ?
@@ -244,6 +244,6 @@ class Scrapes(ActionTable,
             case _:
 
                 self._con.close()
-                raise ValueError(f'Cannot update the scrape database. Invalid column name "{column_name}" given.')
+                raise ValueError(f'Cannot update the "scrapes" table. Invalid column name "{column_name}" given.')
 
         self._con.close()
