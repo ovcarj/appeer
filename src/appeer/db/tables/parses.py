@@ -183,7 +183,7 @@ class Parses(ActionTable,
 
                 # TODO: explicit publisher check should be implemented
                 if not isinstance(new_value, str):
-                    raise ValueError(f'Cannot update the "parses" table. Invalid date={new_value} given; must be a string')
+                    raise ValueError(f'Cannot update the "parses" table. Invalid publisher={new_value} given; must be a string')
 
                 self._cur.execute("""
                 UPDATE parses SET publisher = ? WHERE label = ? AND action_index = ?
