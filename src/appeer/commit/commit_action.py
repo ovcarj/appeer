@@ -1,17 +1,17 @@
-"""Commit parsed metadata to the ``pubs.db`` database"""
+"""Commit parsed metadata to the ``pub.db`` database"""
 
 from appeer.jobs.action import Action
 
 class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-instance-attributes
     """
-    Commit parsed metadata to the ``pubs.db`` database
+    Commit parsed metadata to the ``pub.db`` database
 
     A commit action attempts to insert metadata corresponding to a single
-        parse action to the ``pubs.db`` database.
+        parse action to the ``pub.db`` database.
 
-    The ``pubs.db`` database may contain one and only one entry for a given
+    The ``pub.db`` database may contain one and only one entry for a given
         DOI. Therefore, if a commit action attempts to insert an entry
-        with a DOI that already exists in ``pubs.db``, one of the following
+        with a DOI that already exists in ``pub.db``, one of the following
         may happen:
 
             (1) The entry is rejected; i.e. the commit action does nothing.
@@ -70,7 +70,7 @@ class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-insta
     status : str
         Action status; one of ('I', 'W', 'R', 'E', 'X'); mutable
     passed : str
-        Whether the metadata was entered into ``pubs.db``;
+        Whether the metadata was entered into ``pub.db``;
             one of ('T', 'F'); mutable
 
     """

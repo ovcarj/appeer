@@ -1,13 +1,13 @@
-"""Handles the ``pubs`` table in ``pubs.db``"""
+"""Handles the ``pub`` table in ``pub.db``"""
 
 from appeer.db.tables.table import Table
 from appeer.db.tables.registered_tables import get_registered_tables
 
-class Pubs(Table,
-           name='pubs',
-           columns=get_registered_tables()['pubs']):
+class Pub(Table,
+           name='pub',
+           columns=get_registered_tables()['pub']):
     """
-    Handles the ``pubs`` table
+    Handles the ``pub`` table
 
     Parameters
     ----------

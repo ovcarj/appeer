@@ -76,7 +76,7 @@ class DB(abc.ABC):
 
         self._base = datadir.base
 
-        if db_type not in ['jobs', 'pubs']:
+        if db_type not in ['jobs', 'pub']:
             raise ValueError('Failed to initialize the DB class. db_type must be "jobs" or "pub".')
 
         self._db_type = db_type
@@ -84,8 +84,8 @@ class DB(abc.ABC):
         if self._db_type == 'jobs':
             self._db_path = os.path.join(datadir.db, 'jobs.db')
 
-        elif self._db_type == 'pubs':
-            self._db_path = os.path.join(datadir.db, 'pubs.db')
+        elif self._db_type == 'pub':
+            self._db_path = os.path.join(datadir.db, 'pub.db')
 
         if self._db_exists:
 

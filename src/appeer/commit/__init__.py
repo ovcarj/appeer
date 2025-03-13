@@ -1,1 +1,1 @@
-"""Commit parsed publications to pubs.db"""
+"""Commit parsed publications to pub.db"""

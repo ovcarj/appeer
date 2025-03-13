@@ -1,4 +1,4 @@
-"""Commit publications to the pubs.db database"""
+"""Commit publications to the pub.db database"""
 
 import queue
 import threading

@@ -106,7 +106,7 @@ def get_registered_tables():
                  'status',
                  'passed'],
 
-            'pubs':
+            'pub':
                 ['doi',
                  'received',
                  'accepted',
