@@ -308,7 +308,7 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         while self.job_step < self.no_of_publications:
 
-            self.run_action(queue=self._queue,
+            self.run_action(_queue=self._queue,
                     action_index=self.job_step,
                     **action_parameters)
 
@@ -421,7 +421,7 @@ class ScrapeJob(Job, job_type='scrape_job'): #pylint:disable=too-many-instance-a
 
         self.actions[action_index].run(
                 download_directory=self.download_directory,
-                _queue=self._queue,
+                _queue=_queue,
                 **action_parameters)
 
         if self.actions[action_index].success == 'F':
