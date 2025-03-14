@@ -154,7 +154,7 @@ def commit_action_start(action):
 
     report = '\n' + _log.underlined_message('METADATA SOURCE') + '\n'
 
-    report += f'\n{"Parse job label":20} {action.parse_label}\n'
+    report += f'{"Parse job label":20} {action.parse_label}\n'
     report += f'{"Parse action index":20} {action.parse_action_index}\n\n'
 
     report += _log.underlined_message('METADATA')
