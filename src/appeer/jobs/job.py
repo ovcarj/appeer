@@ -267,7 +267,7 @@ class Job(abc.ABC):
         Returns
         -------
         _failed_actions : list
-            List of failed ScrapeActions
+            List of failed actions
 
         """
 
@@ -284,7 +284,7 @@ class Job(abc.ABC):
         Returns
         -------
         _successful_actions : list
-            List of successful ScrapeActions
+            List of successful actions
 
         """
 
