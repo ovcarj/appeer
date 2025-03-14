@@ -92,3 +92,32 @@ def commit_start_report(job, run_parameters):
     report += _log.boxed_message(f'{start_resume} commit job from step {job.job_step}/{job.no_of_publications - 1}')
 
     return report
+
+def commit_step_report(job, action_index=None):
+    """
+    Return a formatted report at launching of a commit action
+
+    Parameters
+    ----------
+    job : appeer.commit.commit_job.CommitJob
+        appeer commit job
+    action_index : int
+        Index of the commit action that is beginning;
+            defaults to ``job.job_step``
+
+    Returns
+    -------
+    report : str
+        Report on the launch of a commit action
+
+    """
+
+    if not action_index:
+        action_index = job.job_step
+
+    current_time = _utils.get_current_datetime()
+    human_time = _utils.human_datetime(current_time)
+
+    report = _log.boxed_message(f'Committing entry {job.job_step}/{job.no_of_publications - 1}; {human_time}')
+
+    return report
