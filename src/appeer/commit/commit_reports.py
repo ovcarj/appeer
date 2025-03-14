@@ -1,5 +1,7 @@
 """Generate appeer commit-related reports"""
 
+from string import ascii_lowercase
+
 import appeer.general.log as _log
 import appeer.general.utils as _utils
 
@@ -119,5 +121,79 @@ def commit_step_report(job, action_index=None):
     human_time = _utils.human_datetime(current_time)
 
     report = _log.boxed_message(f'Committing entry {job.job_step}/{job.no_of_publications - 1}; {human_time}')
+
+    return report
+
+def commit_action_start(action):
+    """
+    Return a formatted report at the beginning of a commit action
+
+    Parameters
+    ----------
+    action : appeer.commit.commit_action.CommitAction
+        appeer commit action
+
+    Returns
+    -------
+    report : str
+        Report on the beginning of a commit action
+
+    """
+
+    metadata_list = [
+            'doi',
+            'publisher',
+            'journal',
+            'title',
+            'publication_type',
+            'affiliations',
+            'received',
+            'accepted',
+            'published'
+            ]
+
+    report = '\n' + _log.underlined_message('METADATA SOURCE') + '\n'
+
+    report += f'\n{"Parse job label":20} {action.parse_label}\n'
+    report += f'{"Parse action index":20} {action.parse_action_index}\n\n'
+
+    report += _log.underlined_message('METADATA')
+    report += '\n\n'
+
+    align = len(max(metadata_list, key=len)) + 4
+
+    for meta in metadata_list:
+
+        meta_brackets = f'[{meta.upper()}]'
+
+        if meta != 'affiliations':
+            report += f'{meta_brackets:<{align}} {getattr(action, meta)}\n'
+
+    report += '\n[AFFILIATIONS]'
+
+    if action.affiliations:
+
+        affiliations = _utils.aff_str2list(action.affiliations)
+
+        align = len(str(len(affiliations))) + 3
+
+        report += '\n\n'
+
+        for i, aff_list in enumerate(affiliations):
+
+            if len(aff_list) > 1:
+                suff = ascii_lowercase[:len(aff_list)]
+
+            else:
+                suff = ' '
+
+            for j, aff in enumerate(aff_list):
+
+                aff_string = f'({i+1}{suff[j].strip()})'
+
+                report += f'{aff_string:<{align}} {aff}\n'
+
+    else:
+        report += f'{"":<{align}} None'
 
     return report
