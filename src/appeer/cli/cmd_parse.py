@@ -106,11 +106,11 @@ def parse_cli(inputs, **kwargs):
     data_source = list(inputs) or None
 
     if (data_source and kwargs['mode'] in ('A', 'E')):
-        click.echo('Error: No inputs should be provided for parse modes "A" and "E".')
+        click.echo('Error: No inputs should be provided in parse modes "A" and "E".')
         sys.exit()
 
     if (not data_source and kwargs['mode'] in ('S', 'F')):
-        click.echo('Error: Inputs must be provided for parse modes "S" and "F".')
+        click.echo('Error: Inputs must be provided in parse modes "S" and "F".')
         sys.exit()
 
     kwargs['publishers'] = list(kwargs['publishers']) or None
