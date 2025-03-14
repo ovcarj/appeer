@@ -197,3 +197,46 @@ def commit_action_start(action):
         report += f'{"":<{align}} None'
 
     return report
+
+def commit_action_end(action, duplicate):
+    """
+    Return a formatted report at the end of a commit action
+
+    Parameters
+    ----------
+    action : appeer.commit.commit_action.CommitAction
+        appeer commit action
+
+    Returns
+    -------
+    report : str
+        Report on the beginning of a commit action
+    duplicate : bool
+        Whether the DOI was already in the database
+
+    """
+
+    report = _log.underlined_message('DATABASE STATUS UPDATE') + '\n'
+
+    report += f'{"entry":18} {action.doi}\n'
+    report += f'{"preexisting":18} {duplicate}\n'
+
+    report += f'{"database_action":18} '
+
+    passed = bool(action.passed == 'T')
+
+    if not duplicate and passed:
+        report += 'INSERT'
+
+    elif duplicate and passed:
+        report += 'REPLACE'
+
+    elif duplicate and not passed:
+        report += 'SKIP'
+
+    elif not duplicate and not passed:
+        report += 'FAIL'
+
+    report += '\n'
+
+    return report
