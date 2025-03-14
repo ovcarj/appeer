@@ -333,7 +333,7 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         while self.job_step < self.no_of_publications:
 
-            self.run_action(queue=self._queue,
+            self.run_action(_queue=self._queue,
                     action_index=self.job_step,
                     **action_parameters)
 
@@ -470,7 +470,7 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
             action_index=action_index))
 
         self.actions[action_index].run(
-                _queue=self._queue,
+                _queue=_queue,
                 **action_parameters)
 
         if self.actions[action_index].success == 'F':
