@@ -353,7 +353,7 @@ def parse_end(job):
     Returns
     -------
     report : str
-        Report on the beginning of a scrape action
+        Report on the end of a parse job
 
     """
 
