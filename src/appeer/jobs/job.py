@@ -262,7 +262,7 @@ class Job(abc.ABC):
     @property
     def failed_actions(self):
         """
-        Get actions with for which ``action.success == 'F'``
+        Get actions for which ``action.success == 'F'``
 
         Returns
         -------
@@ -279,7 +279,7 @@ class Job(abc.ABC):
     @property
     def successful_actions(self):
         """
-        Get actions with for which ``action.success == 'T'``
+        Get actions for which ``action.success == 'T'``
 
         Returns
         -------
