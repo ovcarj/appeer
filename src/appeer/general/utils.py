@@ -245,6 +245,29 @@ def aff_list2str(aff_list):
 
     return aff_str
 
+def aff_str2list(aff_str):
+    """
+    Inverts the transformation performed by aff_list2str
+
+    Parameters
+    ----------
+    aff_str : str
+        The affiliation list concatenated to a single string
+
+    Returns
+    -------
+    aff_list : list of list of str
+        List of affiliations
+
+    """
+
+    aff_list = [
+            aff.split('!_!')
+            for aff in aff_str.split('?_?')
+            ]
+
+    return aff_list
+
 def get_current_datetime():
     """
     Get current datetime in the ``%Y%m%d-%H%M%S`` format
