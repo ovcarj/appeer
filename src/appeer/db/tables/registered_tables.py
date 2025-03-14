@@ -108,14 +108,15 @@ def get_registered_tables():
 
             'pub':
                 ['doi',
-                 'received',
-                 'accepted',
-                 'published',
-                 'duration',
                  'publisher',
                  'journal',
                  'title',
-                 'affiliations']
+                 'publication_type',
+                 'affiliations',
+                 'received',
+                 'accepted',
+                 'published'
+                 ]
 
                 }
 
