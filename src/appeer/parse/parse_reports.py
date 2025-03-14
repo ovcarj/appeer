@@ -337,7 +337,7 @@ def parsing_report(parser):
                     report += f'{aff_string:<{align}} {aff}\n'
 
         else:
-            report += '{"":<{align}} None'
+            report += f'{"":<{align}} None'
 
     return report
 
