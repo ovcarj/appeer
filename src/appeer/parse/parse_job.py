@@ -256,7 +256,7 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
         If ``restart_mode == 'from_scratch'``, the ``job_step`` is set to 0
             and the parsing is performed for all the actions in the job.
 
-        If ``parse_mode == 'resume'``, parsing is resumed from the current
+        If ``restart_mode == 'resume'``, parsing is resumed from the current
             ``job_step``.
 
         If ``cleanup == 'True'``, the temporary directory given by
