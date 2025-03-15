@@ -8,7 +8,7 @@ class CommitJobs(JobTable,
               name='commit_jobs',
               columns=get_registered_tables()['commit_jobs']):
     """
-    Handles the ``parse_jobs`` table
+    Handles the ``commit_jobs`` table
 
     Parameters
     ----------
@@ -69,7 +69,7 @@ class CommitJobs(JobTable,
         """
 
         if kwargs['mode'] not in ('A', 'E', 'P'):
-            raise ValueError(f'Cannot add entry to the parse jobs database; invalid mode {kwargs["mode"]} inputted.')
+            raise ValueError(f'Cannot add entry to the "commit_jobs" table; invalid mode {kwargs["mode"]} inputted.')
 
         data = ({
             'label': kwargs['label'],
@@ -95,7 +95,7 @@ class CommitJobs(JobTable,
         Updates an entry in the ``commit_jobs`` table
 
         Given a ``label``, updates the corresponding ``column_name``
-            with ``new_value`` in the ``parse_jobs`` table
+            with ``new_value`` in the ``commit_jobs`` table
 
         ``column_name`` must be in
             ('job_status', 'job_step', 'job_successes', 'job_fails',
@@ -104,7 +104,7 @@ class CommitJobs(JobTable,
         Keyword Arguments
         -----------------
         label : str
-            Label of the parse job that is being updated
+            Label of the commit job that is being updated
         column_name : str
             Name of the column whose value is being updated
         new_value : str : int
@@ -123,7 +123,7 @@ class CommitJobs(JobTable,
             case 'job_status':
 
                 if new_value not in ('I', 'W', 'R', 'X', 'E'):
-                    raise ValueError(f'Cannot update the parse database. Invalid job_status={new_value} given; must be "I", "R", "X" or "E".')
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid job_status={new_value} given; must be "I", "R", "X" or "E".')
 
                 self._cur.execute("""
                 UPDATE commit_jobs SET job_status = ? WHERE label = ?
@@ -134,10 +134,10 @@ class CommitJobs(JobTable,
             case 'no_of_publications':
 
                 if not isinstance(new_value, int):
-                    raise ValueError(f'Cannot update the commit database. Invalid no_of_publications={new_value} given; must be a positive integer.')
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid no_of_publications={new_value} given; must be a positive integer.')
 
                 if not new_value > 0:
-                    raise ValueError(f'Cannot update the commit database. Invalid no_of_publications={new_value} given; must be a positive integer.')
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid no_of_publications={new_value} given; must be a positive integer.')
 
                 self._cur.execute("""
                 UPDATE commit_jobs SET no_of_publications = ? WHERE label = ?
@@ -148,10 +148,10 @@ class CommitJobs(JobTable,
             case 'job_step':
 
                 if not isinstance(new_value, int):
-                    raise ValueError(f'Cannot update the commit database. Invalid job_step={new_value} given; must be an integer.')
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid job_step={new_value} given; must be an integer.')
 
                 if not new_value >= 0:
-                    raise ValueError(f'Cannot update the parse database. Invalid job_step={new_value} given; must be a non-negative integer.')
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid job_step={new_value} given; must be a non-negative integer.')
 
                 self._cur.execute("""
                 UPDATE commit_jobs SET job_step = ? WHERE label = ?
@@ -162,13 +162,13 @@ class CommitJobs(JobTable,
             case 'job_successes':
 
                 if not isinstance(new_value, int):
-                    raise ValueError(f'Cannot update the commit database. Invalid no_of_success={new_value} given; must be an integer.')
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid no_of_success={new_value} given; must be an integer.')
 
                 if not new_value >= 0:
-                    raise ValueError(f'Cannot update the commit database. Invalid no_of_success={new_value} given; must be a non-negative integer.')
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid no_of_success={new_value} given; must be a non-negative integer.')
 
                 self._cur.execute("""
-                UPDATE parse_jobs SET job_successes = ? WHERE label = ?
+                UPDATE commit_jobs SET job_successes = ? WHERE label = ?
                 """, (new_value, label))
 
                 self._con.commit()
@@ -176,10 +176,10 @@ class CommitJobs(JobTable,
             case 'job_fails':
 
                 if not isinstance(new_value, int):
-                    raise ValueError(f'Cannot update the commit database. Invalid no_of_fails={new_value} given; must be an integer.')
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid no_of_fails={new_value} given; must be an integer.')
 
                 if not new_value >= 0:
-                    raise ValueError(f'Cannot update the commit database. Invalid no_of_fails={new_value} given; must be a non-negative integer.')
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid no_of_fails={new_value} given; must be a non-negative integer.')
 
                 self._cur.execute("""
                 UPDATE commit_jobs SET job_fails = ? WHERE label = ?
@@ -190,4 +190,4 @@ class CommitJobs(JobTable,
             case _:
 
                 self._con.close()
-                raise ValueError(f'Cannot update the commit database. Invalid column name "{column_name}" given.')
+                raise ValueError(f'Cannot update the "commit_jobs" table. Invalid column name "{column_name}" given.')
