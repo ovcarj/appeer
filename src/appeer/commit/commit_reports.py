@@ -342,3 +342,28 @@ def action_list_summary(action_list): #pylint:disable='too-many-locals'
         report += '\n'
 
     return report
+
+def end_logo(job):
+    """
+    Write a logo and the commit job label at the end of the job
+
+    Parameters
+    ----------
+    job : appeer.commit.commit_job.CommitJob
+        appeer commit job
+
+    Returns
+    -------
+    report : str
+        Logo and commit job label for the end of a commit job
+
+    """
+
+    current_time = _utils.get_current_datetime()
+    human_time = _utils.human_datetime(current_time)
+
+    report = _log.get_logo(centered=True) + '\n'
+    report += _log.boxed_message(f'COMMIT JOB: {job.label}', centered=True) + '\n'
+    report += _log.center(f'Finished on {human_time}') + '\n'
+
+    return report
