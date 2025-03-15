@@ -87,6 +87,40 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
 
         super().__init__(label=label, job_mode=job_mode)
 
+    @property
+    def passed_actions(self):
+        """
+        Get executed actions that resulted in a change of "pub.db"
+
+        Returns
+        -------
+        _passed_actions : list of appeer.commit.commit_action.CommitAction
+            List of executed and passed CommitActions
+
+        """
+
+        _passed_actions = [action for action in self.actions
+                if action.passed == 'T' and action.success == 'T']
+
+        return _passed_actions
+
+    @property
+    def skipped_actions(self):
+        """
+        Get executed actions that did not result in a change of "pub.db"
+
+        Returns
+        -------
+        _skipped_actions : list of appeer.commit.commit_action.CommitAction
+            List of executed, but not passed commit actions
+
+        """
+
+        _skipped_actions = [action for action in self.actions
+                if action.passed == 'F' and action.success == 'T']
+
+        return _skipped_actions
+
     def _prepare_new_job_parameters(self, **kwargs):
         """
         Set defaults and sanitize parameters passed to ``self.new_job()``
