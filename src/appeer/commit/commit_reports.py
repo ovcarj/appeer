@@ -241,6 +241,69 @@ def commit_action_end(action, duplicate):
 
     return report
 
+def commit_end(job):
+    """
+    Return a formatted report at the end of a commit job
+
+    Parameters
+    ----------
+    job : appeer.commit.commit_job.CommitJob
+        appeer commit job
+
+    Returns
+    -------
+    report : str
+        Report on the end of a commit job
+
+    """
+
+    report = ''
+
+    report += _log.boxed_message('COMMIT JOB EXECUTED', centered=True) + '\n'
+
+    align = len(max('Successes', 'Fails', 'Passed', key=len)) + 2
+
+    msg = ''
+
+    msg += f'{"Succeeded":<{align}} {job.job_successes}/{job.no_of_publications}\n'
+    msg += f'{"Failed":<{align}} {job.job_fails}/{job.no_of_publications}\n'
+    msg += f'{"Passed":<{align}} {len(job.passed_actions)}/{job.no_of_publications}\n'
+    msg += f'{"Skipped":<{align}} {len(job.skipped_actions)}/{job.no_of_publications}\n'
+
+    msg = msg.rstrip('\n')
+    report += _log.boxed_message(msg, centered=True)
+
+    report += '\n\n'
+
+    if job.job_fails > 0:
+
+        report += _log.boxed_message('Failed commit actions')
+        report += '\n\n'
+
+        report += action_list_summary(action_list=job.failed_actions)
+
+        report += '\n'
+
+    if job.passed_actions:
+
+        report += _log.boxed_message('Inserted/updated entries')
+        report += '\n\n'
+
+        report += action_list_summary(action_list=job.passed_actions)
+
+        report += '\n'
+
+    if job.skipped_actions:
+
+        report += _log.boxed_message('Skipped entries')
+        report += '\n\n'
+
+        report += action_list_summary(action_list=job.skipped_actions)
+
+        report += '\n'
+
+    return report
+
 def action_list_summary(action_list): #pylint:disable='too-many-locals'
     """
     Return a summary of a list of commit actions
