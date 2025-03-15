@@ -225,3 +225,29 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
         parser_class, loaded_data = preparser.determine_parser()
 
         return parser_class, loaded_data
+
+    def mark_as_committed(self):
+        """
+        Marks the parse action as committed.
+
+        If the action does not exist, does nothing.
+
+        """
+
+        if self._action_exists:
+
+            self._action_mode = 'write'
+            self.committed = 'T'
+
+    def mark_as_uncommitted(self):
+        """
+        Marks the parse action as uncommitted.
+
+        If the action does not exist, does nothing.
+
+        """
+
+        if self._action_exists:
+
+            self._action_mode = 'write'
+            self.committed = 'F'
