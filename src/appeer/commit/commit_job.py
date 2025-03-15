@@ -7,8 +7,11 @@ from appeer.general import log as _log
 
 from appeer.jobs.job import Job
 
+from appeer.parse.parse_job import ParseJob
+
 from appeer.commit.commit_action import CommitAction
 from appeer.commit.commit_packer import CommitPacker
+from appeer.commit import commit_reports as reports
 
 
 class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-attributes
@@ -284,3 +287,40 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
                 }
 
         return run_parameters
+
+    def run_action(self, action_index=None, _queue=None, **action_parameters):
+        """
+        Runs the commit action given by ``action_index``
+
+        Parameters
+        ----------
+        action_index : int
+            Index of the commit action to run; defaults to
+                ``self.job_step``
+        _queue : queue.Queue
+            If given, messages will be logged in the job log file
+
+        Keyword Arguments
+        -----------------
+        overwrite : bool
+            If False, ignore a duplicate DOI entry (default);
+            if True, overwrite a duplicate DOI entry;
+            if the given DOI is unique, this parameter has no impact
+
+        """
+
+        if not action_index:
+            action_index = self.job_step
+
+        self._wlog(reports.commit_step_report(self,
+            action_index=action_index))
+
+        self.actions[action_index].run(
+                _queue=_queue,
+                **action_parameters)
+
+        if self.actions[action_index].success == 'F':
+            self.job_fails += 1
+
+        if self.actions[action_index].success == 'T':
+            self.job_successes += 1
