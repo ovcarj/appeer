@@ -51,3 +51,32 @@ def append_publications(label, data_source):
     cj.add_publications(data_source=data_source)
 
     return cj
+
+def run_job(label,
+            restart_mode='from_scratch',
+            **kwargs):
+    """
+    Run the commit job with the given ``label``
+
+    Parameters
+    ----------
+    label : str
+        Unique job label
+    restart_mode : str
+        Must be in ('from_scratch', 'resume')
+
+    Keyword Arguments
+    -----------------
+    no_parse_mark : bool
+        If True, parse jobs will not be labeled as committed
+            even if they are committed successfully
+    overwrite : bool
+        If False, ignore a duplicate DOI entry (default);
+            if True, overwrite a duplicate DOI entry;
+            if the given DOI is unique, this parameter has no impact
+
+    """
+
+    cj = CommitJob(label=label, job_mode='write')
+    cj.run_job(restart_mode=restart_mode,
+               **kwargs)
