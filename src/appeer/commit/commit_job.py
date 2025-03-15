@@ -324,3 +324,55 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
 
         if self.actions[action_index].success == 'T':
             self.job_successes += 1
+
+    def _update_parses(self):
+        """
+        Updates the "committed" status of all parse jobs/actions corresponding
+            to the ``CommitJob``
+
+        The parse action "committed" status is updated only if the
+            corresponding parse action is successful AND passed.
+
+        If all the successful parse actions within a parse job
+            are committed, the parse job will also be marked as
+            completely committed
+
+        """
+
+        unique_parse_labels = set(action.parse_label
+            for action in self.actions)
+
+        self._wlog(_log.boxed_message('Updating the "commited" status of parse jobs/actions'))
+
+        self._wlog('\nReport format:\n<PARSE_ACTION_INDEX>: <OLD_COMMITTED_STATUS> -> <UPDATED_COMMITTED_STATUS>\n')
+
+        for parse_label in unique_parse_labels:
+
+            self._wlog(_log.underlined_message(f'Parse job: {parse_label}'))
+
+            parse_job = ParseJob(label=parse_label, job_mode='write')
+
+            old_job_status = parse_job.job_committed
+
+            passed_actions = [action
+                    for action in self.passed_actions
+                    if action.parse_label == parse_label and\
+                            action.success == 'T']
+
+            for passed_action in passed_actions:
+
+                parse_action = parse_job.actions\
+                        [passed_action.parse_action_index]
+
+                old_status = parse_action.committed
+                parse_action.mark_as_committed()
+                updated_status = parse_action.committed
+
+                self._wlog(f'{parse_action.action_index}: {old_status} -> {updated_status}')
+
+            parse_job.update_committed()
+            updated_job_status = parse_job.job_committed
+
+            self._wlog(f'\nParse job {parse_label} committed status: {old_job_status} -> {updated_job_status}\n')
+
+        self._wlog(_log.boxed_message('Completed updating the "committed" status of parse jobs/actions') + '\n')
