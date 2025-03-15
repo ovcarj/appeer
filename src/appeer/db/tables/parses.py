@@ -316,7 +316,7 @@ class Parses(ActionTable,
                     raise ValueError(f'Cannot update the "parses" table. Invalid parsed={new_value} given; must be "T" or "F".')
 
                 self._cur.execute("""
-                UPDATE parses SET parsed = ? WHERE label = ? AND action_index = ?
+                UPDATE parses SET committed = ? WHERE label = ? AND action_index = ?
                 """, (new_value, label, action_index))
 
                 self._con.commit()
