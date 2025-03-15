@@ -28,7 +28,7 @@ from appeer.commit import commit_scripts
 
             appeer cjob add --help
 
-        Run a commit job (TODO)
+        Run a commit job
 
             appeer cjob run --help
 
