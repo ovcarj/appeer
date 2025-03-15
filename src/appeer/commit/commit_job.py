@@ -1,5 +1,6 @@
 """Commit publications to the pub.db database"""
 
+import sys
 import queue
 import threading
 
@@ -252,6 +253,105 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
                     action_index=self.no_of_publications + i)
 
             action.new_action(commit_entry=commit_entry)
+
+    def run_job(self, restart_mode='from_scratch', **kwargs):
+        """
+        Runs the actions defined in self.actions
+
+        If ``restart_mode == 'from_scratch'``, the ``job_step`` is set to 0
+            and the parsing is performed for all the actions in the job.
+
+        If ``restart_mode == 'resume'``, parsing is resumed from the current
+            ``job_step``.
+
+        If the keyword argument ``no_parse_mark == True``, parse jobs
+            and actions corresponding to parse actions will not be labeled
+            as committed, even if they are committed successfully.
+
+        Each entry in the ``pub`` table must have a unique ``doi`` value.
+
+            If an entry containing a DOI value already existing in the table
+                is attempted to be added to the database, the ``overwrite``
+                keyword argument governs the behavior of commit actions:
+
+                (1) If ``overwrite == False``, the entry is not inserted
+
+                (2) If ``overwrite == True``, the entry with the given
+                    DOI is updated
+
+        Parameters
+        ----------
+        restart_mode : str
+            Must be in ('from_scratch', 'resume')
+
+        Keyword Arguments
+        -----------------
+        no_parse_mark : bool
+            If True, parse jobs will not be labeled as committed
+                even if they are committed successfully
+        overwrite : bool
+            If False, ignore a duplicate DOI entry (default);
+                if True, overwrite a duplicate DOI entry;
+                if the given DOI is unique, this parameter has no impact
+
+        """
+
+        if self.no_of_publications == 0:
+            self._wlog(f'\nError: Cannot run commit job "{self.label}"; no publications were added to this job. Exiting.\n')
+            self.job_status = 'E'
+            sys.exit()
+
+        run_parameters =\
+                self._prepare_run_parameters(restart_mode=restart_mode,
+                        **kwargs)
+
+        self.job_mode = 'write'
+
+        if run_parameters['restart_mode'] == 'from_scratch':
+
+            self.job_step = 0
+            self.job_fails = 0
+            self.job_successes = 0
+
+        self.job_status = 'R'
+
+        self._wlog(reports.commit_start_report(job=self,
+            run_parameters=run_parameters))
+
+        self._queue = queue.Queue()
+        threading.Thread(target=self._log_server, daemon=True).start()
+
+        action_parameters = {
+                'overwrite': run_parameters['overwrite'],
+                }
+
+        while self.job_step < self.no_of_publications:
+
+            self.run_action(_queue=self._queue,
+                    action_index=self.job_step,
+                    **action_parameters)
+
+            self.job_step += 1
+
+        if all(status == 'X' for status in
+                (getattr(action, 'status') for action in self.actions)):
+
+            self.job_status = 'X'
+
+        self._wlog(reports.commit_end(job=self))
+
+        if not run_parameters['no_parse_mark']:
+
+            if not self.passed_actions:
+                self._wlog('No commit actions reusulted in a change of pub.db; no parse job/actions will be marked as committed.\n')
+
+            else:
+                self._update_parses()
+
+        else:
+            self._wlog('no_parse_mark was set to True; no parse job/actions will be marked as committed.\n')
+
+        self._wlog(reports.end_logo(job=self))
 
     def _prepare_run_parameters(self, restart_mode, **kwargs):
         """
