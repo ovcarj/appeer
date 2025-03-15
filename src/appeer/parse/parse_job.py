@@ -537,3 +537,40 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         else:
             self._wlog('No scrape jobs were associated with this parse job; no scrape jobs/actions will be labeled as parsed.\n')
+
+    def update_committed(self):
+        """
+        If all successful actions are committed, mark the job as committed.
+
+        If the job does not exist, does nothing
+
+        """
+
+        if self._job_exists:
+
+            if all(action.committed == 'T'
+                    for action in self.successful_actions):
+                self.job_committed = 'T'
+
+            else:
+                self.job_committed = 'F'
+
+    def unmark_actions(self):
+        """
+        Set the "committed" status of all parse actions in the job to "F"
+
+        If the job does not exist, does nothing
+
+        """
+
+        if self._job_exists:
+
+            if not self.actions:
+                pass
+
+            else:
+
+                for action in self.actions:
+                    action.mark_as_unparsed()
+
+            self.update_parsed()
