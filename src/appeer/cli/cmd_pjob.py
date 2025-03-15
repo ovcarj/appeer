@@ -161,7 +161,7 @@ def add(job_label, inputs):
 
         Available run modes ("-r" flag): from_scratch/resume
 
-            from_scratch: (Re)start downloading publications from index=0
+            from_scratch: (Re)start parsing publications from index=0
 
             resume: Resume a previously interrupted job
 
