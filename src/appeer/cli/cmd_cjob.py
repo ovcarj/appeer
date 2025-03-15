@@ -130,3 +130,38 @@ def add(job_label, inputs):
 
     commit_scripts.append_publications(label=job_label,
             data_source=data_source)
+
+@cjob_cli.command('run',
+        help="""Run a preexisting commit job
+
+        Example usage:
+
+            appeer cjob run -j "my_label"
+
+            appeer cjob run -r "resume" -c -j "my_label"
+
+        Available run modes ("-r" flag): from_scratch/resume
+
+            from_scratch: (Re)start committing publications from index=0
+
+            resume: Resume a previously interrupted job
+
+        """)
+@click.option('-j', '--job_label', help='Parse job label', required=True)
+@click.option('-r', '--restart_mode', help='Restart mode',
+        default='from_scratch',
+        show_default=True)
+@click.option('-x', '--no_parse_mark',
+        is_flag=True, default=False,
+        help="Do not mark parse jobs as committed")
+@click.option('-o', '--overwrite',
+        is_flag=True, default=False,
+        help="Overwrite existing entries")
+def run(**kwargs):
+    """
+    Run a preexisting commit job
+
+    """
+
+    commit_scripts.run_job(label=kwargs['job_label'],
+            **kwargs)
