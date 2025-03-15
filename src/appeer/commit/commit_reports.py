@@ -240,3 +240,42 @@ def commit_action_end(action, duplicate):
     report += '\n'
 
     return report
+
+def action_list_summary(action_list): #pylint:disable='too-many-locals'
+    """
+    Return a summary of a list of commit actions
+
+    Parameters
+    ----------
+    action_list : list of appeer.commit.commit_job.CommitAction
+        List of appeer parse actions
+    add_parsed_info : bool
+        If True, write action.committed values to summary
+
+    Returns
+    -------
+    report : str
+        Summary of a list of actions
+
+    """
+
+    action_indices = [str(action.action_index) for action in action_list]
+    dois = [action.doi for action in action_list]
+    passed = [action.passed for action in action_list]
+    statuses = [action.status for action in action_list]
+
+    max_index_len = max(len(max(action_indices, key=len)), len('Index'))
+    max_doi_len = max(len(max(dois, key=len)), len('DOI'))
+    max_passed_len = max(len(max(passed, key=len)), len('Passed'))
+    max_status_len = max(len(max(statuses, key=len)), len('Status'))
+
+    _msg = f'{"Index":<{max_index_len}}  {"DOI":<{max_doi_len}}  {"Passed":<{max_passed_len}}  {"Status":<{max_status_len}}'
+
+    report = _log.underlined_message(_msg) + '\n'
+
+    for i in range(len(action_list)):
+        report += f'{action_indices[i]:<{max_index_len}}  {dois[i]:<{max_doi_len}}    {passed[i]:<{max_passed_len}}  {statuses[i]:<{max_status_len}}'
+
+        report += '\n'
+
+    return report
