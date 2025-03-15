@@ -1,6 +1,11 @@
 """Commit parsed metadata to the ``pub.db`` database"""
 
+from appeer.general import utils as _utils
+
 from appeer.jobs.action import Action
+from appeer.db.pub_db import PubDB
+
+from appeer.commit import commit_reports as reports
 
 class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-instance-attributes
     """
@@ -75,6 +80,7 @@ class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-insta
 
     """
 
+
     def __init__(self, label=None, action_index=None, action_mode='read'):
         """
         Connects to the job database and sets the action label and index
@@ -124,3 +130,75 @@ class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-insta
                 parse_action_index=commit_entry.parse_action_index,
                 status='W',
                 **commit_entry.metadata)
+
+    def run(self, overwrite=False, _queue=None):
+        """
+        Run the commit action
+
+        A commit action attempts to add an entry to the ``pub`` table
+            of the ``pubs.db`` database.
+
+        Each entry in the ``pub`` table must have a unique ``doi`` value.
+
+            If an entry containing a DOI value already existing in the table
+                is attempted to be added to the database, the ``overwrite``
+                parameter governs the behavior of this method:
+
+                (1) If ``overwrite == False``, the entry is not inserted
+
+                (2) If ``overwrite == True``, the entry with the given
+                    DOI is updated
+
+        If ``queue`` is given, messages will be sent to the ``queue``
+            and logged in the job log file
+
+        Parameters
+        ----------
+        overwrite : bool
+            If False, ignore a duplicate DOI entry (default);
+            if True, overwrite a duplicate DOI entry;
+            if the given DOI is unique, this parameter has no impact
+        queue : queue.Queue
+            If given, messages will be logged in the job log file
+
+        """
+
+        start_datetime = _utils.get_current_datetime()
+
+        self._queue = _queue
+
+        self._action_mode = 'write'
+        self.status = 'R'
+
+        self.date = start_datetime
+
+        self._aprint(reports.commit_action_start(self))
+
+        pub = PubDB().pub
+
+        duplicate, inserted = pub.add_entry(overwrite=overwrite,
+                doi=self.doi,
+                publisher=self.publisher,
+                journal=self.journal,
+                title=self.title,
+                publication_type=self.publication_type,
+                affiliations=self.affiliations,
+                received=self.received,
+                accepted=self.accepted,
+                published=self.published)
+
+        pub._con.close() #pylint:disable=protected-access
+
+        if inserted:
+            self.passed = 'T'
+
+        else:
+            self.passed = 'F'
+
+        self._aprint(reports.commit_action_end(
+            action=self,
+            duplicate=duplicate))
+
+        self.success = 'T'
+
+        self.status = 'X'
