@@ -249,3 +249,38 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
                     action_index=self.no_of_publications + i)
 
             action.new_action(commit_entry=commit_entry)
+
+    def _prepare_run_parameters(self, restart_mode, **kwargs):
+        """
+        Helper method to prepare run arguments for ``self.run_job()``
+
+        Parameters and keyword arguments are the same as in self.run_job()
+
+        Returns
+        -------
+        run_parameters : dict
+            Appropriately sanitized arguments for a parse job
+
+        """
+
+        if restart_mode not in ('from_scratch', 'resume'):
+            raise ValueError('scrape_mode must be "from_scratch" or "resume".')
+
+        kwargs.setdefault('no_parse_mark', False)
+        no_parse_mark = kwargs['no_parse_mark']
+
+        if not isinstance(no_parse_mark, bool):
+            raise ValueError('The "no_parse_mark" parameter must be boolean.')
+
+        kwargs.setdefault('overwrite', False)
+        overwrite = kwargs['overwrite']
+
+        if not isinstance(overwrite, bool):
+            raise ValueError('The "overwrite" parameter must be boolean.')
+
+        run_parameters = {'restart_mode': restart_mode,
+                'no_parse_mark': no_parse_mark,
+                'overwrite': overwrite
+                }
+
+        return run_parameters
