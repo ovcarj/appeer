@@ -491,7 +491,7 @@ def end_logo(job):
     Returns
     -------
     report : str
-        Logo and scrape job label for the end of a scrape job
+        Logo and parse job label for the end of a parse job
 
     """
 
