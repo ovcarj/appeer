@@ -172,16 +172,16 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
         """
 
         if not self._job_exists:
-            raise PermissionError('Cannot add publications to a parse job; most likely, the job has not yet been initialized.')
+            raise PermissionError('Cannot add publications to a commit job; most likely, the job has not yet been initialized.')
 
         if self.job_status == 'X':
-            raise PermissionError(f'Cannot add new publications to the parse job "{self.label}"; the job has already been executed.')
+            raise PermissionError(f'Cannot add new publications to the commit job "{self.label}"; the job has already been executed.')
 
         if self.job_status == 'R':
-            raise PermissionError(f'Cannot add new publications to the parse job "{self.label}"; the job is in the "R" (Running) state.')
+            raise PermissionError(f'Cannot add new publications to the commit job "{self.label}"; the job is in the "R" (Running) state.')
 
         if self.job_status == 'E':
-            raise PermissionError(f'Cannot add new publications to the parse job "{self.label}"; the job is in the "E" (Error) state.')
+            raise PermissionError(f'Cannot add new publications to the commit job "{self.label}"; the job is in the "E" (Error) state.')
 
         self._job_mode = 'write'
 
