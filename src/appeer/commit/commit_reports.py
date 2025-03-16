@@ -44,6 +44,52 @@ def commit_general_report(job, add_status_info=False):
 
     return report
 
+def commit_jobs_summary(commit_table):
+    """
+    Summary of all commit jobs in the database
+
+    Parameters
+    ----------
+    commit_table : appeer.db.tables.commit_jobs.CommitJobs
+        Instance of CommitJobs table
+
+    Returns
+    -------
+    report : str
+        Summary of all commit jobs
+
+    """
+
+    _msg = f'{"Label":<30} {"Description":<20} {"M":<3} {"S":<3} {"Dup.":<6} {"Pass./Tot.":^10}'
+
+    header_length = len(_msg)
+    dashes = header_length * '–'
+
+    report = f'{dashes}\n{_msg}\n{dashes}\n'
+
+    for job in commit_table.entries:
+
+        description = job.description
+
+        if len(description) > 15:
+            description = description[0:15] + '...'
+
+        pass_tot = f'{job.job_passes}/{job.no_of_publications}'
+
+        report += f'{job.label:<30} {description:<20} {job.mode:<3} {job.job_status:<3} {job.job_duplicates:<6} {pass_tot:^10}' + '\n'
+
+    report += dashes + '\n'
+
+    report += 'M = Commit mode: (A) Auto; (E) Everything; (P) Parse job' + '\n'
+    report += 'S = Job status: (I) Initialized; (R) Running; (X) Executed/Finished; (E) Error' + '\n'
+    report += 'Dup. = Number of preexisting DOI entries' + '\n'
+    report += 'Pass./Tot. = Ratio of (over)written over total entries' + '\n'
+
+    report += dashes
+
+    return report
+
+
 def commit_start_report(job, run_parameters):
     """
     Return a formatted report at the beginning of commit job execution
