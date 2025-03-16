@@ -67,13 +67,14 @@ class Commits(ActionTable,
             'published': kwargs['published'],
             'success': 'F',
             'status': 'W',
-            'passed': 'F'
+            'passed': 'F',
+            'duplicate': 'F'
             })
 
         self._sanity_check()
 
         add_query = """
-        INSERT INTO commits VALUES(:label, :action_index, :parse_label, :parse_action_index, :date, :doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :success, :status, :passed)
+        INSERT INTO commits VALUES(:label, :action_index, :parse_label, :parse_action_index, :date, :doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :success, :status, :passed, :duplicate)
         """
 
         self._cur.execute(add_query, data)
@@ -149,6 +150,17 @@ class Commits(ActionTable,
 
                 self._cur.execute("""
                 UPDATE commits SET passed = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
+
+            case 'duplicate':
+
+                if new_value not in ('T', 'F'):
+                    raise ValueError(f'Cannot update the "commits" table. Invalid duplicate={new_value} given; must be "T" or "F".')
+
+                self._cur.execute("""
+                UPDATE commits SET duplicate = ? WHERE label = ? AND action_index = ?
                 """, (new_value, label, action_index))
 
                 self._con.commit()

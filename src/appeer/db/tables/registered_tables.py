@@ -85,6 +85,8 @@ def get_registered_tables():
                  'job_step',
                  'job_successes',
                  'job_fails',
+                 'job_passes',
+                 'job_duplicates',
                  'no_of_publications'],
 
             'commits':
@@ -104,7 +106,8 @@ def get_registered_tables():
                  'published',
                  'success',
                  'status',
-                 'passed'],
+                 'passed',
+                 'duplicate'],
 
             'pub':
                 ['doi',

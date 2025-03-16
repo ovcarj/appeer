@@ -3,6 +3,7 @@
 from appeer.db.tables.job_table import JobTable
 from appeer.db.tables.registered_tables import get_registered_tables
 
+from appeer.commit import commit_reports as reports
 
 class CommitJobs(JobTable,
               name='commit_jobs',
@@ -32,7 +33,6 @@ class CommitJobs(JobTable,
 
         super().__init__(connection=connection)
 
-    # TODO: Implement commit jobs summary
     @property
     def summary(self):
         """
@@ -45,7 +45,7 @@ class CommitJobs(JobTable,
 
         """
 
-        _summary = 'Summary of commit jobs not yet implemented.'
+        _summary = reports.commit_jobs_summary(self)
 
         return _summary
 
@@ -81,16 +81,18 @@ class CommitJobs(JobTable,
             'job_step': 0,
             'job_successes': 0,
             'job_fails': 0,
+            'job_passes': 0,
+            'job_duplicates': 0,
             'no_of_publications': 0,
             })
 
         self._cur.execute("""
-        INSERT INTO commit_jobs VALUES(:label, :date, :description, :log, :mode, :job_status, :job_step, :job_successes, :job_fails, :no_of_publications)
+        INSERT INTO commit_jobs VALUES(:label, :date, :description, :log, :mode, :job_status, :job_step, :job_successes, :job_fails, :job_passes, :job_duplicates, :no_of_publications)
         """, data)
 
         self._con.commit()
 
-    def update_entry(self, **kwargs):
+    def update_entry(self, **kwargs): #pylint: disable=too-many-branches
         """
         Updates an entry in the ``commit_jobs`` table
 
@@ -183,6 +185,34 @@ class CommitJobs(JobTable,
 
                 self._cur.execute("""
                 UPDATE commit_jobs SET job_fails = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
+
+            case 'job_passes':
+
+                if not isinstance(new_value, int):
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid job_passes={new_value} given; must be an integer.')
+
+                if not new_value >= 0:
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid job_passes={new_value} given; must be a non-negative integer.')
+
+                self._cur.execute("""
+                UPDATE commit_jobs SET job_passes = ? WHERE label = ?
+                """, (new_value, label))
+
+                self._con.commit()
+
+            case 'job_duplicates':
+
+                if not isinstance(new_value, int):
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid job_duplicates={new_value} given; must be an integer.')
+
+                if not new_value >= 0:
+                    raise ValueError(f'Cannot update the "commit_jobs" table. Invalid job_duplicates={new_value} given; must be a non-negative integer.')
+
+                self._cur.execute("""
+                UPDATE commit_jobs SET job_duplicates = ? WHERE label = ?
                 """, (new_value, label))
 
                 self._con.commit()
