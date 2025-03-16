@@ -12,7 +12,7 @@ from appeer.commit import commit_scripts
 @click.group('cjob', invoke_without_command=True,
         help="""Print summary and manipulate commit jobs
 
-        Summary of all commit jobs (TODO):
+        Summary of all commit jobs:
 
             appeer cjob
 
