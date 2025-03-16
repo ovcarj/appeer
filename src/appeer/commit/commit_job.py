@@ -349,7 +349,7 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
         if not run_parameters['no_parse_mark']:
 
             if not self.passed_actions:
-                self._wlog('No commit actions reusulted in a change of pub.db; no parse job/actions will be marked as committed.\n')
+                self._wlog('No commit actions resulted in a change of pub.db; no parse job/actions will be marked as committed.\n')
 
             else:
                 self._update_parses()
