@@ -86,7 +86,8 @@ class Commits(ActionTable,
         Given a ``label`` and ``action_index``, updates the corresponding
             ``column_name`` value with ``new_value`` in the ``parse`` table
 
-        ``column_name`` must be in ('date', 'success', 'status', 'passed')
+        ``column_name`` must be in ('date', 'success', 'status',
+                                    'passed', 'duplicate')
 
         Keyword Arguments
         -----------------
