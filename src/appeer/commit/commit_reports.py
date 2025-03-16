@@ -244,7 +244,7 @@ def commit_action_start(action):
 
     return report
 
-def commit_action_end(action, duplicate):
+def commit_action_end(action):
     """
     Return a formatted report at the end of a commit action
 
@@ -257,30 +257,28 @@ def commit_action_end(action, duplicate):
     -------
     report : str
         Report on the beginning of a commit action
-    duplicate : bool
-        Whether the DOI was already in the database
 
     """
 
     report = _log.underlined_message('DATABASE STATUS UPDATE') + '\n'
 
     report += f'{"entry":18} {action.doi}\n'
-    report += f'{"preexisting":18} {duplicate}\n'
+    report += f'{"preexisting":18} {action.duplicate}\n'
 
     report += f'{"database_action":18} '
 
     passed = bool(action.passed == 'T')
 
-    if not duplicate and passed:
+    if not action.duplicate and passed:
         report += 'INSERT'
 
-    elif duplicate and passed:
+    elif action.duplicate and passed:
         report += 'REPLACE'
 
-    elif duplicate and not passed:
+    elif action.duplicate and not passed:
         report += 'SKIP'
 
-    elif not duplicate and not passed:
+    elif not action.duplicate and not passed:
         report += 'FAIL'
 
     report += '\n'

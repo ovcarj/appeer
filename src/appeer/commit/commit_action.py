@@ -77,6 +77,9 @@ class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-insta
     passed : str
         Whether the metadata was entered into ``pub.db``;
             one of ('T', 'F'); mutable
+    duplicate : str
+        Whether ``self.doi`` already exists in ``pub.db`` before committing;
+            one of ('T', 'F'); mutable
 
     """
 
@@ -189,15 +192,19 @@ class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-insta
 
         pub._con.close() #pylint:disable=protected-access
 
+        if duplicate:
+            self.duplicate = 'T'
+
+        else:
+            self.duplicate = 'F'
+
         if inserted:
             self.passed = 'T'
 
         else:
             self.passed = 'F'
 
-        self._aprint(reports.commit_action_end(
-            action=self,
-            duplicate=duplicate))
+        self._aprint(reports.commit_action_end(action=self))
 
         self.success = 'T'
 

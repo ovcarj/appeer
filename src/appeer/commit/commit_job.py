@@ -69,6 +69,12 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
         Counts how many actions were succesfully ran; mutable
     job_fails : int
         Counts how many actions failed; mutable
+    job_passes : int
+        Counts how many actions resulted in (over)writing an entry
+            in the ``pub`` table; one of ('T', 'F'); mutable
+    job_passes : int
+        Counts how many actions contain a DOI already existing
+            in the ``pub`` table; one of ('T', 'F'), mutable
     no_of_publications : int
         Counts how many publications were added to the job; mutable
 
@@ -424,6 +430,12 @@ class CommitJob(Job, job_type='commit_job'): #pylint:disable=too-many-instance-a
 
         if self.actions[action_index].success == 'T':
             self.job_successes += 1
+
+        if self.actions[action_index].passed == 'T':
+            self.job_passes += 1
+
+        if self.actions[action_index].duplicate == 'T':
+            self.job_duplicates += 1
 
     def _update_parses(self):
         """
