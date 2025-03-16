@@ -305,13 +305,14 @@ def commit_end(job):
 
     report += _log.boxed_message('COMMIT JOB EXECUTED', centered=True) + '\n'
 
-    align = len(max('Successes', 'Fails', 'Passed', key=len)) + 2
+    align = len(max('Successes', 'Fails', 'Passed', 'Duplicates', key=len)) + 2
 
     msg = ''
 
     msg += f'{"Succeeded":<{align}} {job.job_successes}/{job.no_of_publications}\n'
     msg += f'{"Failed":<{align}} {job.job_fails}/{job.no_of_publications}\n'
-    msg += f'{"Passed":<{align}} {len(job.passed_actions)}/{job.no_of_publications}\n'
+    msg += f'{"Duplicates":<{align}} {job.job_duplicates}/{job.no_of_publications}\n'
+    msg += f'{"Passed":<{align}} {job.job_passes}/{job.no_of_publications}\n'
     msg += f'{"Skipped":<{align}} {len(job.skipped_actions)}/{job.no_of_publications}\n'
 
     msg = msg.rstrip('\n')
