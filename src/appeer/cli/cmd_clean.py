@@ -9,6 +9,7 @@ from appeer.general.datadir import Datadir
 from appeer.general.config import Config
 from appeer.scrape import clean_scrape_jobs as csj
 from appeer.parse import clean_parse_jobs as cpj
+from appeer.commit import clean_commit_jobs as ccj
 
 @click.command('all_data', help='Delete the appeer directory')
 def clean_all_data():
@@ -213,6 +214,53 @@ def clean_pjob(label, bad, everything):
     else:
         cpj.clean_parse_job(label)
 
+@click.command('cjob', help="""Delete commit job(s) data
+
+        Delete a single job with a given label:
+
+            appeer clean cjob parse_20241113-070355_8
+
+        Delete all jobs whose status is not 'X':
+
+            appeer clean cjob --bad
+
+        Delete all jobs:
+
+            appeer clean cjob --all
+
+        View a summary of all commit jobs:
+
+            appeer cjob
+
+        """)
+@click.argument('label', nargs=1, required=False)
+@click.option('-b', '--bad', is_flag=True,
+        default=False, help='Delete jobs whose status is not X')
+@click.option('-a', '--all', 'everything', is_flag=True,
+        default=False, help='Delete all commit jobs')
+def clean_cjob(label, bad, everything):
+    """
+    Delete data associated with a commit job with a given ``label``
+
+    """
+
+    if bad:
+        ccj.clean_bad_jobs()
+
+    elif everything:
+        proceed = log.ask_yes_no('You are about to delete all commit jobs data. Do you want to proceed? [Y/n]\n')
+
+        if proceed == 'Y':
+            ccj.clean_all_jobs()
+
+        elif proceed == 'n':
+
+            click.echo('Stopping.')
+            sys.exit()
+
+    else:
+        ccj.clean_commit_job(label)
+
 @click.group()
 def clean_cli(name='clean', help='Delete contents of the appeer data directory'): #pylint:disable=unused-argument, redefined-builtin, line-too-long
     """
@@ -240,3 +288,4 @@ clean_cli.add_command(clean_config)
 
 clean_cli.add_command(clean_sjob)
 clean_cli.add_command(clean_pjob)
+clean_cli.add_command(clean_cjob)
