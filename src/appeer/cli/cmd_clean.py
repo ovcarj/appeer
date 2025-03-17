@@ -131,7 +131,7 @@ def clean_config():
             appeer clean sjob --bad
 
         Delete all jobs
-        
+
             appeer clean sjob --all
 
         View a summary of all scrape jobs, type:
@@ -171,14 +171,14 @@ def clean_sjob(label, bad, everything):
 
         Delete a single job with a given label:
 
-            appeer clean sjob parse_20241113-070355_8
+            appeer clean pjob parse_20241113-070355_8
 
         Delete all jobs whose status is not 'X':
 
             appeer clean pjob --bad
 
         Delete all jobs:
-        
+
             appeer clean pjob --all
 
         View a summary of all parse jobs:
@@ -218,7 +218,7 @@ def clean_pjob(label, bad, everything):
 
         Delete a single job with a given label:
 
-            appeer clean cjob parse_20241113-070355_8
+            appeer clean cjob commit_20241113-070355_8
 
         Delete all jobs whose status is not 'X':
 
