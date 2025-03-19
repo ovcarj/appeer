@@ -32,7 +32,7 @@ from appeer.commit import commit_scripts
 
             appeer cjob run --help
 
-        Instructions for cleaning the commit database (TODO):
+        Instructions for cleaning the commit database:
 
             appeer clean cjob --help
 
