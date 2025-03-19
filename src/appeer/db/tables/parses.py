@@ -116,9 +116,9 @@ class Parses(ActionTable,
 
         self._sanity_check()
 
-        add_query = """
-        INSERT INTO parses VALUES(:label, :action_index, :scrape_label, :scrape_action_index, :date, :input_file, :doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :normalized_received, :normalized_accepted, :normalized_published, :parser, :success, :status, :committed)
-        """
+        colons_values = ', '.join([':' + key for key in data])
+
+        add_query = f'INSERT INTO {self._name} VALUES({colons_values})'
 
         self._cur.execute(add_query, data)
 

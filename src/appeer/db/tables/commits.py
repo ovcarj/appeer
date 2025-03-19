@@ -76,12 +76,11 @@ class Commits(ActionTable,
 
         self._sanity_check()
 
-        add_query = """
-        INSERT INTO commits VALUES(:label, :action_index, :parse_label, :parse_action_index, :date, :doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :normalized_received, :normalized_accepted, :normalized_published, :success, :status, :passed, :duplicate)
-        """
+        colons_values = ', '.join([':' + key for key in data])
+
+        add_query = f'INSERT INTO {self._name} VALUES({colons_values})'
 
         self._cur.execute(add_query, data)
-
         self._con.commit()
 
     def update_entry(self, **kwargs):

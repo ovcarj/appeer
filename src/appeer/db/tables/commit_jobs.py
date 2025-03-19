@@ -86,10 +86,14 @@ class CommitJobs(JobTable,
             'no_of_publications': 0,
             })
 
-        self._cur.execute("""
-        INSERT INTO commit_jobs VALUES(:label, :date, :description, :log, :mode, :job_status, :job_step, :job_successes, :job_fails, :job_passes, :job_duplicates, :no_of_publications)
-        """, data)
 
+        self._sanity_check()
+
+        colons_values = ', '.join([':' + key for key in data])
+
+        add_query = f'INSERT INTO {self._name} VALUES({colons_values})'
+
+        self._cur.execute(add_query, data)
         self._con.commit()
 
     def update_entry(self, **kwargs): #pylint: disable=too-many-branches

@@ -123,10 +123,14 @@ class ParseJobs(JobTable,
             'job_committed': 'F'
             })
 
-        self._cur.execute("""
-        INSERT INTO parse_jobs VALUES(:label, :date, :description, :log, :parse_directory, :mode, :job_status, :job_step, :job_successes, :job_fails, :no_of_publications, :job_committed)
-        """, data)
 
+        self._sanity_check()
+
+        colons_values = ', '.join([':' + key for key in data])
+
+        add_query = f'INSERT INTO {self._name} VALUES({colons_values})'
+
+        self._cur.execute(add_query, data)
         self._con.commit()
 
     def update_entry(self, **kwargs):

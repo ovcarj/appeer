@@ -121,12 +121,11 @@ class ScrapeJobs(JobTable,
 
         self._sanity_check()
 
-        add_query = """
-        INSERT INTO scrape_jobs VALUES(:label, :date, :description, :log, :download_directory, :zip_file, :job_status, :job_step, :job_successes, :job_fails, :no_of_publications, :job_parsed)
-        """
+        colons_values = ', '.join([':' + key for key in data])
+
+        add_query = f'INSERT INTO {self._name} VALUES({colons_values})'
 
         self._cur.execute(add_query, data)
-
         self._con.commit()
 
     def update_entry(self, **kwargs):

@@ -103,12 +103,11 @@ class Scrapes(ActionTable,
 
         self._sanity_check()
 
-        add_query = """
-        INSERT INTO scrapes VALUES(:label, :action_index, :date, :url, :journal, :strategy, :method, :success, :status, :out_file, :parsed)
-        """
+        colons_values = ', '.join([':' + key for key in data])
+
+        add_query = f'INSERT INTO {self._name} VALUES({colons_values})'
 
         self._cur.execute(add_query, data)
-
         self._con.commit()
 
     def update_entry(self, **kwargs):

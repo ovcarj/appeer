@@ -7,6 +7,8 @@ import click
 from appeer.db.tables.table import Table
 from appeer.db.tables.registered_tables import get_registered_tables
 
+from appeer.parse.default_metadata import default_metadata
+
 class Pub(Table,
            name='pub',
            columns=get_registered_tables()['pub']):
@@ -116,11 +118,11 @@ class Pub(Table,
         duplicate = False
         inserted = False
 
-        try:
+        colons_values = ', '.join([':' + meta for meta in default_metadata()])
 
-            add_query = """
-            INSERT INTO pub VALUES(:doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :normalized_received, :normalized_accepted, :normalized_published)
-            """
+        add_query = f'INSERT INTO {self._name} VALUES({colons_values})'
+
+        try:
 
             self._cur.execute(add_query, kwargs)
             self._con.commit()
@@ -132,9 +134,9 @@ class Pub(Table,
             duplicate = True
 
             if overwrite:
-                replace_query = """
-                REPLACE INTO pub VALUES(:doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :normalized_received, :normalized_accepted, :normalized_published)
-                """
+
+                replace_query =\
+                        f'REPLACE INTO {self._name} VALUES({colons_values})'
 
                 self._cur.execute(replace_query, kwargs)
                 self._con.commit()
