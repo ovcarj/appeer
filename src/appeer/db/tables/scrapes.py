@@ -126,7 +126,7 @@ class Scrapes(ActionTable,
             Index of the URL in the input
         column_name : str
             Name of the column whose value is being updated
-        new_value : str : int
+        new_value : str | int
             New value of the given column
 
         """
