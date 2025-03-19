@@ -57,6 +57,12 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
         Date of the publication acceptance; mutable
     published : str
         Date of publication; mutable
+    normalized_received : str
+        Date of the publication reception in YYYY-MM-DD format
+    normalized_accepted : str
+        Date of the publication acceptance in YYYY-MM-DD format
+    normalized_published : str
+        Date of publication in YYYY-MM-DD format
     parser : str
         Name of the parser class used to parse the input file; mutable
     success : str

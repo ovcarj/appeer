@@ -70,6 +70,12 @@ class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-insta
         Date of the publication acceptance
     published : str
         Date of publication
+    normalized_received : str
+        Date of the publication reception in YYYY-MM-DD format
+    normalized_accepted : str
+        Date of the publication acceptance in YYYY-MM-DD format
+    normalized_published : str
+        Date of publication in YYYY-MM-DD format
     success : str
         Whether the action executed successfully; one of ('T', 'F');
             note that success will be 'T' even if the entry is
