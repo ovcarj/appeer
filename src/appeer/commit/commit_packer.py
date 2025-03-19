@@ -9,6 +9,7 @@ from appeer.general import utils as _utils
 from appeer.parse.parse_job import ParseJob
 from appeer.parse import parse_scripts
 from appeer.parse import parse_reports
+from appeer.parse.default_metadata import default_metadata
 
 _CommitEntry = namedtuple('_CommitEntry', [
     'parse_label',
@@ -62,17 +63,7 @@ class CommitPacker:
 
         self.packet = []
 
-        self._metadata_list = [
-                'doi',
-                'publisher',
-                'journal',
-                'title',
-                'publication_type',
-                'affiliations',
-                'received',
-                'accepted',
-                'published'
-                ]
+        self._metadata_list = default_metadata()
 
     def pack(self):
         """

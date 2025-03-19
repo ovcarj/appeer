@@ -5,6 +5,8 @@ from string import ascii_lowercase
 import appeer.general.log as _log
 import appeer.general.utils as _utils
 
+from appeer.parse.default_metadata import default_metadata
+
 
 def commit_general_report(job, add_status_info=False):
     """
@@ -186,17 +188,7 @@ def commit_action_start(action):
 
     """
 
-    metadata_list = [
-            'doi',
-            'publisher',
-            'journal',
-            'title',
-            'publication_type',
-            'affiliations',
-            'received',
-            'accepted',
-            'published'
-            ]
+    metadata_list = default_metadata()
 
     report = '\n' + _log.underlined_message('METADATA SOURCE') + '\n'
 

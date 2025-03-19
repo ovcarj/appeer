@@ -6,6 +6,7 @@ import inspect
 import functools
 
 from appeer.parse.parsers import soup_utils
+from appeer.parse.default_metadata import default_metadata
 
 class Parser(abc.ABC):
     """
@@ -114,8 +115,8 @@ class Parser(abc.ABC):
         Parsing will be considered successful only if all of the listed
             metadata properties are parsed from the publication.
 
-        The default list of the properties is defined in this (abstract)
-            class.
+        The default list of the properties is defined in
+            appeer.parse.default_metadata()
 
         If it is not possible to parse a certain property for a given
             (publisher, journal), this method should be redefined in the
@@ -141,17 +142,7 @@ class Parser(abc.ABC):
 
         """
 
-        cls.metadata_list = [
-                'doi',
-                'publisher',
-                'journal',
-                'title',
-                'publication_type',
-                'affiliations',
-                'received',
-                'accepted',
-                'published'
-                ]
+        cls.metadata_list = default_metadata()
 
     def __init_subclass__(cls, publisher_code, journal_code, data_type): #pylint:disable=too-many-locals, too-many-branches
         """
