@@ -263,3 +263,79 @@ class Parser_PUBLISHER_JOURNAL_txt(Parser,
         _published = None
 
         return _published
+
+    @functools.cached_property
+    def normalized_received(self):
+        """
+        Normalize the ``received`` date to ISO format (YYYY-MM-DD)
+
+        Returns
+        -------
+        _normalized_received : str
+            Date in YYYY-MM-DD format
+
+        """
+
+        # Get the normalized date from self.received
+        # In case of failure, a normalize_* function from date_utils
+        #   should raise an error
+        #
+        # E.g.:
+        #
+        #_normalized_received = date_utils.normalize_d_M_y(self.received)
+        #
+
+        _normalized_received = None
+
+        return _normalized_received
+
+    @functools.cached_property
+    def normalized_accepted(self):
+        """
+        Normalize the ``accepted`` date to ISO format (YYYY-MM-DD)
+
+        Returns
+        -------
+        _normalized_accepted : str
+            Date in YYYY-MM-DD format
+
+        """
+
+
+        # Get the normalized date from self.accepted
+        # In case of failure, a normalize_* function from date_utils
+        #   should raise an error
+        #
+        # E.g.:
+        #
+        #_normalized_accepted = date_utils.normalize_d_M_y(self.accepted)
+        #
+
+        _normalized_accepted = None
+
+        return _normalized_accepted
+
+    @functools.cached_property
+    def normalized_published(self):
+        """
+        Normalize the ``published`` date to ISO format (YYYY-MM-DD)
+
+        Returns
+        -------
+        _normalized_published : str
+            Date in YYYY-MM-DD format
+
+        """
+
+        # Get the normalized date from self.published
+        # In case of failure, a normalize_* function from date_utils
+        #   should raise an error
+        #
+        # E.g.:
+        #
+        #_normalized_published = date_utils.normalize_d_M_y(self.published)
+        #
+
+        _normalized_published = None
+
+        return _normalized_published

@@ -97,6 +97,12 @@ class Pub(Table,
             Date of the publication acceptance
         published : str
             Date of publication
+        normalized_received : str
+            Date of the publication reception in YYYY-MM-DD format
+        normalized_accepted : str
+            Date of the publication acceptance in YYYY-MM-DD format
+        normalized_published : str
+            Date of publication in YYYY-MM-DD format
 
         Returns
         -------
@@ -113,7 +119,7 @@ class Pub(Table,
         try:
 
             add_query = """
-            INSERT INTO pub VALUES(:doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published)
+            INSERT INTO pub VALUES(:doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :normalized_received, :normalized_accepted, :normalized_published)
             """
 
             self._cur.execute(add_query, kwargs)
@@ -127,7 +133,7 @@ class Pub(Table,
 
             if overwrite:
                 replace_query = """
-                REPLACE INTO pub VALUES(:doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published)
+                REPLACE INTO pub VALUES(:doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :normalized_received, :normalized_accepted, :normalized_published)
                 """
 
                 self._cur.execute(replace_query, kwargs)

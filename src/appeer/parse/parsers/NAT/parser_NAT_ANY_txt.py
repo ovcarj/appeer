@@ -319,3 +319,51 @@ class Parser_NAT_ANY_txt(Parser,
         _published = self._parse_NAT_date('Published')
 
         return _published
+
+    @functools.cached_property
+    def normalized_received(self):
+        """
+        Normalize the ``received`` date to ISO format (YYYY-MM-DD)
+
+        Returns
+        -------
+        _normalized_received : str
+            Date in YYYY-MM-DD format
+
+        """
+
+        _normalized_received = date_utils.normalize_d_M_y(self.received)
+
+        return _normalized_received
+
+    @functools.cached_property
+    def normalized_accepted(self):
+        """
+        Normalize the ``accepted`` date to ISO format (YYYY-MM-DD)
+
+        Returns
+        -------
+        _normalized_accepted : str
+            Date in YYYY-MM-DD format
+
+        """
+
+        _normalized_accepted = date_utils.normalize_d_M_y(self.accepted)
+
+        return _normalized_accepted
+
+    @functools.cached_property
+    def normalized_published(self):
+        """
+        Normalize the ``published`` date to ISO format (YYYY-MM-DD)
+
+        Returns
+        -------
+        _normalized_published : str
+            Date in YYYY-MM-DD format
+
+        """
+
+        _normalized_published = date_utils.normalize_d_M_y(self.published)
+
+        return _normalized_published

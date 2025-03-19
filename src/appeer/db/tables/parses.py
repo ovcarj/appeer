@@ -105,6 +105,9 @@ class Parses(ActionTable,
             'received': None,
             'accepted': None,
             'published': None,
+            'normalized_received': None,
+            'normalized_accepted': None,
+            'normalized_published': None,
             'parser': None,
             'success': 'F',
             'status': 'W',
@@ -114,7 +117,7 @@ class Parses(ActionTable,
         self._sanity_check()
 
         add_query = """
-        INSERT INTO parses VALUES(:label, :action_index, :scrape_label, :scrape_action_index, :date, :input_file, :doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :parser, :success, :status, :committed)
+        INSERT INTO parses VALUES(:label, :action_index, :scrape_label, :scrape_action_index, :date, :input_file, :doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :normalized_received, :normalized_accepted, :normalized_published, :parser, :success, :status, :committed)
         """
 
         self._cur.execute(add_query, data)
@@ -132,6 +135,9 @@ class Parses(ActionTable,
             'doi', 'publisher', 'journal',
             'title', 'publication_type', 'affiliations',
             'received', 'accepted', 'published',
+            'normalized_received',
+            'normalized_accepted',
+            'normalized_published',
             'parser', 'success', 'status', 'committed'
             )
 
@@ -272,6 +278,39 @@ class Parses(ActionTable,
 
                 self._cur.execute("""
                 UPDATE parses SET published = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
+
+            case 'normalized_received':
+
+                if not isinstance(new_value, str):
+                    raise ValueError(f'Cannot update the "parses" table. Invalid normalized_received={new_value} given; must be a string')
+
+                self._cur.execute("""
+                UPDATE parses SET normalized_received = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
+
+            case 'normalized_accepted':
+
+                if not isinstance(new_value, str):
+                    raise ValueError(f'Cannot update the "parses" table. Invalid normalized_accepted={new_value} given; must be a string')
+
+                self._cur.execute("""
+                UPDATE parses SET normalized_accepted = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
+
+            case 'normalized_published':
+
+                if not isinstance(new_value, str):
+                    raise ValueError(f'Cannot update the "parses" table. Invalid normalized_published={new_value} given; must be a string')
+
+                self._cur.execute("""
+                UPDATE parses SET normalized_published = ? WHERE label = ? AND action_index = ?
                 """, (new_value, label, action_index))
 
                 self._con.commit()

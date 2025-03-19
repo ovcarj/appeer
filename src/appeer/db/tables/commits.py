@@ -65,6 +65,9 @@ class Commits(ActionTable,
             'received': kwargs['received'],
             'accepted': kwargs['accepted'],
             'published': kwargs['published'],
+            'normalized_received': kwargs['normalized_received'],
+            'normalized_accepted': kwargs['normalized_accepted'],
+            'normalized_published': kwargs['normalized_published'],
             'success': 'F',
             'status': 'W',
             'passed': 'F',
@@ -74,7 +77,7 @@ class Commits(ActionTable,
         self._sanity_check()
 
         add_query = """
-        INSERT INTO commits VALUES(:label, :action_index, :parse_label, :parse_action_index, :date, :doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :success, :status, :passed, :duplicate)
+        INSERT INTO commits VALUES(:label, :action_index, :parse_label, :parse_action_index, :date, :doi, :publisher, :journal, :title, :publication_type, :affiliations, :received, :accepted, :published, :normalized_received, :normalized_accepted, :normalized_published, :success, :status, :passed, :duplicate)
         """
 
         self._cur.execute(add_query, data)
