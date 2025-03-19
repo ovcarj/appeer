@@ -5,6 +5,8 @@ from appeer.general import utils as _utils
 from appeer.jobs.action import Action
 from appeer.db.pub_db import PubDB
 
+from appeer.parse.default_metadata import default_metadata
+
 from appeer.commit import commit_reports as reports
 
 class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-instance-attributes
@@ -179,16 +181,11 @@ class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-insta
 
         pub = PubDB().pub
 
-        duplicate, inserted = pub.add_entry(overwrite=overwrite,
-                doi=self.doi,
-                publisher=self.publisher,
-                journal=self.journal,
-                title=self.title,
-                publication_type=self.publication_type,
-                affiliations=self.affiliations,
-                received=self.received,
-                accepted=self.accepted,
-                published=self.published)
+        metadata = {meta: getattr(self, meta)
+                for meta in default_metadata()
+                }
+
+        duplicate, inserted = pub.add_entry(overwrite=overwrite, **metadata)
 
         pub._con.close() #pylint:disable=protected-access
 
