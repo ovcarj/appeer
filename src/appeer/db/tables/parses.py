@@ -101,6 +101,7 @@ class Parses(ActionTable,
             'journal': None,
             'title': None,
             'publication_type': None,
+            'no_of_authors': None,
             'affiliations': None,
             'received': None,
             'accepted': None,
@@ -133,7 +134,8 @@ class Parses(ActionTable,
 
             ('date',
             'doi', 'publisher', 'journal',
-            'title', 'publication_type', 'affiliations',
+            'title', 'publication_type',
+            'no_of_authors', 'affiliations',
             'received', 'accepted', 'published',
             'normalized_received',
             'normalized_accepted',
@@ -229,6 +231,20 @@ class Parses(ActionTable,
 
                 self._cur.execute("""
                 UPDATE parses SET publication_type = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
+
+            case 'no_of_authors':
+
+                if not isinstance(new_value, int):
+                    raise ValueError(f'Cannot update the "parses" table. Invalid no_of_authors={new_value} given; must be an integer')
+
+                if not new_value > 0:
+                    raise ValueError(f'Cannot update the "parses" table. Invalid no_of_authors={new_value} given; must be a positive integer')
+
+                self._cur.execute("""
+                UPDATE parses SET no_of_authors = ? WHERE label = ? AND action_index = ?
                 """, (new_value, label, action_index))
 
                 self._con.commit()

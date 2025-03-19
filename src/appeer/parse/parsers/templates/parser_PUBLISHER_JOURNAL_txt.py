@@ -187,6 +187,25 @@ class Parser_PUBLISHER_JOURNAL_txt(Parser,
         return _publication_type
 
     @functools.cached_property
+    def no_of_authors(self):
+        """
+        Get the number of publication authors
+
+        Returns
+        -------
+        _no_of_authors : int | None
+            Number of publication authors
+
+        """
+
+        # Get the number of publication authors from self._input_data
+        # In case of failure, return None
+
+        _no_of_authors = None
+
+        return _no_of_authors
+
+    @functools.cached_property
     def affiliations(self):
         """
         Get the author affiliations

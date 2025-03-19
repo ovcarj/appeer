@@ -49,6 +49,8 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
         Title of the publication; mutable
     publication_type : str
         Type of publication; mutable
+    no_of_authors : int
+        Number of publication authors; mutable
     affiliations : list of str
         Author affiliations; mutable
     received : str

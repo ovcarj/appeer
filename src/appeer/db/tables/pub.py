@@ -91,6 +91,8 @@ class Pub(Table,
             Title of the publication
         publication_type : str
             Type of publication
+        no_of_authors : int
+            Number of publication authors
         affiliations : str
             Author affiliations
         received : str

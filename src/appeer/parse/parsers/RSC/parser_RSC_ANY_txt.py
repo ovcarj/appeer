@@ -221,6 +221,31 @@ class Parser_RSC_ANY_txt(Parser,
         return _publication_type
 
     @functools.cached_property
+    def no_of_authors(self):
+        """
+        Get the number of publication authors
+
+        Returns
+        -------
+        _no_of_authors : int | None
+            Number of publication authors
+
+        """
+
+        authors = soup_utils.get_meta_content(
+                soup=self._input_data,
+                attr_value='citation_author',
+                attr_key='name'
+                )
+
+        if isinstance(authors, str):
+            authors = [authors]
+
+        _no_of_authors = len(authors)
+
+        return _no_of_authors
+
+    @functools.cached_property
     def affiliations(self):
         """
         Get the author affiliations
@@ -344,6 +369,9 @@ class Parser_RSC_ANY_txt(Parser,
                         for aff in aff_entry]
                 for aff_entry in _affiliations
                 ]
+
+        if len(_affiliations) != self.no_of_authors:
+            _affiliations = None
 
         return _affiliations
 
