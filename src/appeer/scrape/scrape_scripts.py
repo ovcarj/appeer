@@ -356,4 +356,4 @@ def unmark_scrapes(scrape_labels=None, _all=False):
 
             job_new_status = sj.job_parsed
 
-            click.echo(f'scrape job "{scrape_label}": Parsed status updated {job_old_status} -> {job_new_status}')
+            click.echo(f'Scrape job "{scrape_label}": Parsed status updated {job_old_status} -> {job_new_status}')
