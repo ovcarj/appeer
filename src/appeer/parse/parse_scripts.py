@@ -1,5 +1,7 @@
 """Basic parse job scripts"""
 
+import click
+
 from appeer.general import utils as _utils
 
 from appeer.db.jobs_db import JobsDB
@@ -241,3 +243,54 @@ def get_execution_dict(job_labels):
     parse_jobs_executed_dict = dict(zip(job_labels, statuses))
 
     return parse_jobs_executed_dict
+
+def unmark_parses(parse_labels=None, _all=False):
+    """
+    Set the "committed" status of all parse actions in ``parse_jobs`` to "F"
+
+    If ``_all is True``, mark ALL parse jobs as unparsed.
+
+    ``parse_labels`` and ``_all`` cannot be simultaneously be truthy.
+
+    Parameters
+    ----------
+    parse_labels : None | list of str
+        List of appeer parse job labels
+     _all : bool
+        If True, mark ALL parse jobs as unparsed
+
+    """
+
+    if parse_labels and _all:
+        click.echo('Cannot simultaneously provide "parse_labels" and "_all" parameters.')
+        return
+
+    if _all:
+
+        jobs_db = JobsDB()
+        parse_labels = [entry.label
+                for entry in jobs_db.parse_jobs.entries]
+
+    if not _utils.is_list_of_str(parse_labels):
+        click.echo('Parse labels must be provided as a list of strings.')
+        return
+
+    for parse_label in parse_labels:
+
+        pj = ParseJob(parse_label, job_mode='write')
+
+        if not pj._job_exists: #pylint:disable=protected-access
+            click.echo(f'Parse job "{parse_label}" does not exist.')
+
+        else:
+
+            job_old_status = pj.job_committed
+
+            if not pj.actions:
+                click.echo(f'No actions associated with scrape job "{parse_label}"')
+
+            pj.unmark_actions()
+
+            job_new_status = pj.job_committed
+
+            click.echo(f'Parse job "{parse_label}": committed status updated {job_old_status} -> {job_new_status}')

@@ -190,3 +190,30 @@ def run(**kwargs):
 
     parse_scripts.run_job(label=kwargs['job_label'],
             **kwargs)
+
+@pjob_cli.command('unmark',
+        help="""Mark parse jobs as not committed
+
+        WARNING: Passing the (-a, --all) flag will mark ALL parse jobs in the
+        database as not committed.
+
+        Example usage:
+
+            appeer pjob unmark parse_label1 parse_label2
+
+            appeer pjob unmark --all
+
+        """)
+@click.argument('parse_labels', default=None, nargs=-1)
+@click.option('-a', '--all', '_all',
+        is_flag=True, default=False,
+        help="Mark ALL parse jobs as unparsed")
+def unmark(parse_labels, _all):
+    """
+    Mark parse jobs as not committed
+
+    """
+
+    parse_labels = list(parse_labels) or None
+
+    parse_scripts.unmark_parses(parse_labels=parse_labels, _all=_all)
