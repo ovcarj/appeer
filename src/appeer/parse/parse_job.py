@@ -571,6 +571,6 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
             else:
 
                 for action in self.actions:
-                    action.mark_as_unparsed()
+                    action.mark_as_uncommitted()
 
-            self.update_parsed()
+            self.update_committed()
