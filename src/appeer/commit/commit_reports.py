@@ -260,17 +260,18 @@ def commit_action_end(action):
     report += f'{"database_action":18} '
 
     passed = bool(action.passed == 'T')
+    duplicate = bool(action.duplicate == 'T')
 
-    if not action.duplicate and passed:
+    if not duplicate and passed:
         report += 'INSERT'
 
-    elif action.duplicate and passed:
+    elif duplicate and passed:
         report += 'REPLACE'
 
-    elif action.duplicate and not passed:
+    elif duplicate and not passed:
         report += 'SKIP'
 
-    elif not action.duplicate and not passed:
+    elif not duplicate and not passed:
         report += 'FAIL'
 
     report += '\n'
