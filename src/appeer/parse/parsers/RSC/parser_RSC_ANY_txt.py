@@ -323,7 +323,8 @@ class Parser_RSC_ANY_txt(Parser,
                 return None
 
             try:
-                author_sups = [list(sup.text) for sup in author_sup_tags]
+                author_sups = [list(sup.text) for sup in author_sup_tags
+                        if 'id' not in sup.parent.parent.attrs]
 
             except AttributeError:
                 return None
