@@ -246,7 +246,7 @@ class Parser_RSC_ANY_txt(Parser,
         return _no_of_authors
 
     @functools.cached_property
-    def affiliations(self):
+    def affiliations(self): #pylint:disable=too-many-branches
         """
         Get the author affiliations
 
@@ -261,6 +261,12 @@ class Parser_RSC_ANY_txt(Parser,
                 of a single author
         
         """
+
+        #
+        # If the number of authors cannot be obtained, immediately fail
+        #
+        if not self.no_of_authors:
+            return None
 
         _affiliations = None
 
