@@ -169,23 +169,38 @@ def normalize_d_M_y(dMY_date):
 
     Returns
     -------
-    normalized_dMy_date
-        Date in standard format
+    normalized_dMy_date : str | None
+        Date in standard format; returns None on failure
 
     """
 
-    d, M, y = dMY_date.split(' ')
+    try:
+        d, M, y = dMY_date.split(' ')
 
-    day = re.findall(r'\b\d+', d)[0]
+    except (ValueError, AttributeError):
+        return None
+
+    try:
+        day = re.findall(r'\b\d+', d)[0]
+
+    except IndexError:
+        return None
 
     if len(day) == 1:
         day = '0' + day
 
-    month = _M_map()[M.capitalize()]
+    try:
+        month = _M_map()[M.capitalize()]
+
+    except KeyError:
+        return None
 
     normalized_dMy_date = '-'.join([y, month, day])
 
-    # The line below raises an error if the date is invalid
-    datetime.date.fromisoformat(normalized_dMy_date)
+    try:
+        datetime.date.fromisoformat(normalized_dMy_date)
+
+    except ValueError:
+        return None
 
     return normalized_dMy_date

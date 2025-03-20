@@ -296,8 +296,9 @@ class Parser_PUBLISHER_JOURNAL_txt(Parser,
         """
 
         # Get the normalized date from self.received
+        #
         # In case of failure, a normalize_* function from date_utils
-        #   should raise an error
+        # should return None
         #
         # E.g.:
         #
@@ -315,15 +316,16 @@ class Parser_PUBLISHER_JOURNAL_txt(Parser,
 
         Returns
         -------
-        _normalized_accepted : str
+        _normalized_accepted : str | None
             Date in YYYY-MM-DD format
 
         """
 
 
         # Get the normalized date from self.accepted
+        #
         # In case of failure, a normalize_* function from date_utils
-        #   should raise an error
+        # should return None
         #
         # E.g.:
         #
@@ -341,14 +343,15 @@ class Parser_PUBLISHER_JOURNAL_txt(Parser,
 
         Returns
         -------
-        _normalized_published : str
+        _normalized_published : str | None
             Date in YYYY-MM-DD format
 
         """
 
         # Get the normalized date from self.published
+        #
         # In case of failure, a normalize_* function from date_utils
-        #   should raise an error
+        # should return None
         #
         # E.g.:
         #
