@@ -98,12 +98,15 @@ class Parser_NAT_ANY_txt(Parser,
         li_list = self._input_data.find_all('li',
                 class_='c-bibliographic-information__list-item')
 
+        li_list.extend(self._input_data.find_all('li',
+                class_='c-article-identifiers__item'))
+
         if li_list:
 
             for li in li_list:
 
                 try:
-                    text = li.p.text
+                    text = li.text
 
                 except AttributeError:
                     pass
@@ -115,7 +118,7 @@ class Parser_NAT_ANY_txt(Parser,
                         try:
                             _date = date_utils.get_d_M_y(text)[0]
 
-                        except IndexError:
+                        except (IndexError, TypeError):
                             pass
 
                         else:
@@ -225,16 +228,20 @@ class Parser_NAT_ANY_txt(Parser,
 
         """
 
+        _no_of_authors = None
+
         authors = soup_utils.get_meta_content(
                 soup=self._input_data,
                 attr_value='citation_author',
                 attr_key='name'
                 )
 
-        if isinstance(authors, str):
-            authors = [authors]
+        if authors:
 
-        _no_of_authors = len(authors)
+            if isinstance(authors, str):
+                authors = [authors]
+
+            _no_of_authors = len(authors)
 
         return _no_of_authors
 
@@ -251,6 +258,12 @@ class Parser_NAT_ANY_txt(Parser,
                 of a single author
         
         """
+
+        #
+        # If the number of authors cannot be obtained, immediately fail
+        #
+        if not self.no_of_authors:
+            return None
 
         _affiliations = []
 
@@ -295,7 +308,10 @@ class Parser_NAT_ANY_txt(Parser,
 
         _affiliations = _affiliations or None
 
-        if len(_affiliations) != self.no_of_authors:
+        if _affiliations and\
+                (len(_affiliations) != self.no_of_authors or\
+                not all(_affiliations)):
+
             _affiliations = None
 
         return _affiliations
