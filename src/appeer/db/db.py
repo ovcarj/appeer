@@ -61,14 +61,16 @@ class DB(abc.ABC):
 
             cls._table_classes[f'{table}'] = _table_class
 
-    def __init__(self, db_type):
+    def __init__(self, db_type, read_only=False):
         """
         If the database exists, establishes a connection and a cursor.
 
         Parameters
         ----------
         db_type : str
-            Must be 'jobs' or 'pub'.
+            Must be 'jobs' or 'pub'
+        read_only : bool
+            If True, open a database in read-only mode
 
         """
 
@@ -89,7 +91,10 @@ class DB(abc.ABC):
 
         if self._db_exists:
 
-            self._con = sqlite3.connect(self._db_path)
+            if read_only:
+                self._db_path = 'file:' + self._db_path + '?mode=ro'
+
+            self._con = sqlite3.connect(self._db_path, uri=read_only)
             self._cur = self._con.cursor()
 
             def _get_table_instance(self, connection, tab_class): #pylint:disable=unused-argument

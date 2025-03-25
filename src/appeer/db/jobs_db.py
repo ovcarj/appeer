@@ -15,10 +15,15 @@ class JobsDB(DB, tables=[
 
     """
 
-    def __init__(self):
+    def __init__(self, read_only):
         """
         If the jobs database exists, establishes a connection and a cursor
 
+        Parameters
+        ----------
+        read_only : bool
+            If True, open the database in read-only mode
+
         """
 
-        super().__init__(db_type='jobs')
+        super().__init__(db_type='jobs', read_only=read_only)

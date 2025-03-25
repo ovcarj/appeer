@@ -8,10 +8,15 @@ class PubDB(DB, tables=['pub']):
 
     """
 
-    def __init__(self):
+    def __init__(self, read_only):
         """
         If the pub database exists, establishes a connection and a cursor.
 
+        Parameters
+        ----------
+        read_only : bool
+            If True, open the database in read-only mode
+
         """
 
-        super().__init__(db_type='pub')
+        super().__init__(db_type='pub', read_only=read_only)
