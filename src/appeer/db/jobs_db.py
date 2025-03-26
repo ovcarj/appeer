@@ -15,7 +15,7 @@ class JobsDB(DB, tables=[
 
     """
 
-    def __init__(self, read_only):
+    def __init__(self, read_only=False):
         """
         If the jobs database exists, establishes a connection and a cursor
 
