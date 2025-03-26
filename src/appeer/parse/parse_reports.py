@@ -301,7 +301,7 @@ def parsing_report(parser):
         report += 'Parsing successful!\n\n'
 
     else:
-        report += 'Parsing failed.\n'
+        report += 'Parsing failed.\n\n'
 
     align = len(max(parser.metadata_list, key=len)) + 4
 
@@ -314,7 +314,7 @@ def parsing_report(parser):
 
     if 'affiliations' in parser.metadata_list:
 
-        report += '\n[AFFILIATIONS]'
+        report += f'\n{"[AFFILIATIONS]":<{align}} '
 
         if parser.affiliations:
 
@@ -337,7 +337,7 @@ def parsing_report(parser):
                     report += f'{aff_string:<{align}} {aff}\n'
 
         else:
-            report += f'{"":<{align}} None'
+            report += 'None\n'
 
     return report
 

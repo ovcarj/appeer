@@ -207,7 +207,7 @@ def commit_action_start(action):
         if meta != 'affiliations':
             report += f'{meta_brackets:<{align}} {getattr(action, meta)}\n'
 
-    report += '\n[AFFILIATIONS]'
+    report += f'\n{"[AFFILIATIONS]":<{align}} '
 
     if action.affiliations:
 
@@ -232,7 +232,7 @@ def commit_action_start(action):
                 report += f'{aff_string:<{align}} {aff}\n'
 
     else:
-        report += f'{"":<{align}} None'
+        report += 'None\n'
 
     return report
 
