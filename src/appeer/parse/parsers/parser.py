@@ -92,7 +92,7 @@ class Parser(abc.ABC):
             so the parsing can be flagged as successful.
 
             This list is defined in the ``_define_metadata_list`` class
-            method. This (abstract) class defines the default list.
+            method.
 
     (4) Implement the necessary cached properties
 
@@ -116,7 +116,7 @@ class Parser(abc.ABC):
             metadata properties are parsed from the publication.
 
         The default list of the properties is defined in
-            appeer.parse.default_metadata()
+            appeer.parse.default_metadata.default_metadata()
 
         If it is not possible to parse a certain property for a given
             (publisher, journal), this method should be redefined in the
