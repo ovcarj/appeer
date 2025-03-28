@@ -4,6 +4,7 @@ import sys
 import os
 import threading
 import queue
+import inspect
 
 from appeer.general.datadir import Datadir
 from appeer.general import log as _log
@@ -325,10 +326,20 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
         self._queue = queue.Queue()
         threading.Thread(target=self._log_server, daemon=True).start()
 
+        parsers_dir = os.path.join(
+                os.path.dirname(inspect.getfile(self.__class__)),
+                'parsers'
+                )
+
+        publishers_index = _utils.load_json(
+                os.path.join(parsers_dir, 'publishers_index.json')
+                )
+
         action_parameters = {
                 'publishers': run_parameters['publishers'],
                 'journals': run_parameters['journals'],
-                'data_types': run_parameters['data_types']
+                'data_types': run_parameters['data_types'],
+                'publishers_index': publishers_index
                 }
 
         while self.job_step < self.no_of_publications:

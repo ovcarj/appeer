@@ -65,6 +65,9 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
         Date of the publication acceptance in YYYY-MM-DD format
     normalized_published : str
         Date of publication in YYYY-MM-DD format
+    normalized_publisher : str
+        Publisher in the standard format;
+            as defined in parse/parsers/publishers_index.json
     parser : str
         Name of the parser class used to parse the input file; mutable
     success : str
@@ -127,12 +130,18 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
                 input_file=parse_entry.filepath,
                 status='W')
 
-    def run(self, _queue=None, **kwargs):
+    def run(self, _queue=None, publishers_index=None, **kwargs):
         """
         Run the parse action
 
         If ``queue`` is given, messages will be sent to the ``queue``
             and logged in the job log file
+
+        The ``publishers_index`` should be either ``None`` or the
+            ./parsers/publishers_index.json file loaded to a dict.
+
+        Usually, ParseJob will load the file once per job and
+            pass it to all the parse actions.
 
         The rest of the arguments will be passed to the Preparser.
             They may be used to accelerate determining the appropriate
@@ -144,6 +153,9 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
         ----------
         queue : queue.Queue
             If given, messages will be logged in the job log file
+        publishers_index : dict | None
+            The ./parsers/publishers_index.json file loaded to a dict
+                If None, it will be loaded by the parser class
 
         Keyword Arguments
         -----------------
@@ -182,7 +194,8 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
 
         else:
 
-            parser = parser_class(loaded_data)
+            parser = parser_class(loaded_data,
+                    publishers_index=publishers_index)
 
             self._aprint(reports.parsing_report(parser))
 

@@ -74,6 +74,7 @@ def get_registered_tables():
                  'normalized_received',
                  'normalized_accepted',
                  'normalized_published',
+                 'normalized_publisher',
                  'parser',
                  'success',
                  'status',
@@ -112,6 +113,7 @@ def get_registered_tables():
                  'normalized_received',
                  'normalized_accepted',
                  'normalized_published',
+                 'normalized_publisher',
                  'success',
                  'status',
                  'passed',
@@ -131,6 +133,7 @@ def get_registered_tables():
                  'normalized_received',
                  'normalized_accepted',
                  'normalized_published'
+                 'normalized_publisher',
                  ]
 
                 }

@@ -107,6 +107,9 @@ class Pub(Table,
             Date of the publication acceptance in YYYY-MM-DD format
         normalized_published : str
             Date of publication in YYYY-MM-DD format
+        normalized_publisher : str
+            Publisher in the standard format;
+                as defined in parse/parsers/publishers_index.json
 
         Returns
         -------

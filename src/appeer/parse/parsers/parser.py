@@ -107,6 +107,9 @@ class Parser(abc.ABC):
     (5) Add the (publisher, journal) pair to ./implemented_parsers.json
             for the parser to be recognized by Preparser.
 
+    (6) Add a normalized (standard) publisher name to ./publishers_index.json,
+            along with possible publisher name variants
+
     """
 
     @classmethod
@@ -233,6 +236,10 @@ class Parser(abc.ABC):
 
         for entry in cls.metadata_list:
 
+            # Normalized publisher is implemented in this (parent) class
+            if entry == 'normalized_publisher':
+                continue
+
             try:
                 is_cached_property = isinstance(cls.__dict__[entry],
                         functools.cached_property)
@@ -247,7 +254,7 @@ class Parser(abc.ABC):
             input_data,
             data_type='txt',
             parser='html.parser',
-            publisher_index=None):
+            publishers_index=None):
         """
         Load the data to be parsed to ``self._input_data``
 
@@ -273,9 +280,9 @@ class Parser(abc.ABC):
             Input data type. Currently, only "txt" is supported
         parser : str
             In case of "txt" data type, the parser used by ``BeautifulSoup``
-        publisher_index : dict | None
-            The ./publisher_index.json file loaded to a dict
-                If None, it will be loaded.
+        publishers_index : dict | None
+            The ./publishers_index.json file loaded to a dict
+                If None, it will be loaded
 
         """
 
@@ -290,12 +297,12 @@ class Parser(abc.ABC):
         else:
             raise NotImplementedError('Currently, only text parsing is implemented.')
 
-        if publisher_index:
+        if publishers_index:
 
-            if not isinstance(publisher_index, dict):
-                raise TypeError('The inputted "publisher_index" is invalid.')
+            if not isinstance(publishers_index, dict):
+                raise TypeError('The inputted "publishers_index" is invalid.')
 
-            self._publisher_index = publisher_index
+            self._publishers_index = publishers_index
 
         else:
 
@@ -303,7 +310,7 @@ class Parser(abc.ABC):
                     inspect.getfile(self.__class__.__base__)
                     )
 
-            self._publisher_index = _utils.load_json(
+            self._publishers_index = _utils.load_json(
                     os.path.join(parsers_dir, 'publishers_index.json')
                     )
 
@@ -312,7 +319,7 @@ class Parser(abc.ABC):
         """
         Obtains the normalized publisher name from the parsed publisher name
 
-        The normalized publisher names are defined in ./publisher_index.json
+        The normalized publisher names are defined in ./publishers_index.json
 
         Returns
         -------
@@ -326,7 +333,7 @@ class Parser(abc.ABC):
 
         _normalized_publisher = None
 
-        for publisher_data in self._publisher_index.values():
+        for publisher_data in self._publishers_index.values():
 
             for variant in publisher_data['name_variants']:
 

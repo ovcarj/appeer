@@ -55,7 +55,8 @@ class Parser_RSC_ANY_txt(Parser,
 
         return is_RSC_ANY, exception
 
-    def __init__(self, input_data, data_type='txt', parser='html.parser'):
+    def __init__(self, input_data, data_type='txt', parser='html.parser',
+            publishers_index=None):
         """
         Load the inputted data into ``self._input_data``
 
@@ -67,12 +68,16 @@ class Parser_RSC_ANY_txt(Parser,
             Input data type
         parser : str
             The parser used by ``BeautifulSoup``
+        publishers_index : dict | None
+            The ../publishers_index.json file loaded to a dict
+                If None, it will be loaded.
 
         """
 
         super().__init__(input_data=input_data,
                 data_type=data_type,
-                parser=parser)
+                parser=parser,
+                publishers_index=publishers_index)
 
     @functools.cached_property
     def doi(self):
