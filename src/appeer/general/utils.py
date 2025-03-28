@@ -10,6 +10,7 @@ import zipfile
 from shutil import make_archive, rmtree
 from datetime import datetime
 from random import randint
+from difflib import SequenceMatcher
 
 import click
 
@@ -267,6 +268,33 @@ def aff_str2list(aff_str):
             ]
 
     return aff_list
+
+def compare_strings(string1, string2):
+    """
+    Obtains the similarity metric between two strings
+
+    Note: both strings are first made lowercase using casefold()
+
+    Parameters
+    ----------
+    string1 : str
+        A string to be compared with another string
+    string2 : str
+        A string to be compared with another string
+
+    Returns
+    -------
+    ratio : float
+        A measure of the strings’ similarity in the range [0, 1]
+
+    """
+
+    string1 = string1.casefold()
+    string2 = string2.casefold()
+
+    ratio = SequenceMatcher(None, string1, string2).ratio()
+
+    return ratio
 
 def get_current_datetime():
     """
