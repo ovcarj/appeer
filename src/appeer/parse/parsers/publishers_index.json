@@ -1,0 +1,26 @@
+{
+
+	"NAT": {
+
+		"web":			"nature.com",
+		"normalized_name":	"Nature Portfolio",
+		"name_variants":	[
+					"Nature Portfolio",
+					"Nature Publishing Group",
+					"Nature Research"
+					]
+
+		},
+
+	"RSC": {
+
+		"web":			"pubs.rsc.org",
+		"normalized_name":	"The Royal Society of Chemistry",
+		"name_variants":	[
+					"The Royal Society of Chemistry",
+					"Royal Society of Chemistry"
+					]
+
+		}
+
+}
