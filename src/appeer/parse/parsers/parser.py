@@ -5,6 +5,8 @@ import os
 import inspect
 import functools
 
+from appeer.general import utils as _utils
+
 from appeer.parse.parsers import soup_utils
 from appeer.parse.default_metadata import default_metadata
 
@@ -241,7 +243,11 @@ class Parser(abc.ABC):
             if not is_cached_property:
                 raise TypeError(f'"{entry}" must be implemented as functools.cached_property in {cls.__name__}')
 
-    def __init__(self, input_data, data_type='txt', parser='html.parser'):
+    def __init__(self,
+            input_data,
+            data_type='txt',
+            parser='html.parser',
+            publisher_index=None):
         """
         Load the data to be parsed to ``self._input_data``
 
@@ -267,6 +273,9 @@ class Parser(abc.ABC):
             Input data type. Currently, only "txt" is supported
         parser : str
             In case of "txt" data type, the parser used by ``BeautifulSoup``
+        publisher_index : dict | None
+            The ./publisher_index.json file loaded to a dict
+                If None, it will be loaded.
 
         """
 
@@ -280,6 +289,58 @@ class Parser(abc.ABC):
 
         else:
             raise NotImplementedError('Currently, only text parsing is implemented.')
+
+        if publisher_index:
+
+            if not isinstance(publisher_index, dict):
+                raise TypeError('The inputted "publisher_index" is invalid.')
+
+            self._publisher_index = publisher_index
+
+        else:
+
+            parsers_dir = os.path.dirname(
+                    inspect.getfile(self.__class__.__base__)
+                    )
+
+            self._publisher_index = _utils.load_json(
+                    os.path.join(parsers_dir, 'publishers_index.json')
+                    )
+
+    @functools.cached_property
+    def normalized_publisher(self):
+        """
+        Obtains the normalized publisher name from the parsed publisher name
+
+        The normalized publisher names are defined in ./publisher_index.json
+
+        Returns
+        -------
+        _normalized_publisher : str | None
+            The normalized publisher name; None if search failed
+
+        """
+
+        if not self.publisher: #pylint:disable=no-member
+            return None
+
+        _normalized_publisher = None
+
+        for publisher_data in self._publisher_index.values():
+
+            for variant in publisher_data['name_variants']:
+
+                ratio = _utils.compare_strings(self.publisher, variant) #pylint:disable=no-member
+
+                if ratio > 0.9:
+
+                    _normalized_publisher = publisher_data['normalized_name']
+                    break
+
+            if _normalized_publisher:
+                break
+
+        return _normalized_publisher
 
     @property
     def success(self):
