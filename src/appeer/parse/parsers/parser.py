@@ -110,6 +110,10 @@ class Parser(abc.ABC):
     (6) Add a normalized (standard) publisher name to ./publishers_index.json,
             along with possible publisher name variants
 
+    (7) Add normalized (standard) journals names to
+            ./<publisher_code>/<publisher_code>_journals.json,
+            along with possible journal name variants
+
     """
 
     @classmethod
@@ -236,8 +240,12 @@ class Parser(abc.ABC):
 
         for entry in cls.metadata_list:
 
-            # Normalized publisher is implemented in this (parent) class
-            if entry == 'normalized_publisher':
+            #
+            # normalized_publisher and normalized_journal are implemented
+            # in this (parent) class
+            #
+
+            if entry in ('normalized_publisher', 'normalized_journal'):
                 continue
 
             try:
@@ -250,11 +258,12 @@ class Parser(abc.ABC):
             if not is_cached_property:
                 raise TypeError(f'"{entry}" must be implemented as functools.cached_property in {cls.__name__}')
 
-    def __init__(self,
+    def __init__(self,                  #pylint:disable=too-many-arguments
             input_data,
             data_type='txt',
             parser='html.parser',
-            publishers_index=None):
+            publishers_index=None,
+            publisher_journals=None):
         """
         Load the data to be parsed to ``self._input_data``
 
@@ -282,6 +291,9 @@ class Parser(abc.ABC):
             In case of "txt" data type, the parser used by ``BeautifulSoup``
         publishers_index : dict | None
             The ./publishers_index.json file loaded to a dict
+                If None, it will be loaded
+        publisher_journals : dict | None
+            ./<publisher_code>/<publisher_code>_journals.json loaded to a dict
                 If None, it will be loaded
 
         """
@@ -312,6 +324,27 @@ class Parser(abc.ABC):
 
             self._publishers_index = _utils.load_json(
                     os.path.join(parsers_dir, 'publishers_index.json')
+                    )
+
+        if publisher_journals:
+
+            if not isinstance(publisher_journals, dict):
+                raise TypeError('The inputted "publisher_journals" is invalid; must be a dict.')
+
+            self._publisher_journals = publisher_journals
+
+        else:
+
+            parser_dir = os.path.dirname(
+                    inspect.getfile(self.__class__)
+                    )
+
+            publisher_code = self.__class__.__name__.split('_')[1]
+
+            publisher_journals_json = f'{publisher_code}_journals.json'
+
+            self._publisher_journals = _utils.load_json(
+                    os.path.join(parser_dir, publisher_journals_json)
                     )
 
     @functools.cached_property
@@ -348,6 +381,43 @@ class Parser(abc.ABC):
                 break
 
         return _normalized_publisher
+
+    @functools.cached_property
+    def normalized_journal(self):
+        """
+        Obtains the normalized journal name from the parsed journal name
+
+        The normalized journal names are defined in
+            ./<publisher_code>/<publisher_code>_journals.json
+
+        Returns
+        -------
+        _normalized_journal : str | None
+            The normalized journal name; None if normalization failed
+
+        """
+
+        if not self.journal: #pylint:disable=no-member
+            return None
+
+        _normalized_journal = None
+
+        for journal_data in self._publisher_journals.values():
+
+            for variant in journal_data['name_variants']:
+
+                ratio = _utils.compare_strings(self.journal, variant) #pylint:disable=no-member
+
+                # Ratio arbitrarily chosen to be strict; may require testing
+                if ratio > 0.97:
+
+                    _normalized_journal = journal_data['normalized_name']
+                    break
+
+            if _normalized_journal:
+                break
+
+        return _normalized_journal
 
     @property
     def success(self):

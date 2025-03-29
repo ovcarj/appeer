@@ -1,0 +1,2053 @@
+{
+
+	"NAT_0":
+
+		{
+
+		"normalized_name":	"Acta Pharmacologica Sinica",
+		"name_variants":	[
+					"Acta Pharmacologica Sinica"
+					]
+		},
+
+	"NAT_1":
+
+		{
+
+		"normalized_name":	"BDJ In Practice",
+		"name_variants":	[
+					"BDJ In Practice"
+					]
+		},
+
+	"NAT_2":
+
+		{
+
+		"normalized_name":	"BDJ Open",
+		"name_variants":	[
+					"BDJ Open"
+					]
+		},
+
+	"NAT_3":
+
+		{
+
+		"normalized_name":	"BDJ Student",
+		"name_variants":	[
+					"BDJ Student"
+					]
+		},
+
+	"NAT_4":
+
+		{
+
+		"normalized_name":	"BDJ Team",
+		"name_variants":	[
+					"BDJ Team"
+					]
+		},
+
+	"NAT_5":
+
+		{
+
+		"normalized_name":	"Biopharma Dealmakers",
+		"name_variants":	[
+					"Biopharma Dealmakers"
+					]
+		},
+
+	"NAT_6":
+
+		{
+
+		"normalized_name":	"BJC Reports",
+		"name_variants":	[
+					"BJC Reports"
+					]
+		},
+
+	"NAT_7":
+
+		{
+
+		"normalized_name":	"Blood Cancer Journal",
+		"name_variants":	[
+					"Blood Cancer Journal"
+					]
+		},
+
+	"NAT_8":
+
+		{
+
+		"normalized_name":	"Bone Marrow Transplantation",
+		"name_variants":	[
+					"Bone Marrow Transplantation"
+					]
+		},
+
+	"NAT_9":
+
+		{
+
+		"normalized_name":	"Bone Research",
+		"name_variants":	[
+					"Bone Research"
+					]
+		},
+
+	"NAT_10":
+
+		{
+
+		"normalized_name":	"British Dental Journal",
+		"name_variants":	[
+					"British Dental Journal"
+					]
+		},
+
+	"NAT_11":
+
+		{
+
+		"normalized_name":	"British Journal of Cancer",
+		"name_variants":	[
+					"British Journal of Cancer"
+					]
+		},
+
+	"NAT_12":
+
+		{
+
+		"normalized_name":	"Cancer Gene Therapy",
+		"name_variants":	[
+					"Cancer Gene Therapy"
+					]
+		},
+
+	"NAT_13":
+
+		{
+
+		"normalized_name":	"Cell Death & Differentiation",
+		"name_variants":	[
+					"Cell Death & Differentiation"
+					]
+		},
+
+	"NAT_14":
+
+		{
+
+		"normalized_name":	"Cell Death & Disease",
+		"name_variants":	[
+					"Cell Death & Disease"
+					]
+		},
+
+	"NAT_15":
+
+		{
+
+		"normalized_name":	"Cell Death Discovery",
+		"name_variants":	[
+					"Cell Death Discovery"
+					]
+		},
+
+	"NAT_16":
+
+		{
+
+		"normalized_name":	"Cell Discovery",
+		"name_variants":	[
+					"Cell Discovery"
+					]
+		},
+
+	"NAT_17":
+
+		{
+
+		"normalized_name":	"Cell Research",
+		"name_variants":	[
+					"Cell Research"
+					]
+		},
+
+	"NAT_18":
+
+		{
+
+		"normalized_name":	"Cellular & Molecular Immunology",
+		"name_variants":	[
+					"Cellular & Molecular Immunology"
+					]
+		},
+
+	"NAT_19":
+
+		{
+
+		"normalized_name":	"Communications Biology",
+		"name_variants":	[
+					"Communications Biology"
+					]
+		},
+
+	"NAT_20":
+
+		{
+
+		"normalized_name":	"Communications Chemistry",
+		"name_variants":	[
+					"Communications Chemistry"
+					]
+		},
+
+	"NAT_21":
+
+		{
+
+		"normalized_name":	"Communications Earth & Environment",
+		"name_variants":	[
+					"Communications Earth & Environment"
+					]
+		},
+
+	"NAT_22":
+
+		{
+
+		"normalized_name":	"Communications Engineering",
+		"name_variants":	[
+					"Communications Engineering"
+					]
+		},
+
+	"NAT_23":
+
+		{
+
+		"normalized_name":	"Communications Materials",
+		"name_variants":	[
+					"Communications Materials"
+					]
+		},
+
+	"NAT_24":
+
+		{
+
+		"normalized_name":	"Communications Medicine",
+		"name_variants":	[
+					"Communications Medicine"
+					]
+		},
+
+	"NAT_25":
+
+		{
+
+		"normalized_name":	"Communications Physics",
+		"name_variants":	[
+					"Communications Physics"
+					]
+		},
+
+	"NAT_26":
+
+		{
+
+		"normalized_name":	"Communications Psychology",
+		"name_variants":	[
+					"Communications Psychology"
+					]
+		},
+
+	"NAT_27":
+
+		{
+
+		"normalized_name":	"Communications Sustainability",
+		"name_variants":	[
+					"Communications Sustainability"
+					]
+		},
+
+	"NAT_28":
+
+		{
+
+		"normalized_name":	"European Journal of Clinical Nutrition",
+		"name_variants":	[
+					"European Journal of Clinical Nutrition"
+					]
+		},
+
+	"NAT_29":
+
+		{
+
+		"normalized_name":	"European Journal of Human Genetics",
+		"name_variants":	[
+					"European Journal of Human Genetics"
+					]
+		},
+
+	"NAT_30":
+
+		{
+
+		"normalized_name":	"Evidence-Based Dentistry",
+		"name_variants":	[
+					"Evidence-Based Dentistry"
+					]
+		},
+
+	"NAT_31":
+
+		{
+
+		"normalized_name":	"Experimental & Molecular Medicine",
+		"name_variants":	[
+					"Experimental & Molecular Medicine"
+					]
+		},
+
+	"NAT_32":
+
+		{
+
+		"normalized_name":	"Eye",
+		"name_variants":	[
+					"Eye"
+					]
+		},
+
+	"NAT_33":
+
+		{
+
+		"normalized_name":	"Eye Open",
+		"name_variants":	[
+					"Eye Open"
+					]
+		},
+
+	"NAT_34":
+
+		{
+
+		"normalized_name":	"Gene Therapy",
+		"name_variants":	[
+					"Gene Therapy"
+					]
+		},
+
+	"NAT_35":
+
+		{
+
+		"normalized_name":	"Genes & Immunity",
+		"name_variants":	[
+					"Genes & Immunity"
+					]
+		},
+
+	"NAT_36":
+
+		{
+
+		"normalized_name":	"Heredity",
+		"name_variants":	[
+					"Heredity"
+					]
+		},
+
+	"NAT_37":
+
+		{
+
+		"normalized_name":	"Human Genome Variation",
+		"name_variants":	[
+					"Human Genome Variation"
+					]
+		},
+
+	"NAT_38":
+
+		{
+
+		"normalized_name":	"Humanities and Social Sciences Communications",
+		"name_variants":	[
+					"Humanities and Social Sciences Communications"
+					]
+		},
+
+	"NAT_39":
+
+		{
+
+		"normalized_name":	"Hypertension Research",
+		"name_variants":	[
+					"Hypertension Research"
+					]
+		},
+
+	"NAT_40":
+
+		{
+
+		"normalized_name":	"International Journal of Impotence Research",
+		"name_variants":	[
+					"International Journal of Impotence Research"
+					]
+		},
+
+	"NAT_41":
+
+		{
+
+		"normalized_name":	"International Journal of Obesity",
+		"name_variants":	[
+					"International Journal of Obesity"
+					]
+		},
+
+	"NAT_42":
+
+		{
+
+		"normalized_name":	"International Journal of Obesity Supplements",
+		"name_variants":	[
+					"International Journal of Obesity Supplements"
+					]
+		},
+
+	"NAT_43":
+
+		{
+
+		"normalized_name":	"International Journal of Oral Science",
+		"name_variants":	[
+					"International Journal of Oral Science"
+					]
+		},
+
+	"NAT_44":
+
+		{
+
+		"normalized_name":	"ISME Communications",
+		"name_variants":	[
+					"ISME Communications"
+					]
+		},
+
+	"NAT_45":
+
+		{
+
+		"normalized_name":	"The ISME Journal",
+		"name_variants":	[
+					"The ISME Journal"
+					]
+		},
+
+	"NAT_46":
+
+		{
+
+		"normalized_name":	"The Journal of Antibiotics",
+		"name_variants":	[
+					"The Journal of Antibiotics"
+					]
+		},
+
+	"NAT_47":
+
+		{
+
+		"normalized_name":	"Journal of Exposure Science & Environmental Epidemiology",
+		"name_variants":	[
+					"Journal of Exposure Science & Environmental Epidemiology"
+					]
+		},
+
+	"NAT_48":
+
+		{
+
+		"normalized_name":	"Journal of Human Genetics",
+		"name_variants":	[
+					"Journal of Human Genetics"
+					]
+		},
+
+	"NAT_49":
+
+		{
+
+		"normalized_name":	"Journal of Human Hypertension",
+		"name_variants":	[
+					"Journal of Human Hypertension"
+					]
+		},
+
+	"NAT_50":
+
+		{
+
+		"normalized_name":	"Journal of Perinatology",
+		"name_variants":	[
+					"Journal of Perinatology"
+					]
+		},
+
+	"NAT_51":
+
+		{
+
+		"normalized_name":	"Lab Animal",
+		"name_variants":	[
+					"Lab Animal"
+					]
+		},
+
+	"NAT_52":
+
+		{
+
+		"normalized_name":	"Leukemia",
+		"name_variants":	[
+					"Leukemia"
+					]
+		},
+
+	"NAT_53":
+
+		{
+
+		"normalized_name":	"Leukemia Supplements",
+		"name_variants":	[
+					"Leukemia Supplements"
+					]
+		},
+
+	"NAT_54":
+
+		{
+
+		"normalized_name":	"Light: Science & Applications",
+		"name_variants":	[
+					"Light: Science & Applications"
+					]
+		},
+
+	"NAT_55":
+
+		{
+
+		"normalized_name":	"Microsystems & Nanoengineering",
+		"name_variants":	[
+					"Microsystems & Nanoengineering"
+					]
+		},
+
+	"NAT_56":
+
+		{
+
+		"normalized_name":	"Molecular Psychiatry",
+		"name_variants":	[
+					"Molecular Psychiatry"
+					]
+		},
+
+	"NAT_57":
+
+		{
+
+		"normalized_name":	"Mucosal Immunology",
+		"name_variants":	[
+					"Mucosal Immunology"
+					]
+		},
+
+	"NAT_58":
+
+		{
+
+		"normalized_name":	"Nature",
+		"name_variants":	[
+					"Nature"
+					]
+		},
+
+	"NAT_59":
+
+		{
+
+		"normalized_name":	"Nature Africa",
+		"name_variants":	[
+					"Nature Africa"
+					]
+		},
+
+	"NAT_60":
+
+		{
+
+		"normalized_name":	"Nature Aging",
+		"name_variants":	[
+					"Nature Aging"
+					]
+		},
+
+	"NAT_61":
+
+		{
+
+		"normalized_name":	"Nature Astronomy",
+		"name_variants":	[
+					"Nature Astronomy"
+					]
+		},
+
+	"NAT_62":
+
+		{
+
+		"normalized_name":	"Nature Biomedical Engineering",
+		"name_variants":	[
+					"Nature Biomedical Engineering"
+					]
+		},
+
+	"NAT_63":
+
+		{
+
+		"normalized_name":	"Nature Biotechnology",
+		"name_variants":	[
+					"Nature Biotechnology"
+					]
+		},
+
+	"NAT_64":
+
+		{
+
+		"normalized_name":	"Nature Cancer",
+		"name_variants":	[
+					"Nature Cancer"
+					]
+		},
+
+	"NAT_65":
+
+		{
+
+		"normalized_name":	"Nature Cardiovascular Research",
+		"name_variants":	[
+					"Nature Cardiovascular Research"
+					]
+		},
+
+	"NAT_66":
+
+		{
+
+		"normalized_name":	"Nature Catalysis",
+		"name_variants":	[
+					"Nature Catalysis"
+					]
+		},
+
+	"NAT_67":
+
+		{
+
+		"normalized_name":	"Nature Cell Biology",
+		"name_variants":	[
+					"Nature Cell Biology"
+					]
+		},
+
+	"NAT_68":
+
+		{
+
+		"normalized_name":	"Nature Chemical Biology",
+		"name_variants":	[
+					"Nature Chemical Biology"
+					]
+		},
+
+	"NAT_69":
+
+		{
+
+		"normalized_name":	"Nature Chemical Engineering",
+		"name_variants":	[
+					"Nature Chemical Engineering"
+					]
+		},
+
+	"NAT_70":
+
+		{
+
+		"normalized_name":	"Nature Chemistry",
+		"name_variants":	[
+					"Nature Chemistry"
+					]
+		},
+
+	"NAT_71":
+
+		{
+
+		"normalized_name":	"Nature Cities",
+		"name_variants":	[
+					"Nature Cities"
+					]
+		},
+
+	"NAT_72":
+
+		{
+
+		"normalized_name":	"Nature Climate Change",
+		"name_variants":	[
+					"Nature Climate Change"
+					]
+		},
+
+	"NAT_73":
+
+		{
+
+		"normalized_name":	"Nature Communications",
+		"name_variants":	[
+					"Nature Communications"
+					]
+		},
+
+	"NAT_74":
+
+		{
+
+		"normalized_name":	"Nature Computational Science",
+		"name_variants":	[
+					"Nature Computational Science"
+					]
+		},
+
+	"NAT_75":
+
+		{
+
+		"normalized_name":	"Nature Digest",
+		"name_variants":	[
+					"Nature Digest"
+					]
+		},
+
+	"NAT_76":
+
+		{
+
+		"normalized_name":	"Nature Ecology & Evolution",
+		"name_variants":	[
+					"Nature Ecology & Evolution"
+					]
+		},
+
+	"NAT_77":
+
+		{
+
+		"normalized_name":	"Nature Electronics",
+		"name_variants":	[
+					"Nature Electronics"
+					]
+		},
+
+	"NAT_78":
+
+		{
+
+		"normalized_name":	"Nature Energy",
+		"name_variants":	[
+					"Nature Energy"
+					]
+		},
+
+	"NAT_79":
+
+		{
+
+		"normalized_name":	"Nature Food",
+		"name_variants":	[
+					"Nature Food"
+					]
+		},
+
+	"NAT_80":
+
+		{
+
+		"normalized_name":	"Nature Genetics",
+		"name_variants":	[
+					"Nature Genetics"
+					]
+		},
+
+	"NAT_81":
+
+		{
+
+		"normalized_name":	"Nature Geoscience",
+		"name_variants":	[
+					"Nature Geoscience"
+					]
+		},
+
+	"NAT_82":
+
+		{
+
+		"normalized_name":	"Nature Human Behaviour",
+		"name_variants":	[
+					"Nature Human Behaviour"
+					]
+		},
+
+	"NAT_83":
+
+		{
+
+		"normalized_name":	"Nature Immunology",
+		"name_variants":	[
+					"Nature Immunology"
+					]
+		},
+
+	"NAT_84":
+
+		{
+
+		"normalized_name":	"Nature India",
+		"name_variants":	[
+					"Nature India"
+					]
+		},
+
+	"NAT_85":
+
+		{
+
+		"normalized_name":	"Nature Italy",
+		"name_variants":	[
+					"Nature Italy"
+					]
+		},
+
+	"NAT_86":
+
+		{
+
+		"normalized_name":	"Nature Machine Intelligence",
+		"name_variants":	[
+					"Nature Machine Intelligence"
+					]
+		},
+
+	"NAT_87":
+
+		{
+
+		"normalized_name":	"Nature Materials",
+		"name_variants":	[
+					"Nature Materials"
+					]
+		},
+
+	"NAT_88":
+
+		{
+
+		"normalized_name":	"Nature Medicine",
+		"name_variants":	[
+					"Nature Medicine"
+					]
+		},
+
+	"NAT_89":
+
+		{
+
+		"normalized_name":	"Nature Mental Health",
+		"name_variants":	[
+					"Nature Mental Health"
+					]
+		},
+
+	"NAT_90":
+
+		{
+
+		"normalized_name":	"Nature Metabolism",
+		"name_variants":	[
+					"Nature Metabolism"
+					]
+		},
+
+	"NAT_91":
+
+		{
+
+		"normalized_name":	"Nature Methods",
+		"name_variants":	[
+					"Nature Methods"
+					]
+		},
+
+	"NAT_92":
+
+		{
+
+		"normalized_name":	"Nature Microbiology",
+		"name_variants":	[
+					"Nature Microbiology"
+					]
+		},
+
+	"NAT_93":
+
+		{
+
+		"normalized_name":	"Nature Nanotechnology",
+		"name_variants":	[
+					"Nature Nanotechnology"
+					]
+		},
+
+	"NAT_94":
+
+		{
+
+		"normalized_name":	"Nature Neuroscience",
+		"name_variants":	[
+					"Nature Neuroscience"
+					]
+		},
+
+	"NAT_95":
+
+		{
+
+		"normalized_name":	"Nature Photonics",
+		"name_variants":	[
+					"Nature Photonics"
+					]
+		},
+
+	"NAT_96":
+
+		{
+
+		"normalized_name":	"Nature Physics",
+		"name_variants":	[
+					"Nature Physics"
+					]
+		},
+
+	"NAT_97":
+
+		{
+
+		"normalized_name":	"Nature Plants",
+		"name_variants":	[
+					"Nature Plants"
+					]
+		},
+
+	"NAT_98":
+
+		{
+
+		"normalized_name":	"Nature Protocols",
+		"name_variants":	[
+					"Nature Protocols"
+					]
+		},
+
+	"NAT_99":
+
+		{
+
+		"normalized_name":	"Nature Reviews Biodiversity",
+		"name_variants":	[
+					"Nature Reviews Biodiversity"
+					]
+		},
+
+	"NAT_100":
+
+		{
+
+		"normalized_name":	"Nature Reviews Bioengineering",
+		"name_variants":	[
+					"Nature Reviews Bioengineering"
+					]
+		},
+
+	"NAT_101":
+
+		{
+
+		"normalized_name":	"Nature Reviews Cancer",
+		"name_variants":	[
+					"Nature Reviews Cancer"
+					]
+		},
+
+	"NAT_102":
+
+		{
+
+		"normalized_name":	"Nature Reviews Cardiology",
+		"name_variants":	[
+					"Nature Reviews Cardiology"
+					]
+		},
+
+	"NAT_103":
+
+		{
+
+		"normalized_name":	"Nature Reviews Chemistry",
+		"name_variants":	[
+					"Nature Reviews Chemistry"
+					]
+		},
+
+	"NAT_104":
+
+		{
+
+		"normalized_name":	"Nature Reviews Clean Technology",
+		"name_variants":	[
+					"Nature Reviews Clean Technology"
+					]
+		},
+
+	"NAT_105":
+
+		{
+
+		"normalized_name":	"Nature Reviews Clinical Oncology",
+		"name_variants":	[
+					"Nature Reviews Clinical Oncology"
+					]
+		},
+
+	"NAT_106":
+
+		{
+
+		"normalized_name":	"Nature Reviews Disease Primers",
+		"name_variants":	[
+					"Nature Reviews Disease Primers"
+					]
+		},
+
+	"NAT_107":
+
+		{
+
+		"normalized_name":	"Nature Reviews Drug Discovery",
+		"name_variants":	[
+					"Nature Reviews Drug Discovery"
+					]
+		},
+
+	"NAT_108":
+
+		{
+
+		"normalized_name":	"Nature Reviews Earth & Environment",
+		"name_variants":	[
+					"Nature Reviews Earth & Environment"
+					]
+		},
+
+	"NAT_109":
+
+		{
+
+		"normalized_name":	"Nature Reviews Electrical Engineering",
+		"name_variants":	[
+					"Nature Reviews Electrical Engineering"
+					]
+		},
+
+	"NAT_110":
+
+		{
+
+		"normalized_name":	"Nature Reviews Endocrinology",
+		"name_variants":	[
+					"Nature Reviews Endocrinology"
+					]
+		},
+
+	"NAT_111":
+
+		{
+
+		"normalized_name":	"Nature Reviews Gastroenterology & Hepatology",
+		"name_variants":	[
+					"Nature Reviews Gastroenterology & Hepatology"
+					]
+		},
+
+	"NAT_112":
+
+		{
+
+		"normalized_name":	"Nature Reviews Genetics",
+		"name_variants":	[
+					"Nature Reviews Genetics"
+					]
+		},
+
+	"NAT_113":
+
+		{
+
+		"normalized_name":	"Nature Reviews Immunology",
+		"name_variants":	[
+					"Nature Reviews Immunology"
+					]
+		},
+
+	"NAT_114":
+
+		{
+
+		"normalized_name":	"Nature Reviews Materials",
+		"name_variants":	[
+					"Nature Reviews Materials"
+					]
+		},
+
+	"NAT_115":
+
+		{
+
+		"normalized_name":	"Nature Reviews Methods Primers",
+		"name_variants":	[
+					"Nature Reviews Methods Primers"
+					]
+		},
+
+	"NAT_116":
+
+		{
+
+		"normalized_name":	"Nature Reviews Microbiology",
+		"name_variants":	[
+					"Nature Reviews Microbiology"
+					]
+		},
+
+	"NAT_117":
+
+		{
+
+		"normalized_name":	"Nature Reviews Molecular Cell Biology",
+		"name_variants":	[
+					"Nature Reviews Molecular Cell Biology"
+					]
+		},
+
+	"NAT_118":
+
+		{
+
+		"normalized_name":	"Nature Reviews Nephrology",
+		"name_variants":	[
+					"Nature Reviews Nephrology"
+					]
+		},
+
+	"NAT_119":
+
+		{
+
+		"normalized_name":	"Nature Reviews Neurology",
+		"name_variants":	[
+					"Nature Reviews Neurology"
+					]
+		},
+
+	"NAT_120":
+
+		{
+
+		"normalized_name":	"Nature Reviews Neuroscience",
+		"name_variants":	[
+					"Nature Reviews Neuroscience"
+					]
+		},
+
+	"NAT_121":
+
+		{
+
+		"normalized_name":	"Nature Reviews Physics",
+		"name_variants":	[
+					"Nature Reviews Physics"
+					]
+		},
+
+	"NAT_122":
+
+		{
+
+		"normalized_name":	"Nature Reviews Psychology",
+		"name_variants":	[
+					"Nature Reviews Psychology"
+					]
+		},
+
+	"NAT_123":
+
+		{
+
+		"normalized_name":	"Nature Reviews Rheumatology",
+		"name_variants":	[
+					"Nature Reviews Rheumatology"
+					]
+		},
+
+	"NAT_124":
+
+		{
+
+		"normalized_name":	"Nature Reviews Urology",
+		"name_variants":	[
+					"Nature Reviews Urology"
+					]
+		},
+
+	"NAT_125":
+
+		{
+
+		"normalized_name":	"Nature Structural & Molecular Biology",
+		"name_variants":	[
+					"Nature Structural & Molecular Biology"
+					]
+		},
+
+	"NAT_126":
+
+		{
+
+		"normalized_name":	"Nature Sustainability",
+		"name_variants":	[
+					"Nature Sustainability"
+					]
+		},
+
+	"NAT_127":
+
+		{
+
+		"normalized_name":	"Nature Synthesis",
+		"name_variants":	[
+					"Nature Synthesis"
+					]
+		},
+
+	"NAT_128":
+
+		{
+
+		"normalized_name":	"Nature Water",
+		"name_variants":	[
+					"Nature Water"
+					]
+		},
+
+	"NAT_129":
+
+		{
+
+		"normalized_name":	"Neuropsychopharmacology",
+		"name_variants":	[
+					"Neuropsychopharmacology"
+					]
+		},
+
+	"NAT_130":
+
+		{
+
+		"normalized_name":	"NPG Asia Materials",
+		"name_variants":	[
+					"NPG Asia Materials"
+					]
+		},
+
+	"NAT_131":
+
+		{
+
+		"normalized_name":	"npj 2D Materials and Applications",
+		"name_variants":	[
+					"npj 2D Materials and Applications"
+					]
+		},
+
+	"NAT_132":
+
+		{
+
+		"normalized_name":	"npj Acoustics",
+		"name_variants":	[
+					"npj Acoustics"
+					]
+		},
+
+	"NAT_133":
+
+		{
+
+		"normalized_name":	"npj Advanced Manufacturing",
+		"name_variants":	[
+					"npj Advanced Manufacturing"
+					]
+		},
+
+	"NAT_134":
+
+		{
+
+		"normalized_name":	"npj Aging",
+		"name_variants":	[
+					"npj Aging"
+					]
+		},
+
+	"NAT_135":
+
+		{
+
+		"normalized_name":	"npj Antimicrobials and Resistance",
+		"name_variants":	[
+					"npj Antimicrobials and Resistance"
+					]
+		},
+
+	"NAT_136":
+
+		{
+
+		"normalized_name":	"npj Artificial Intelligence",
+		"name_variants":	[
+					"npj Artificial Intelligence"
+					]
+		},
+
+	"NAT_137":
+
+		{
+
+		"normalized_name":	"npj Biodiversity",
+		"name_variants":	[
+					"npj Biodiversity"
+					]
+		},
+
+	"NAT_138":
+
+		{
+
+		"normalized_name":	"npj Biofilms and Microbiomes",
+		"name_variants":	[
+					"npj Biofilms and Microbiomes"
+					]
+		},
+
+	"NAT_139":
+
+		{
+
+		"normalized_name":	"npj Biological Physics and Mechanics",
+		"name_variants":	[
+					"npj Biological Physics and Mechanics"
+					]
+		},
+
+	"NAT_140":
+
+		{
+
+		"normalized_name":	"npj Biological Timing and Sleep",
+		"name_variants":	[
+					"npj Biological Timing and Sleep"
+					]
+		},
+
+	"NAT_141":
+
+		{
+
+		"normalized_name":	"npj Biomedical Innovations",
+		"name_variants":	[
+					"npj Biomedical Innovations"
+					]
+		},
+
+	"NAT_142":
+
+		{
+
+		"normalized_name":	"npj Biosensing",
+		"name_variants":	[
+					"npj Biosensing"
+					]
+		},
+
+	"NAT_143":
+
+		{
+
+		"normalized_name":	"npj Breast Cancer",
+		"name_variants":	[
+					"npj Breast Cancer"
+					]
+		},
+
+	"NAT_144":
+
+		{
+
+		"normalized_name":	"npj Cardiovascular Health",
+		"name_variants":	[
+					"npj Cardiovascular Health"
+					]
+		},
+
+	"NAT_145":
+
+		{
+
+		"normalized_name":	"npj Clean Air",
+		"name_variants":	[
+					"npj Clean Air"
+					]
+		},
+
+	"NAT_146":
+
+		{
+
+		"normalized_name":	"npj Clean Energy",
+		"name_variants":	[
+					"npj Clean Energy"
+					]
+		},
+
+	"NAT_147":
+
+		{
+
+		"normalized_name":	"npj Clean Water",
+		"name_variants":	[
+					"npj Clean Water"
+					]
+		},
+
+	"NAT_148":
+
+		{
+
+		"normalized_name":	"npj Climate Action",
+		"name_variants":	[
+					"npj Climate Action"
+					]
+		},
+
+	"NAT_149":
+
+		{
+
+		"normalized_name":	"npj Climate and Atmospheric Science",
+		"name_variants":	[
+					"npj Climate and Atmospheric Science"
+					]
+		},
+
+	"NAT_150":
+
+		{
+
+		"normalized_name":	"npj Complexity",
+		"name_variants":	[
+					"npj Complexity"
+					]
+		},
+
+	"NAT_151":
+
+		{
+
+		"normalized_name":	"npj Computational Materials",
+		"name_variants":	[
+					"npj Computational Materials"
+					]
+		},
+
+	"NAT_152":
+
+		{
+
+		"normalized_name":	"npj Dementia",
+		"name_variants":	[
+					"npj Dementia"
+					]
+		},
+
+	"NAT_153":
+
+		{
+
+		"normalized_name":	"npj Digital Medicine",
+		"name_variants":	[
+					"npj Digital Medicine"
+					]
+		},
+
+	"NAT_154":
+
+		{
+
+		"normalized_name":	"npj Drug Discovery",
+		"name_variants":	[
+					"npj Drug Discovery"
+					]
+		},
+
+	"NAT_155":
+
+		{
+
+		"normalized_name":	"npj Flexible Electronics",
+		"name_variants":	[
+					"npj Flexible Electronics"
+					]
+		},
+
+	"NAT_156":
+
+		{
+
+		"normalized_name":	"npj Genomic Medicine",
+		"name_variants":	[
+					"npj Genomic Medicine"
+					]
+		},
+
+	"NAT_157":
+
+		{
+
+		"normalized_name":	"npj Gut and Liver",
+		"name_variants":	[
+					"npj Gut and Liver"
+					]
+		},
+
+	"NAT_158":
+
+		{
+
+		"normalized_name":	"npj Health Systems",
+		"name_variants":	[
+					"npj Health Systems"
+					]
+		},
+
+	"NAT_159":
+
+		{
+
+		"normalized_name":	"npj Heritage Science",
+		"name_variants":	[
+					"npj Heritage Science"
+					]
+		},
+
+	"NAT_160":
+
+		{
+
+		"normalized_name":	"npj Imaging",
+		"name_variants":	[
+					"npj Imaging"
+					]
+		},
+
+	"NAT_161":
+
+		{
+
+		"normalized_name":	"npj Materials Degradation",
+		"name_variants":	[
+					"npj Materials Degradation"
+					]
+		},
+
+	"NAT_162":
+
+		{
+
+		"normalized_name":	"npj Materials Sustainability",
+		"name_variants":	[
+					"npj Materials Sustainability"
+					]
+		},
+
+	"NAT_163":
+
+		{
+
+		"normalized_name":	"npj Mental Health Research",
+		"name_variants":	[
+					"npj Mental Health Research"
+					]
+		},
+
+	"NAT_164":
+
+		{
+
+		"normalized_name":	"npj Metabolic Health and Disease",
+		"name_variants":	[
+					"npj Metabolic Health and Disease"
+					]
+		},
+
+	"NAT_165":
+
+		{
+
+		"normalized_name":	"npj Microgravity",
+		"name_variants":	[
+					"npj Microgravity"
+					]
+		},
+
+	"NAT_166":
+
+		{
+
+		"normalized_name":	"npj Nanophotonics",
+		"name_variants":	[
+					"npj Nanophotonics"
+					]
+		},
+
+	"NAT_167":
+
+		{
+
+		"normalized_name":	"npj Natural Hazards",
+		"name_variants":	[
+					"npj Natural Hazards"
+					]
+		},
+
+	"NAT_168":
+
+		{
+
+		"normalized_name":	"npj Ocean Sustainability",
+		"name_variants":	[
+					"npj Ocean Sustainability"
+					]
+		},
+
+	"NAT_169":
+
+		{
+
+		"normalized_name":	"npj Parkinson's Disease",
+		"name_variants":	[
+					"npj Parkinson's Disease"
+					]
+		},
+
+	"NAT_170":
+
+		{
+
+		"normalized_name":	"npj Precision Oncology",
+		"name_variants":	[
+					"npj Precision Oncology"
+					]
+		},
+
+	"NAT_171":
+
+		{
+
+		"normalized_name":	"npj Primary Care Respiratory Medicine",
+		"name_variants":	[
+					"npj Primary Care Respiratory Medicine"
+					]
+		},
+
+	"NAT_172":
+
+		{
+
+		"normalized_name":	"npj Quantum Information",
+		"name_variants":	[
+					"npj Quantum Information"
+					]
+		},
+
+	"NAT_173":
+
+		{
+
+		"normalized_name":	"npj Quantum Materials",
+		"name_variants":	[
+					"npj Quantum Materials"
+					]
+		},
+
+	"NAT_174":
+
+		{
+
+		"normalized_name":	"npj Regenerative Medicine",
+		"name_variants":	[
+					"npj Regenerative Medicine"
+					]
+		},
+
+	"NAT_175":
+
+		{
+
+		"normalized_name":	"npj Robotics",
+		"name_variants":	[
+					"npj Robotics"
+					]
+		},
+
+	"NAT_176":
+
+		{
+
+		"normalized_name":	"npj Science of Food",
+		"name_variants":	[
+					"npj Science of Food"
+					]
+		},
+
+	"NAT_177":
+
+		{
+
+		"normalized_name":	"npj Science of Learning",
+		"name_variants":	[
+					"npj Science of Learning"
+					]
+		},
+
+	"NAT_178":
+
+		{
+
+		"normalized_name":	"npj Science of Plants",
+		"name_variants":	[
+					"npj Science of Plants"
+					]
+		},
+
+	"NAT_179":
+
+		{
+
+		"normalized_name":	"npj Spintronics",
+		"name_variants":	[
+					"npj Spintronics"
+					]
+		},
+
+	"NAT_180":
+
+		{
+
+		"normalized_name":	"npj Sustainable Agriculture",
+		"name_variants":	[
+					"npj Sustainable Agriculture"
+					]
+		},
+
+	"NAT_181":
+
+		{
+
+		"normalized_name":	"npj Sustainable Mobility and Transport",
+		"name_variants":	[
+					"npj Sustainable Mobility and Transport"
+					]
+		},
+
+	"NAT_182":
+
+		{
+
+		"normalized_name":	"npj Systems Biology and Applications",
+		"name_variants":	[
+					"npj Systems Biology and Applications"
+					]
+		},
+
+	"NAT_183":
+
+		{
+
+		"normalized_name":	"npj Unconventional Computing",
+		"name_variants":	[
+					"npj Unconventional Computing"
+					]
+		},
+
+	"NAT_184":
+
+		{
+
+		"normalized_name":	"npj Urban Sustainability",
+		"name_variants":	[
+					"npj Urban Sustainability"
+					]
+		},
+
+	"NAT_185":
+
+		{
+
+		"normalized_name":	"npj Vaccines",
+		"name_variants":	[
+					"npj Vaccines"
+					]
+		},
+
+	"NAT_186":
+
+		{
+
+		"normalized_name":	"npj Viruses",
+		"name_variants":	[
+					"npj Viruses"
+					]
+		},
+
+	"NAT_187":
+
+		{
+
+		"normalized_name":	"npj Women's Health",
+		"name_variants":	[
+					"npj Women's Health"
+					]
+		},
+
+	"NAT_188":
+
+		{
+
+		"normalized_name":	"NPP—Digital Psychiatry and Neuroscience",
+		"name_variants":	[
+					"NPP—Digital Psychiatry and Neuroscience"
+					]
+		},
+
+	"NAT_189":
+
+		{
+
+		"normalized_name":	"Nutrition & Diabetes",
+		"name_variants":	[
+					"Nutrition & Diabetes"
+					]
+		},
+
+	"NAT_190":
+
+		{
+
+		"normalized_name":	"Oncogene",
+		"name_variants":	[
+					"Oncogene"
+					]
+		},
+
+	"NAT_191":
+
+		{
+
+		"normalized_name":	"Oncogenesis",
+		"name_variants":	[
+					"Oncogenesis"
+					]
+		},
+
+	"NAT_192":
+
+		{
+
+		"normalized_name":	"Pediatric Research",
+		"name_variants":	[
+					"Pediatric Research"
+					]
+		},
+
+	"NAT_193":
+
+		{
+
+		"normalized_name":	"The Pharmacogenomics Journal",
+		"name_variants":	[
+					"The Pharmacogenomics Journal"
+					]
+		},
+
+	"NAT_194":
+
+		{
+
+		"normalized_name":	"Polymer Journal",
+		"name_variants":	[
+					"Polymer Journal"
+					]
+		},
+
+	"NAT_195":
+
+		{
+
+		"normalized_name":	"Prostate Cancer and Prostatic Diseases",
+		"name_variants":	[
+					"Prostate Cancer and Prostatic Diseases"
+					]
+		},
+
+	"NAT_196":
+
+		{
+
+		"normalized_name":	"Schizophrenia",
+		"name_variants":	[
+					"Schizophrenia"
+					]
+		},
+
+	"NAT_197":
+
+		{
+
+		"normalized_name":	"Scientific American",
+		"name_variants":	[
+					"Scientific American"
+					]
+		},
+
+	"NAT_198":
+
+		{
+
+		"normalized_name":	"Scientific American Mind",
+		"name_variants":	[
+					"Scientific American Mind"
+					]
+		},
+
+	"NAT_199":
+
+		{
+
+		"normalized_name":	"Scientific Data",
+		"name_variants":	[
+					"Scientific Data"
+					]
+		},
+
+	"NAT_200":
+
+		{
+
+		"normalized_name":	"Scientific Reports",
+		"name_variants":	[
+					"Scientific Reports"
+					]
+		},
+
+	"NAT_201":
+
+		{
+
+		"normalized_name":	"Signal Transduction and Targeted Therapy",
+		"name_variants":	[
+					"Signal Transduction and Targeted Therapy"
+					]
+		},
+
+	"NAT_202":
+
+		{
+
+		"normalized_name":	"Spinal Cord",
+		"name_variants":	[
+					"Spinal Cord"
+					]
+		},
+
+	"NAT_203":
+
+		{
+
+		"normalized_name":	"Spinal Cord Series and Cases",
+		"name_variants":	[
+					"Spinal Cord Series and Cases"
+					]
+		},
+
+	"NAT_204":
+
+		{
+
+		"normalized_name":	"Translational Psychiatry",
+		"name_variants":	[
+					"Translational Psychiatry"
+					]
+		}
+
+}

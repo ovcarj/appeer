@@ -1,0 +1,610 @@
+{
+
+	"RSC_0":
+
+		{
+
+		"normalized_name":	"Analyst",
+		"name_variants":	[
+					"Analyst"
+					]
+		},
+
+	"RSC_1":
+
+		{
+
+		"normalized_name":	"Analytical Methods",
+		"name_variants":	[
+					"Analytical Methods"
+					]
+		},
+
+	"RSC_2":
+
+		{
+
+		"normalized_name":	"Biomaterials Science",
+		"name_variants":	[
+					"Biomaterials Science"
+					]
+		},
+
+	"RSC_3":
+
+		{
+
+		"normalized_name":	"Catalysis Science & Technology",
+		"name_variants":	[
+					"Catalysis Science & Technology",
+					"Catalysis Science and Technology"
+					]
+		},
+
+	"RSC_4":
+
+		{
+
+		"normalized_name":	"ChemComm",
+		"name_variants":	[
+					"ChemComm",
+					"Chemical Communications"
+					]
+		},
+
+	"RSC_5":
+
+		{
+
+		"normalized_name":	"Chemical Science",
+		"name_variants":	[
+					"Chemical Science"
+					]
+		},
+
+	"RSC_6":
+
+		{
+
+		"normalized_name":	"Chem Soc Rev",
+		"name_variants":	[
+					"Chem Soc Rev",
+					"Chemical Society Reviews"
+					]
+		},
+
+	"RSC_7":
+
+		{
+
+		"normalized_name":	"Chemistry Education Research and Practice",
+		"name_variants":	[
+					"Chemistry Education Research and Practice",
+					"Chemistry Education Research & Practice"
+					]
+		},
+
+	"RSC_8":
+
+		{
+
+		"normalized_name":	"CrystEngComm",
+		"name_variants":	[
+					"CrystEngComm"
+					]
+		},
+
+	"RSC_9":
+
+		{
+
+		"normalized_name":	"Dalton Transactions",
+		"name_variants":	[
+					"Dalton Transactions"
+					]
+		},
+
+	"RSC_10":
+
+		{
+
+		"normalized_name":	"Digital Discovery",
+		"name_variants":	[
+					"Digital Discovery"
+					]
+		},
+
+	"RSC_11":
+
+		{
+
+		"normalized_name":	"Energy Advances",
+		"name_variants":	[
+					"Energy Advances"
+					]
+		},
+
+	"RSC_12":
+
+		{
+
+		"normalized_name":	"Energy & Environmental Science",
+		"name_variants":	[
+					"Energy & Environmental Science",
+					"Energy and Environmental Science"
+					]
+		},
+
+	"RSC_13":
+
+		{
+
+		"normalized_name":	"EES Catalysis",
+		"name_variants":	[
+					"EES Catalysis"
+					]
+		},
+
+	"RSC_14":
+
+		{
+
+		"normalized_name":	"Environmental Science: Advances",
+		"name_variants":	[
+					"Environmental Science: Advances"
+					]
+		},
+
+	"RSC_15":
+
+		{
+
+		"normalized_name":	"Environmental Science: Atmospheres",
+		"name_variants":	[
+					"Environmental Science: Atmospheres"
+					]
+		},
+
+	"RSC_16":
+
+		{
+
+		"normalized_name":	"Environmental Science: Nano",
+		"name_variants":	[
+					"Environmental Science: Nano"
+					]
+		},
+
+	"RSC_17":
+
+		{
+
+		"normalized_name":	"Environmental Science: Processes & Impacts",
+		"name_variants":	[
+					"Environmental Science: Processes & Impacts",
+					"Environmental Science: Processes and Impacts"
+					]
+		},
+
+	"RSC_18":
+
+		{
+
+		"normalized_name":	"Environmental Science: Water Research & Technology",
+		"name_variants":	[
+					"Environmental Science: Water Research & Technology",
+					"Environmental Science: Water Research and Technology"
+					]
+		},
+
+	"RSC_19":
+
+		{
+
+		"normalized_name":	"Faraday Discussions",
+		"name_variants":	[
+					"Faraday Discussions"
+					]
+		},
+
+	"RSC_20":
+
+		{
+
+		"normalized_name":	"Food & Function",
+		"name_variants":	[
+					"Food & Function",
+					"Food and Function"
+					]
+		},
+
+	"RSC_21":
+
+		{
+
+		"normalized_name":	"Green Chemistry",
+		"name_variants":	[
+					"Green Chemistry"
+					]
+		},
+
+	"RSC_22":
+
+		{
+
+		"normalized_name":	"Industrial Chemistry & Materials",
+		"name_variants":	[
+					"Industrial Chemistry & Materials",
+					"Industrial Chemistry and Materials"
+					]
+		},
+
+	"RSC_23":
+
+		{
+
+		"normalized_name":	"Inorganic Chemistry Frontiers",
+		"name_variants":	[
+					"Inorganic Chemistry Frontiers"
+					]
+		},
+
+	"RSC_24":
+
+		{
+
+		"normalized_name":	"JAAS (Journal of Analytical Atomic Spectrometry)",
+		"name_variants":	[
+					"JAAS (Journal of Analytical Atomic Spectrometry)",
+					"JAAS",
+					"Journal of Analytical Atomic Spectrometry"
+					]
+		},
+
+	"RSC_25":
+
+		{
+
+		"normalized_name":	"Journal of Materials Chemistry A",
+		"name_variants":	[
+					"Journal of Materials Chemistry A"
+					]
+		},
+
+	"RSC_26":
+
+		{
+
+		"normalized_name":	"Journal of Materials Chemistry B",
+		"name_variants":	[
+					"Journal of Materials Chemistry B"
+					]
+		},
+
+	"RSC_27":
+
+		{
+
+		"normalized_name":	"Journal of Materials Chemistry C",
+		"name_variants":	[
+					"Journal of Materials Chemistry C"
+					]
+		},
+
+	"RSC_28":
+
+		{
+
+		"normalized_name":	"Lab on a Chip",
+		"name_variants":	[
+					"Lab on a Chip"
+					]
+		},
+
+	"RSC_29":
+
+		{
+
+		"normalized_name":	"Materials Advances",
+		"name_variants":	[
+					"Materials Advances"
+					]
+		},
+
+	"RSC_30":
+
+		{
+
+		"normalized_name":	"Materials Chemistry Frontiers",
+		"name_variants":	[
+					"Materials Chemistry Frontiers"
+					]
+		},
+
+	"RSC_31":
+
+		{
+
+		"normalized_name":	"Materials Horizons",
+		"name_variants":	[
+					"Materials Horizons"
+					]
+		},
+
+	"RSC_32":
+
+		{
+
+		"normalized_name":	"Molecular Omics",
+		"name_variants":	[
+					"Molecular Omics"
+					]
+		},
+
+	"RSC_33":
+
+		{
+
+		"normalized_name":	"MSDE (Molecular Systems Design & Engineering)",
+		"name_variants":	[
+					"MSDE (Molecular Systems Design & Engineering)",
+					"MSDE",
+					"Molecular Systems Design & Engineering"
+					]
+		},
+
+	"RSC_34":
+
+		{
+
+		"normalized_name":	"Nanoscale",
+		"name_variants":	[
+					"Nanoscale"
+					]
+		},
+
+	"RSC_35":
+
+		{
+
+		"normalized_name":	"Nanoscale Advances",
+		"name_variants":	[
+					"Nanoscale Advances"
+					]
+		},
+
+	"RSC_36":
+
+		{
+
+		"normalized_name":	"Nanoscale Horizons",
+		"name_variants":	[
+					"Nanoscale Horizons"
+					]
+		},
+
+	"RSC_37":
+
+		{
+
+		"normalized_name":	"Natural Product Reports (NPR)",
+		"name_variants":	[
+					"Natural Product Reports (NPR)",
+					"NPR",
+					"Natural Product Reports"
+					]
+		},
+
+	"RSC_38":
+
+		{
+
+		"normalized_name":	"NJC (New Journal of Chemistry)",
+		"name_variants":	[
+					"NJC (New Journal of Chemistry)",
+					"NJC",
+					"New Journal of Chemistry"
+					]
+		},
+
+	"RSC_39":
+
+		{
+
+		"normalized_name":	"Organic & Biomolecular Chemistry",
+		"name_variants":	[
+					"Organic & Biomolecular Chemistry",
+					"Organic and Biomolecular Chemistry"
+					]
+		},
+
+	"RSC_40":
+
+		{
+
+		"normalized_name":	"Organic Chemistry Frontiers",
+		"name_variants":	[
+					"Organic Chemistry Frontiers"
+					]
+		},
+
+	"RSC_41":
+
+		{
+
+		"normalized_name":	"PCCP (Physical Chemistry Chemical Physics)",
+		"name_variants":	[
+					"PCCP (Physical Chemistry Chemical Physics)",
+					"PCCP",
+					"Physical Chemistry Chemical Physics"
+					]
+		},
+
+	"RSC_42":
+
+		{
+
+		"normalized_name":	"Polymer Chemistry",
+		"name_variants":	[
+					"Polymer Chemistry"
+					]
+		},
+
+	"RSC_43":
+
+		{
+
+		"normalized_name":	"Reaction Chemistry & Engineering",
+		"name_variants":	[
+					"Reaction Chemistry & Engineering",
+					"Reaction Chemistry and Engineering"
+					]
+		},
+
+	"RSC_44":
+
+		{
+
+		"normalized_name":	"RSC Advances",
+		"name_variants":	[
+					"RSC Advances",
+					"Royal Society of Chemistry Advances",
+					"The Royal Society of Chemistry Advances",
+					"Advances"
+					]
+		},
+
+	"RSC_45":
+
+		{
+
+		"normalized_name":	"RSC Applied Interfaces",
+		"name_variants":	[
+					"RSC Applied Interfaces",
+					"Royal Society of Chemistry Applied Interfaces",
+					"The Royal Society of Chemistry Applied Interfaces",
+					"Applied Interfaces"
+					]
+		},
+
+	"RSC_46":
+
+		{
+
+		"normalized_name":	"RSC Applied Polymers",
+		"name_variants":	[
+					"RSC Applied Polymers",
+					"Royal Society of Chemistry Applied Polymers",
+					"The Royal Society of Chemistry Applied Polymers",
+					"Applied Polymers"
+					]
+		},
+
+	"RSC_47":
+
+		{
+
+		"normalized_name":	"RSC Chemical Biology",
+		"name_variants":	[
+					"RSC Chemical Biology",
+					"Royal Society of Chemistry Chemical Biology",
+					"The Royal Society of Chemistry Chemical Biology",
+					"Chemical Biology"
+					]
+		},
+
+	"RSC_48":
+
+		{
+
+		"normalized_name":	"RSC Mechanochemistry",
+		"name_variants":	[
+					"RSC Mechanochemistry",
+					"Royal Society of Chemistry Mechanochemistry",
+					"The Royal Society of Chemistry Mechanochemistry",
+					"Mechanochemistry"
+					]
+		},
+
+	"RSC_49":
+
+		{
+
+		"normalized_name":	"RSC Medicinal Chemistry",
+		"name_variants":	[
+					"RSC Medicinal Chemistry",
+					"Royal Society of Chemistry Medicinal Chemistry",
+					"The Royal Society of Chemistry Medicinal Chemistry",
+					"Medicinal Chemistry"
+					]
+		},
+
+	"RSC_50":
+
+		{
+
+		"normalized_name":	"RSC Pharmaceutics",
+		"name_variants":	[
+					"RSC Pharmaceutics",
+					"Royal Society of Chemistry Pharmaceutics",
+					"The Royal Society of Chemistry Pharmaceutics",
+					"Pharmaceutics"
+					]
+		},
+
+	"RSC_51":
+
+		{
+
+		"normalized_name":	"RSC Sustainability",
+		"name_variants":	[
+					"RSC Sustainability",
+					"Royal Society of Chemistry Sustainability",
+					"The Royal Society of Chemistry Sustainability",
+					"Sustainability"
+					]
+		},
+
+	"RSC_52":
+
+		{
+
+		"normalized_name":	"Sensors & Diagnostics",
+		"name_variants":	[
+					"Sensors & Diagnostics",
+					"Sensors and Diagnostics"
+					]
+		},
+
+	"RSC_53":
+
+		{
+
+		"normalized_name":	"Soft Matter",
+		"name_variants":	[
+					"Soft Matter"
+					]
+		},
+
+	"RSC_54":
+
+		{
+
+		"normalized_name":	"Sustainable Energy & Fuels",
+		"name_variants":	[
+					"Sustainable Energy & Fuels",
+					"Sustainable Energy and Fuels"
+					]
+		},
+
+	"RSC_55":
+
+		{
+
+		"normalized_name":	"Sustainable Food Technology",
+		"name_variants":	[
+					"Sustainable Food Technology"
+					]
+		}
+
+}
