@@ -102,6 +102,8 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
 
         super().__init__(label=label, job_mode=job_mode)
 
+        self._publisher_journals_dict = {}
+
     @property
     def summary(self):
         """
@@ -339,7 +341,8 @@ class ParseJob(Job, job_type='parse_job'): #pylint:disable=too-many-instance-att
                 'publishers': run_parameters['publishers'],
                 'journals': run_parameters['journals'],
                 'data_types': run_parameters['data_types'],
-                'publishers_index': publishers_index
+                'publishers_index': publishers_index,
+                'publisher_journals_dict': self._publisher_journals_dict
                 }
 
         while self.job_step < self.no_of_publications:

@@ -110,6 +110,7 @@ class Parses(ActionTable,
             'normalized_accepted': None,
             'normalized_published': None,
             'normalized_publisher': None,
+            'normalized_journal': None,
             'parser': None,
             'success': 'F',
             'status': 'W',
@@ -141,7 +142,7 @@ class Parses(ActionTable,
             'normalized_received',
             'normalized_accepted',
             'normalized_published',
-            'normalized_publisher',
+            'normalized_publisher', 'normalized_journal',
             'parser', 'success', 'status', 'committed'
             )
 
@@ -340,6 +341,17 @@ class Parses(ActionTable,
 
                 self._cur.execute("""
                 UPDATE parses SET normalized_publisher = ? WHERE label = ? AND action_index = ?
+                """, (new_value, label, action_index))
+
+                self._con.commit()
+
+            case 'normalized_journal':
+
+                if not isinstance(new_value, str):
+                    raise ValueError(f'Cannot update the "parses" table. Invalid normalized_journal={new_value} given; must be a string')
+
+                self._cur.execute("""
+                UPDATE parses SET normalized_journal = ? WHERE label = ? AND action_index = ?
                 """, (new_value, label, action_index))
 
                 self._con.commit()

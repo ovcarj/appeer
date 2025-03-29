@@ -1,5 +1,8 @@
 """Parse a single file"""
 
+import os
+import inspect
+
 from appeer.general import utils as _utils
 
 from appeer.jobs.action import Action
@@ -68,6 +71,9 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
     normalized_publisher : str
         Publisher in the standard format;
             as defined in parse/parsers/publishers_index.json
+    normalized_journal : str
+        Journal in the standard format;
+            as defined in parse/parsers/PUBLISHER/PUBLISHER_journals.json
     parser : str
         Name of the parser class used to parse the input file; mutable
     success : str
@@ -130,7 +136,11 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
                 input_file=parse_entry.filepath,
                 status='W')
 
-    def run(self, _queue=None, publishers_index=None, **kwargs):
+    def run(self,
+            _queue=None,
+            publishers_index=None,
+            publisher_journals_dict=None,
+            **kwargs):
         """
         Run the parse action
 
@@ -142,6 +152,15 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
 
         Usually, ParseJob will load the file once per job and
             pass it to all the parse actions.
+
+        The ``publisher_journals_dict`` should be either ``None`` or a
+            dictionary whose keys are publisher codes and whose values
+            are the corresponding loaded
+
+            ./parsers/<publisher_code>/<publisher_code>_journals.json
+
+            files. If <publisher_code> is not present in the dictionary,
+            the file will be loaded.
 
         The rest of the arguments will be passed to the Preparser.
             They may be used to accelerate determining the appropriate
@@ -156,6 +175,10 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
         publishers_index : dict | None
             The ./parsers/publishers_index.json file loaded to a dict
                 If None, it will be loaded by the parser class
+        publisher_journals_dict : dict | None
+            Dictionary holding the loaded publisher journals JSON files;
+                If None or publisher code key not in dictionary,
+                the necessary file will be loaded by the parser class
 
         Keyword Arguments
         -----------------
@@ -180,6 +203,9 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
 
         parser_class, loaded_data = self._determine_parser(**kwargs)
 
+        if publisher_journals_dict is None:
+            publisher_journals_dict = {}
+
         try:
             self.parser = parser_class.__name__
 
@@ -194,8 +220,29 @@ class ParseAction(Action, action_type='parse'): #pylint:disable=too-many-instanc
 
         else:
 
+            publisher_code = self.parser.split('_')[1]
+
+            try:
+                publisher_journals = publisher_journals_dict[publisher_code]
+
+            except (KeyError, AttributeError):
+
+                parser_dir = os.path.dirname(
+                        inspect.getfile(parser_class)
+                        )
+
+                publisher_journals_json = f'{publisher_code}_journals.json'
+
+                publisher_journals = _utils.load_json(
+                        os.path.join(parser_dir, publisher_journals_json)
+                        )
+
+                publisher_journals_dict[f'{publisher_code}'] =\
+                        publisher_journals
+
             parser = parser_class(loaded_data,
-                    publishers_index=publishers_index)
+                    publishers_index=publishers_index,
+                    publisher_journals=publisher_journals)
 
             self._aprint(reports.parsing_report(parser))
 

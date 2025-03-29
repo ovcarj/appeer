@@ -81,6 +81,9 @@ class CommitAction(Action, action_type='commit'): #pylint:disable=too-many-insta
     normalized_publisher : str
         Publisher in the standard format;
             as defined in parse/parsers/publishers_index.json
+    normalized_journal : str
+        Journal in the standard format;
+            as defined in parse/parsers/PUBLISHER/PUBLISHER_journals.json
     success : str
         Whether the action executed successfully; one of ('T', 'F');
             note that success will be 'T' even if the entry is

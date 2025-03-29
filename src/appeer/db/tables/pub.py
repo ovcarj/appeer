@@ -110,6 +110,9 @@ class Pub(Table,
         normalized_publisher : str
             Publisher in the standard format;
                 as defined in parse/parsers/publishers_index.json
+        normalized_publisher : str
+            Journal in the standard format;
+                as defined in parse/parsers/PUBLISHER/PUBLISHER_journals.json
 
         Returns
         -------
