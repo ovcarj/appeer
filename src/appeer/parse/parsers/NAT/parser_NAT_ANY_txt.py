@@ -55,8 +55,8 @@ class Parser_NAT_ANY_txt(Parser,
 
         return is_NAT_ANY, exception
 
-    def __init__(self, input_data, data_type='txt', parser='lxml',
-            publishers_index=None):
+    def __init__(self, input_data, data_type='txt', parser='lxml', #pylint:disable=too-many-arguments
+            publishers_index=None, publisher_journals=None):
         """
         Load the inputted data into ``self._input_data``
 
@@ -71,13 +71,17 @@ class Parser_NAT_ANY_txt(Parser,
         publishers_index : dict | None
             The ../publishers_index.json file loaded to a dict
                 If None, it will be loaded.
+        publisher_journals : dict | None
+            ./<publisher_code>/<publisher_code>_journals.json loaded to a dict
+                If None, it will be loaded
 
         """
 
         super().__init__(input_data=input_data,
                 data_type=data_type,
                 parser=parser,
-                publishers_index=publishers_index)
+                publishers_index=publishers_index,
+                publisher_journals=publisher_journals)
 
     def _parse_NAT_date(self, date_type):
         """
