@@ -132,7 +132,7 @@ def get_registered_tables():
                  'published',
                  'normalized_received',
                  'normalized_accepted',
-                 'normalized_published'
+                 'normalized_published',
                  'normalized_publisher',
                  ]
 
