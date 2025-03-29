@@ -94,6 +94,16 @@
 					]
 		},
 
+	"RSC_9_0":
+
+		{
+
+		"normalized_name":	"Journal of the Chemical Society, Dalton Transactions",
+		"name_variants":	[
+					"Journal of the Chemical Society, Dalton Transactions"
+					]
+		},
+
 	"RSC_9":
 
 		{
@@ -258,6 +268,16 @@
 					"JAAS (Journal of Analytical Atomic Spectrometry)",
 					"JAAS",
 					"Journal of Analytical Atomic Spectrometry"
+					]
+		},
+
+	"RSC_25_0":
+
+		{
+
+		"normalized_name":	"Journal of Materials Chemistry",
+		"name_variants":	[
+					"Journal of Materials Chemistry"
 					]
 		},
 
