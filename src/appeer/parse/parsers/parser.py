@@ -300,7 +300,7 @@ class Parser(abc.ABC):
         if publishers_index:
 
             if not isinstance(publishers_index, dict):
-                raise TypeError('The inputted "publishers_index" is invalid.')
+                raise TypeError('The inputted "publishers_index" is invalid; must be a dict.')
 
             self._publishers_index = publishers_index
 
@@ -324,7 +324,7 @@ class Parser(abc.ABC):
         Returns
         -------
         _normalized_publisher : str | None
-            The normalized publisher name; None if search failed
+            The normalized publisher name; None if normalization failed
 
         """
 
