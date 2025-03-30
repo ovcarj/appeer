@@ -258,3 +258,26 @@ class Pub(Table,
             pub = pub[0]
 
         return pub
+
+    def get_unique_publishers(self):
+        """
+        Get a list of publishers found in the table
+
+        Returns
+        -------
+        unique_publishers : list of str
+            List of unique publishers in the pub table
+
+        """
+
+        self._sanity_check()
+
+        query = f"""SELECT DISTINCT normalized_publisher FROM {self._name}
+                ORDER BY normalized_publisher"""
+
+        self._cur.execute(query)
+        search_results = self._cur.fetchall()
+
+        unique_publishers = [result[0] for result in search_results]
+
+        return unique_publishers
