@@ -55,6 +55,9 @@ def unique_publishers_report():
 
     unique_publishers = pub.get_unique_publishers()
 
+    if not unique_publishers:
+        return 'No publishers found.'
+
     grouped_publishers = group_by_alphabet(unique_publishers)
 
     report = ''
