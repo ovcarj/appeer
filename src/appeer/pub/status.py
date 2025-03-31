@@ -75,3 +75,44 @@ def unique_publishers_report():
     report = report.rstrip('\n')
 
     return report
+
+def unique_journals_report(publisher):
+    """
+    Get an alphabetical list of journals for a given ``publisher``
+
+    Parameters
+    ----------
+    publisher : str
+        Normalized publisher name
+
+    Returns
+    -------
+    report : str
+        Alphabetical list of journals for a given publisher
+
+    """
+
+    pub = PubDB(read_only=True).pub
+
+    unique_journals = pub.get_unique_journals(publisher)
+
+    if not unique_journals:
+        return f'No journals found for publisher "{publisher}".'
+
+    grouped_journals = group_by_alphabet(unique_journals)
+
+    report = ''
+
+    for letter, journals in grouped_journals.items():
+
+        report += letter + '\n'
+        report += '–' * 70 + '\n'
+
+        for journal in journals:
+            report += journal + '\n'
+
+        report += '\n'
+
+    report = report.rstrip('\n')
+
+    return report
