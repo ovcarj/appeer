@@ -281,3 +281,33 @@ class Pub(Table,
         unique_publishers = [result[0] for result in search_results]
 
         return unique_publishers
+
+    def get_unique_journals(self, publisher):
+        """
+        Get a list of journals for a given publisher
+
+        Returns
+        -------
+        unique_journals : list of str | None
+            List of unique journals for a given publisher;
+                None if publisher doesn't exist
+
+        """
+
+        self._sanity_check()
+
+        unique_publishers = self.get_unique_publishers()
+
+        if publisher not in unique_publishers:
+            return None
+
+        query = f"""SELECT DISTINCT normalized_journal FROM {self._name}
+                WHERE normalized_publisher = ?
+                ORDER BY normalized_journal"""
+
+        self._cur.execute(query, (publisher,))
+        search_results = self._cur.fetchall()
+
+        unique_journals = [result[0] for result in search_results]
+
+        return unique_journals
