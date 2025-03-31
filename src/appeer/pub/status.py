@@ -42,12 +42,12 @@ def group_by_alphabet(entry_list):
 
 def unique_publishers_report():
     """
-    Get a report on the unique publishers in ``pub.db``
+    Get an alphabetical list of unique publishers in ``pub.db``
 
     Returns
     -------
     report : str
-        Formatted report on the the unique publishers
+        Alphabetical list of unique publishers
 
     """
 
