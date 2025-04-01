@@ -398,3 +398,81 @@ class Pub(Table,
                 )
 
         return publisher_summary
+
+    def get_journal_summary(self, publisher, journal):
+        """
+        Get a summary of a ``journal`` of a given ``publisher``
+
+        - Counts how many entries are found for the journal
+
+        - Finds distinct publication types
+
+            NOTE: Publication types are currently in experimental/unstable
+            stage as they are not normalized.
+
+        - Finds the earliest/latest normalized received date for the journal
+
+        - Finds the earliest/latest normalized accepted date for the journal
+
+        - Finds the earliest/latest normalized published date for the journal
+
+        The result is returned as a JournalSummary named tuple
+
+        Parameters
+        ----------
+        publisher : str
+            Normalized publisher name
+        journal : str
+            Normalized journal name
+
+        Returns
+        -------
+        journal_summary : appeer.db.tables.pub.JournalSummary | None
+            Summary of a journal for a given publisher;
+                None if publisher or journal do not exist in the table
+
+        """
+
+        self._sanity_check()
+
+        unique_publishers = self.get_unique_publishers()
+
+        if publisher not in unique_publishers:
+            return None
+
+        unique_journals = self.get_unique_journals(publisher=publisher)
+
+        if journal not in unique_journals:
+            return None
+
+        query = f"""
+
+                SELECT normalized_journal,
+
+                COUNT(normalized_journal),
+
+                GROUP_CONCAT(DISTINCT publication_type||'|'),
+
+                MIN(normalized_received),
+                MAX(normalized_received),
+
+                MIN(normalized_accepted),
+                MAX(normalized_accepted),
+
+                MIN(normalized_published),
+                MAX(normalized_published)
+
+                FROM {self._name}
+
+                WHERE normalized_publisher = ?
+                AND normalized_journal = ?
+
+                """
+
+        self._cur.execute(query, (publisher, journal))
+
+        journal_summary = list(
+                map(JournalSummary._make, self._cur.fetchall())
+                )[0]
+
+        return journal_summary
