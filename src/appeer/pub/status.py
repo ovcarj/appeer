@@ -207,7 +207,8 @@ def _journal_summary_msg(journal_summary, align=None):
     start_ = '\n' + ' ' * (align + 1)
 
     publication_types = start_.join(textwrap.wrap(publication_types,
-            width=len(journal_summary.name)))
+            width=len(journal_summary.name),
+            break_long_words=False))
 
     _msg = f'{"no_of_entries":<{align}} {journal_summary.count}\n\n'
     _msg += f'{"min_received":<{align}} {journal_summary.min_received}\n'
