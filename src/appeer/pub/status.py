@@ -168,6 +168,40 @@ def publisher_summary_report(publisher):
 
     return report
 
+def journal_summary_report(publisher, journal):
+    """
+    A semi-detailed summary of a ``journal`` of a given ``publisher``
+
+    Parameters
+    ----------
+    publisher : str
+        Normalized publisher name
+    journal : str
+        Normalized journal name
+
+    Returns
+    -------
+    report : str
+        Summary of a ``journal`` for a given ``publisher``
+
+    """
+
+    pub = PubDB(read_only=True).pub
+
+    journal_summary = pub.get_journal_summary(
+            publisher=publisher,
+            journal=journal)
+
+    if not journal_summary:
+        _msg = f'No entries found for publisher "{publisher}" and journal "{journal}".'
+        return _msg
+
+    report = _log.boxed_message(f'Summary of publisher: {publisher}; journal: {journal}', centered=True) + '\n\n'
+
+    report += _journal_summary_msg(journal_summary=journal_summary)
+
+    return report
+
 def _journal_summary_msg(journal_summary, align=None):
     """
     Create a boxed summary from appeer.db.tables.pub.JournalSummary
