@@ -269,6 +269,29 @@ def aff_str2list(aff_str):
 
     return aff_list
 
+def publication_types_unpack(publication_types_pack):
+    """
+    Unpacks the publication types listed by appeer.db.tables.pub methods
+
+    Parameters
+    ----------
+    publication_types_pack : str
+        Publication types as given by get_publisher_summary()
+
+    Returns
+    -------
+    publication_types : list of str
+        List of publication types
+
+    """
+
+    publication_types = publication_types_pack.split('|,')
+
+    if publication_types[-1].endswith('|'):
+        publication_types[-1] = publication_types[-1][:-1]
+
+    return publication_types
+
 def compare_strings(string1, string2):
     """
     Obtains the similarity metric between two strings
