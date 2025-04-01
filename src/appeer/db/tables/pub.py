@@ -1,6 +1,7 @@
 """Handles the ``pub`` table in ``pub.db``"""
 
 import sqlite3
+from collections import namedtuple
 
 import click
 
@@ -8,6 +9,18 @@ from appeer.db.tables.table import Table
 from appeer.db.tables.registered_tables import get_registered_tables
 
 from appeer.parse.default_metadata import default_metadata
+
+JournalSummary = namedtuple('JournalSummary',
+        ['name',
+        'count',
+        'publication_types',
+        'min_received',
+        'max_received',
+        'min_accepted',
+        'max_accepted',
+        'min_published',
+        'max_published']
+        )
 
 class Pub(Table,
            name='pub',
@@ -311,3 +324,77 @@ class Pub(Table,
         unique_journals = [result[0] for result in search_results]
 
         return unique_journals
+
+    def get_publisher_summary(self, publisher):
+        """
+        Get a summary of journals found for a given ``publisher``
+
+        - Finds distinct normalized journal names
+
+        - Counts how many entries are found for each journal
+
+        - Finds distinct publication types
+
+            NOTE: Publication types are currently in experimental/unstable
+            stage as they are not normalized.
+
+        - Finds the earliest/latest normalized received date for each journal
+
+        - Finds the earliest/latest normalized accepted date for each journal
+
+        - Finds the earliest/latest normalized published date for each journal
+
+        The results are returned in a list of JournalSummary named tuples
+
+        Parameters
+        ----------
+        publisher : str
+            A normalized publisher name
+
+        Returns
+        -------
+        publisher_summary : list of appeer.db.tables.pub.JournalSummary | None
+            Summary of unique journals for a given publisher;
+                None if publisher does not exist in the table
+
+        """
+
+        self._sanity_check()
+
+        unique_publishers = self.get_unique_publishers()
+
+        if publisher not in unique_publishers:
+            return None
+
+        query = f"""
+
+                SELECT normalized_journal,
+
+                COUNT(normalized_journal),
+
+                GROUP_CONCAT(DISTINCT publication_type||'|'),
+
+                MIN(normalized_received),
+                MAX(normalized_received),
+
+                MIN(normalized_accepted),
+                MAX(normalized_accepted),
+
+                MIN(normalized_published),
+                MAX(normalized_published)
+
+                FROM {self._name}
+                WHERE normalized_publisher = ?
+
+                GROUP BY normalized_journal
+                ORDER BY normalized_journal
+
+                """
+
+        self._cur.execute(query, (publisher,))
+
+        publisher_summary = list(
+                map(JournalSummary._make, self._cur.fetchall())
+                )
+
+        return publisher_summary
