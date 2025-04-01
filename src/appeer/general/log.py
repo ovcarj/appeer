@@ -244,7 +244,7 @@ def boxed_message(message, centered=False, width=None, header=None):
     ----------
     message : str
         A string to be written in a box
-    center : bool
+    centered : bool
         If given, the message will be centered using str.center(width=width)
     width : int
         Width of the line for centering
