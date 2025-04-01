@@ -15,11 +15,11 @@ from appeer.pub import status
 
                 appeer pub -J -p 'Nature Porfolio'
 
-        (*) A semi-detailed summary of a given publisher
+        (*) A semi-detailed summary of a given publisher:
 
                 appeer pub -p 'Nature Portfolio'
 
-        (*) A semi-detailed summary of a given (publisher, journal) pair
+        (*) A semi-detailed summary of a given (publisher, journal) pair:
 
                 appeer pub -p 'Nature Portfolio' -j 'Nature'
 
