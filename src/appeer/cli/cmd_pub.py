@@ -63,3 +63,8 @@ def pub_cli(ctx, **kwargs):
                 click.echo(status.journal_summary_report(
                     publisher=kwargs['publisher'],
                     journal=kwargs['journal']))
+
+        else:
+            ctx = click.get_current_context()
+            click.echo(ctx.get_help())
+            ctx.exit()
