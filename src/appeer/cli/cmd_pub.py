@@ -15,10 +15,15 @@ from appeer.pub import status
 
                 appeer pub -J -p 'Nature Porfolio'
 
+        (*) A semi-detailed summary of a given publisher
+
+                appeer pub -p 'Nature Portfolio'
+
 """, short_help='Analyze publications')
 @click.option('-P', '--publisher_list', is_flag=True, default=False)
 @click.option('-J', '--journal_list', is_flag=True, default=False)
 @click.option('-p', '--publisher')
+@click.option('-j', '--journal')
 @click.pass_context
 def pub_cli(ctx, **kwargs):
     """
@@ -39,3 +44,7 @@ def pub_cli(ctx, **kwargs):
             else:
                 click.echo(status.unique_journals_report(
                     publisher=kwargs['publisher']))
+
+        elif kwargs['publisher'] and not kwargs['journal']:
+            click.echo(status.publisher_summary_report(
+                publisher=kwargs['publisher']))
