@@ -190,7 +190,7 @@ def check_doi_format(entry):
         String to be tested if it is in DOI format
 
     Returns
-    ----------
+    -------
     is_doi_format : bool
         True if ``entry`` is in DOI format, False if it is not
 
