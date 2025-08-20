@@ -38,7 +38,7 @@ from appeer.commit import commit_scripts
 
             Parses publications from a list of parse job labels
 
-                appeer parse -S scrape_label1 scrape_label2
+                appeer parse -S parse_label1 parse_label2
 
     (*) Several other options and flags are available. The most relevant ones are:
 
